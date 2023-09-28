@@ -11,7 +11,7 @@
   "dependencies": {
     "@kyvg/vue3-notification": "^3.0.1",
     "autoprefixer": "^10.4.14",
-    "axios": "^1.4.0",
+    "axios": "^1.5.1",
     "pinia": "^2.1.4",
     "postcss": "^8.4.27",
     "sass": "^1.64.2",
