@@ -1,42 +1,47 @@
-import axios from 'axios';
+import { ref } from "vue";
+import axios from "axios";
 
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000', 
-    timeout: 10000, 
-});
+const baseURL = "http://localhost:8000";
 
-axiosInstance.interceptors.request.use(
-    config => {
-        const token = localStorage.getItem('authToken'); // Retrieve the authorization token from wherever you store it
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
+const useAxios = () => {
+  const axiosInstance = axios.create({
+    baseURL,
+    timeout: 10000,
+  });
+
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
     },
-    error => {
-        return Promise.reject(error);
+    (error) => {
+      return Promise.reject(error);
     }
-);
+  );
 
-class Api {
-    constructor() {
-        this.axiosInstance = axiosInstance;
-    }
+  const login = (data) => {
+    return axiosInstance.post("/auth/login", {
+      username: data.username,
+      password: data.password,
+    });
+  };
 
-    Login = (data) => {
-        return axiosInstance.post('/auth/login', {
-            username: data.username,
-            password: data.password
-        })
-    }
+  const getListUsers = () => {
+    return axiosInstance.get("/users");
+  };
 
-    GetListUsers = () => {
-        return axiosInstance.get('/users');
-    }
+  const deleteUser = (id) => {
+    return axiosInstance.delete(`/user/${id}`);
+  };
 
-    DeleteUser = (id) => {
-        return axiosInstance.delete(`/user/${id}`)
-    }
-}
+  return {
+    login,
+    getListUsers,
+    deleteUser,
+  };
+};
 
-export const api = new Api();
+export default useAxios;

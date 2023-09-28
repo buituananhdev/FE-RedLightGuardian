@@ -5,6 +5,7 @@
       class="max-w-md w-full px-6 py-8 bg-white shadow-md overflow-hidden sm:rounded-lg"
     >
       <h2 class="text-center text-3xl font-extrabold text-gray-900">Login</h2>
+
       <form class="mt-8 space-y-6" @submit.prevent="login">
         <div>
           <label for="username" class="block text-sm font-medium text-gray-700"
@@ -55,7 +56,6 @@ import { notify } from "@kyvg/vue3-notification";
 import router from '../router';
 const username = ref('');
 const password = ref('');
-const api = inject('api');
 const login = async () => {
   try {
     const res = await api.Login({
