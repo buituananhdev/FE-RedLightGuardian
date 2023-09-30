@@ -13,7 +13,7 @@
 
 <style scoped>
 .app-container {
-  
+  background: #fff;
 }
 header {
   line-height: 1.5;
