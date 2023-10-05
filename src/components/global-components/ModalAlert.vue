@@ -98,11 +98,6 @@ export default {
     box-shadow: 0px 16px 72px 0px rgba(71, 79, 98, 0.07);
     width: 520px;
 
-    .myhome__logo {
-        justify-content: center;
-        // align-self: stretch;
-    }
-
     &__content {
         display: flex;
         flex-direction: column;

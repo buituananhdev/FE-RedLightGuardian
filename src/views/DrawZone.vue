@@ -1,9 +1,3 @@
-<template>
-  <div id="danger-zone">
-    <DangerZone />
-  </div>
-</template>
-
 <script>
 import DangerZone from "../components/DangerZone.vue";
 
@@ -13,3 +7,9 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div id="danger-zone">
+    <DangerZone />
+  </div>
+</template>
