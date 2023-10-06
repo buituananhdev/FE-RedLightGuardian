@@ -24,7 +24,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
 import PopupDetailUser from '@/components/Users/PopupDetailUser.vue'
-import { getUsersApi, updateUserApi } from '@/services/user.service'
+import { getUsersApi, updateUserApi } from '@/api/user.js'
 import { useNotification } from '@kyvg/vue3-notification'
 
 const notification = useNotification()
