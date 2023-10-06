@@ -1,47 +1,63 @@
 <template>
     <div>
-        <input type="file" @change="handleFileUpload" />
-        <button @click="uploadImage">Tải Ảnh Lên</button>
+        <input type="file" @change="uploadImage" />
+        <canvas ref="canvas"></canvas>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-
 export default {
-    data() {
-        return {
-            selectedFile: null,
-        };
-    },
     methods: {
-        handleFileUpload(event) {
-            this.selectedFile = event.target.files[0];
-        },
-        uploadImage() {
-            if (!this.selectedFile) {
-                alert('Vui lòng chọn một tệp ảnh để tải lên.');
-                return;
+        async uploadImage(event) {
+            const file = event.target.files[0];
+            const data = new FormData();
+            data.append('image_file', file, 'image_file');
+
+            try {
+                const response = await axios.post(
+                    'http://localhost:8080/detect',
+                    data
+                );
+                const boxes = response.data;
+                this.drawImageAndBoxes(file, boxes);
+            } catch (error) {
+                console.error('Error uploading image:', error);
             }
-
-            let formData = new FormData();
-            formData.append('photo', this.selectedFile);
-
-            axios
-                .post('http://localhost:3012/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                })
-                .then((response) => {
-                    console.log(response.data);
-                    alert('Ảnh đã được tải lên thành công!');
-                })
-                .catch((error) => {
-                    console.error('Đã xảy ra lỗi khi tải ảnh lên: ', error);
-                    alert('Đã xảy ra lỗi khi tải ảnh lên máy chủ.');
+        },
+        drawImageAndBoxes(file, boxes) {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                const canvas = this.$refs.canvas;
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                ctx.strokeStyle = '#00FF00';
+                ctx.lineWidth = 3;
+                ctx.font = '18px serif';
+                boxes.forEach(([x1, y1, x2, y2, label, probability]) => {
+                    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                    ctx.fillStyle = '#00ff00';
+                    const width = ctx.measureText(
+                        `${label} (${probability})`
+                    ).width;
+                    ctx.fillRect(x1, y1, width + 10, 25);
+                    ctx.fillStyle = '#000000';
+                    ctx.fillText(`${label} (${probability})`, x1, y1 + 18);
                 });
+            };
         },
     },
 };
 </script>
+<style lang="scss" scoped>
+canvas {
+    display: block;
+    border: 1px solid black;
+    margin-top: 10px;
+    width: 100%;
+    height: 100%;
+}
+</style>

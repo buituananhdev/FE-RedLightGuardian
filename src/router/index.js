@@ -28,14 +28,17 @@ const routes = [
   {
     path: '/draw',
     name: 'draw',
+    meta: { layout: 'empty' },
     component: () => import('../views/DrawZone.vue')
   },
   {
     path: '/test',
     name: 'test',
+    meta: { layout: 'empty' },
     component: () => import('../views/test.vue')
   }
 ]
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
