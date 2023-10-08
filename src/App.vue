@@ -10,7 +10,7 @@ const layout = computed(() => {
 <template>
   <Notifications />
   <component :is="layout">
-    <router-view />
+      <router-view />
   </component>
   <!-- nếu ở đây có gì thay đổi thì router view sẽ bị rerender dẫn đến component hiện tại bị render lại -->
 </template>

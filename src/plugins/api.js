@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { refreshAccessToken } from './auth.js'
+import { refreshAccessToken } from '@/services/auth.service'
 import { notify } from '@kyvg/vue3-notification'
 
 const axiosApiInstance = axios.create()
 // set base api
-axiosApiInstance.defaults.baseURL = import.meta.env.BASE_URL_API
+axiosApiInstance.defaults.baseURL = import.meta.env.VITE_API_URL
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
   async (config) => {

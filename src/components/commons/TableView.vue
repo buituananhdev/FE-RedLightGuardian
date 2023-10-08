@@ -1,14 +1,11 @@
 <template>
     <div class="tableview" :class="{ 'half-width': isSplitScreen }">
-        <div
-            class="tableview__container"
-            :class="{ 'blank-pagination': !listData.length }"
-        >
+        <div class="tableview__container" :class="{ 'blank-pagination': !listData.length }">
             <div class="tableview__container__head">
                 <div class="tableview__container__head__row">
                     <div
                         class="tableview__container__head__row__cell"
-                        v-for="(item, index) in listHeader"
+                        v-for="(item, index) in listHeaderFiltered"
                         :key="index"
                         :style="{ width: columnStyle(item) + '%' }"
                         :class="{
@@ -20,87 +17,77 @@
                     </div>
                 </div>
             </div>
-            <div
-                class="tableview__container__body overflow-y"
-                v-if="listDataProps.length"
-            >
-                <slot name="tbody" v-bind:listData="listDataProps" />
+            <div class="tableview__container__body overflow-y" v-if="listData.length">
+                <slot name="tbody"></slot>
             </div>
             <div v-else class="tableview__empty">
-                <!-- <img src="~/assets/icons/empty-icn.svg" alt="" /> -->
-                <span> Không có dữ liệu </span>
+                <span>Không có dữ liệu</span>
             </div>
         </div>
-        <!-- <div v-show="listData.length" class="tableview__pagination">
-            <vue-paginate
-                v-show="!showLoading && listData.length"
-                :baseUrl="requestUrl"
-                ref="vuePaginate"
-                :optionParam="$attrs.optionParam ?? ''"
-                :startFetch="true"
-                startPageCount="1"
-                :paging="10"
-                @before-fetch="showLoading = $event"
-                @fetch-success="parseDataClass"
-                @total-count="totalNews = $event"
-                @click-page="scrollToTopPage"
-            >
-            </vue-paginate>
-        </div> -->
     </div>
 </template>
 
 <script>
-// import VuePaginate from '~/components/paginate/VuePaginate.vue';
 export default {
-    // components: {
-    //     VuePaginate,
-    // },
     props: {
         listHeader: {
             type: Array,
         },
-        requestUrl: {
-            type: String,
-            default: '',
+        itemsPerPage: {
+            type: Number,
+            default: 10,
         },
         isSplitScreen: {
             type: Boolean,
             default: false,
         },
-        listDataProps: {
+        listData: {
             type: Array,
             default: []
         }
     },
     data() {
         return {
-            showLoading: true,
-            totalNews: null,
-            listData: [],
-        };
+            currentPage: 1,
+        }
     },
     computed: {
+        listHeaderFiltered() {
+            return this.listHeader
+        },
+        totalPageCount() {
+            return Math.ceil(this.listData.length / this.itemsPerPage)
+        },
+        paginatedListData() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage
+            const endIndex = startIndex + this.itemsPerPage
+            return this.listData.slice(startIndex, endIndex)
+        },
     },
     methods: {
         columnStyle(item) {
             if (this.isSplitScreen) {
-                return parseFloat(100 / this.listHeaderFiltered.length);
+                return parseFloat(100 / this.listHeaderFiltered.length)
             } else {
-                return item.width;
+                return item.width
             }
         },
-        parseDataClass(data) {
-            try {
-                this.listData = data;
-                console.log('data', data);
-            } catch (e) {
-                console.log('loi', e);
+        // Các phương thức xử lý trang ở đây
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPageCount) {
+                this.currentPage++
             }
         },
-        scrollToTopPage() {},
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--
+            }
+        },
     },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -161,13 +148,7 @@ export default {
                     text-align: center;
                     span {
                         width: 100%;
-                        @include text-style(
-                            14px,
-                            150%,
-                            500,
-                            $text-light-icon-secondary-2,
-                            normal
-                        );
+                        @include text-style(14px, 150%, 500, $text-light-icon-secondary-2, normal);
                         @include truncate(1);
                     }
                 }
@@ -191,13 +172,7 @@ export default {
 
                     span {
                         @include truncate(1);
-                        @include text-style(
-                            14px,
-                            150%,
-                            400,
-                            $text-light-secondary-1,
-                            normal
-                        );
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, normal);
                     }
                     button {
                         @include truncate(1);
