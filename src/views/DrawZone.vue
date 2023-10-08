@@ -1,15 +1,15 @@
 <script>
-import DangerZone from "../components/DangerZone.vue";
+import DangerZone from '@/components/camera/DrawDangerZone.vue'
 
 export default {
-  components: {
-    DangerZone,
-  },
-};
+    components: {
+        DangerZone,
+    },
+}
 </script>
 
 <template>
-  <div id="danger-zone">
-    <DangerZone />
-  </div>
+    <div id="danger-zone">
+        <DangerZone />
+    </div>
 </template>

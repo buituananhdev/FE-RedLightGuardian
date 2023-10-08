@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { getInfo } from '@/api/auth'
+import { getInfo } from '@/services/auth.service'
 export const authStore = ref({
   user: null,
   isLoggedIn: false,

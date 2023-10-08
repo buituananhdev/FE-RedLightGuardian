@@ -10,13 +10,13 @@ const routes = [
   {
     path: '/users',
     name: 'users',
-    meta: { requiresAuth: true, roles: ['ADMIN'] },
+    meta: { layout: 'empty' },
     component: () => import('@/views/UserList.vue'),
   },
   {
     path: '/login',
     name: 'login',
-    meta: { layout: 'empty' },
+    meta: { layout: 'auth' },
     component: () => import('@/views/auth/LoginPage.vue'),
   },
   {
@@ -26,19 +26,18 @@ const routes = [
     component: () => import('@/views/auth/RegisterPage.vue'),
   },
   {
-    path: '/draw',
-    name: 'draw',
-    meta: { layout: 'empty' },
-    component: () => import('../views/DrawZone.vue')
+    path: '/drawzone',
+    name: 'drawzone',
+    meta: { layout: 'auth' },
+    component: () => import('@/views/DrawZone.vue')
   },
   {
     path: '/test',
     name: 'test',
-    meta: { layout: 'empty' },
-    component: () => import('../views/test.vue')
-  }
+    meta: { layout: 'auth' },
+    component: () => import('@/views/TestPage.vue')
+  },
 ]
-
 const router = createRouter({
   history: createWebHistory(),
   routes,

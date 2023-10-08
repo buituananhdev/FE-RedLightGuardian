@@ -175,7 +175,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { initAuthStore } from '@/stores/auth.store'
-import { registerApi } from '@/api/auth'
+import { registerApi } from '@/services/auth.service'
 import { useNotification } from '@kyvg/vue3-notification'
 const notification = useNotification()
 const router = useRouter()
