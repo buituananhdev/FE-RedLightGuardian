@@ -7,12 +7,14 @@ const routes = [
     component: () => import('@/views/Dashboard.vue'),
     meta: { requiresAuth: true },
   },
+  // Users router
   {
     path: '/users',
     name: 'users',
     meta: { layout: 'empty' },
     component: () => import('@/views/UserList.vue'),
   },
+  // Auth router
   {
     path: '/login',
     name: 'login',
