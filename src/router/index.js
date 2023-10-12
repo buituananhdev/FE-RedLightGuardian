@@ -11,8 +11,15 @@ const routes = [
   {
     path: '/users',
     name: 'users',
-    meta: { layout: 'empty' },
+    meta: { requiresAuth: true },
     component: () => import('@/views/UserList.vue'),
+  },
+   // violations router
+  {
+    path: '/violations',
+    name: 'violations',
+    meta: { layout: 'empty' },
+    component: () => import('@/views/ViolationsPage.vue'),
   },
   // Auth router
   {
