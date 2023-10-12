@@ -8,9 +8,12 @@
                     :key="item.id"
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
-                    <span class="user-id">{{ item.id }}</span>
-                    <span class="user-username">{{ item.username }}</span>
-                    <div class="user-action">
+                    <span class="width-10">{{ item.id }}</span>
+                    <span class="width-20">{{ item.name }}</span>
+                    <span class="width-10">{{ item.vehicleID }}</span>
+                    <span class="width-20">{{ item.time }}</span>
+                    <span class="width-20">{{ item.imageUrl }}</span>
+                    <div class="user-action width-20">
                         <img src="@/assets/icons/edit-icon.svg" alt="" width="20" height="20" />
                         <img src="@/assets/icons/delete-icon.svg" alt="" width="20" height="20" />
                     </div>
@@ -28,15 +31,27 @@ export default {
             listHeader: [
                 {
                     title: 'Id',
+                    width: 10,
+                },
+                {
+                    title: 'Họ và tên',
                     width: 20,
                 },
                 {
-                    title: 'User Name',
-                    width: 50,
+                    title: 'Id vehicle',
+                    width: 10,
+                },
+                {
+                    title: 'Time',
+                    width: 20,
+                },
+                {
+                    title: 'Image',
+                    width: 20,
                 },
                 {
                     title: 'Action',
-                    width: 30,
+                    width: 20,
                 },
             ],
             listData: [],
@@ -48,7 +63,7 @@ export default {
     methods: {
         async fetchData() {
             axios
-                .get('https://652182c1a4199548356d4f70.mockapi.io/violation/users')
+                .get('https://652182c1a4199548356d4f70.mockapi.io/violation/violations')
                 .then((res) => {
                     this.listData = res.data
                 })
@@ -73,14 +88,13 @@ export default {
             justify-content: center;
             align-content: center;
         }
-        .user-id {
+        .width-10 {
+            width: 10%;
+        }
+        .width-20 {
             width: 20%;
         }
-        .user-username {
-            width: 50%;
-        }
         .user-action {
-            width: 30%;
             display: flex;
             gap: 40;
             justify-content: center;
