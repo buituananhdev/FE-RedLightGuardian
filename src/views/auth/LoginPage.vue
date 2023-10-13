@@ -28,13 +28,13 @@
             </svg>
           </span>
           <input
-            id="email"
-            v-model="email"
-            name="email"
-            type="email"
-            autocomplete="email"
+            id="user"
+            v-model="username"
+            name="user"
+            type="user"
+            autocomplete="user"
             class="w-full py-4 text-sm text-gray-900 rounded-md pl-10 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10"
-            placeholder="Email address"
+            placeholder="Username"
             required=""
           />
         </div>
@@ -111,7 +111,7 @@ import { loginApi, loginGGApi } from '@/services/auth.service'
 import { useNotification } from '@kyvg/vue3-notification'
 const notification = useNotification()
 const router = useRouter()
-const email = ref('')
+const username = ref('')
 const password = ref('')
 // const googleLoginBtn = ref()
 // onMounted(() => {
@@ -119,7 +119,7 @@ const password = ref('')
 //   const gClientId = '539910609167-67i01tcoja47s71qshaeodhcc69d5u99.apps.googleusercontent.com'
 //   window.google.accounts.id.initialize({
 //     client_id: gClientId,
-//     scope: 'email profile openid',
+//     scope: 'user profile openid',
 //     callback: handleCredentialResponse,
 //     auto_select: true,
 //   })
@@ -130,9 +130,10 @@ const password = ref('')
 const handleCredentialResponse = async (res) => {
   try {
     await loginGGApi({ credential: res.credential }).then((res) => {
-      const data = res['data']
-      localStorage.setItem('access_token', data.tokens.access.token)
-      localStorage.setItem('refresh_token', data.tokens.refresh.token)
+      const data = res.data;
+      console.log('data', res.data)
+      localStorage.setItem('access_token', data.access_token)
+      localStorage.setItem('refresh_token', data.refresh_token)
     })
     await initAuthStore()
     router.push('/')
@@ -147,12 +148,13 @@ const handleCredentialResponse = async (res) => {
 
 const submit = async () => {
   try {
-    await loginApi({ email: email.value, password: password.value }).then((res) => {
-      const data = res['data']
-      localStorage.setItem('access_token', data.tokens.access.token)
-      localStorage.setItem('refresh_token', data.tokens.refresh.token)
+    await loginApi({ username: username.value, password: password.value }).then((res) => {
+      const data = res.data.data;
+      console.log('data', data)
+      localStorage.setItem('access_token', data.access_token)
+      localStorage.setItem('refresh_token', data.refresh_token)
     })
-    await initAuthStore()
+    // await initAuthStore()
     router.push('/')
   } catch (error) {
     notification.notify({

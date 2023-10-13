@@ -8,11 +8,17 @@
                     :key="item.id"
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
-                    <span class="user-id">{{ item.id }}</span>
+                    <span class="user-id">{{ index + 1 }}</span>
                     <span class="user-username">{{ item.username }}</span>
                     <div class="user-action">
-                        <img src="@/assets/icons/edit-icon.svg" alt="" width="20" height="20" />
-                        <img src="@/assets/icons/delete-icon.svg" alt="" width="20" height="20" />
+                        <img src="@/assets/icons/edit-icon.svg" alt="edit" width="20" height="20" @click="editUser" />
+                        <img
+                            src="@/assets/icons/delete-icon.svg"
+                            alt="delete"
+                            width="20"
+                            height="20"
+                            @click="deleteUser(item.id)"
+                        />
                     </div>
                 </div>
             </template>
@@ -21,7 +27,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { getAllUsers, deleteUser } from '@/services/user.service'
 export default {
     data() {
         return {
@@ -47,15 +53,35 @@ export default {
     },
     methods: {
         async fetchData() {
-            axios
-                .get('https://652182c1a4199548356d4f70.mockapi.io/violation/users')
-                .then((res) => {
-                    this.listData = res.data
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
+            try {
+                const res = await getAllUsers();
+                this.listData = res.data.data;
+                console.log('check', this.listData);
+            } catch (error) {
+                console.error(error);
+            }
         },
+        async deleteUser(id) {
+            try {
+                const res = await deleteUser(id);
+                if(res.data.status === 'success') {
+                    this.listData = this.listData.filter(user => user.id !== id);
+                    this.$notify({
+                        type: 'success',
+                        title: 'Delete User',
+                        text: 'Delete user successfully!',
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                $notify({
+                        type: 'error',
+                        title: 'Delete User',
+                        text: 'Delete user failed!',
+                        duration: 1000,
+                    })
+            }
+        }
     },
 }
 </script>
@@ -82,8 +108,8 @@ export default {
         .user-action {
             width: 30%;
             display: flex;
-            gap: 40;
             justify-content: center;
+            gap: 10px;
         }
     }
     .bold {

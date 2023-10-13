@@ -12,6 +12,7 @@ import TableView from '@/components/commons/TableView.vue';
 import authLayout from '@/layouts/authLayout.vue'
 import emptyLayout from '@/layouts/emptyLayout.vue'
 
+
 const initApp = async () => {
   authMiddleware()
   await initAuthStore()

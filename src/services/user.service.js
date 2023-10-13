@@ -11,3 +11,10 @@ export const updateUserApi = async (id, data) => {
 export const changeBalance = async (userID, balance) => {
   return await axiosApiInstance.patch(`/users/${userID}/change-balance`, { balance: balance })
 }
+export const deleteUser = async (id) => {
+  return await axiosApiInstance.delete(`/users/${id}`)
+}
+
+export const getAllUsers = async (id) => {
+  return await axiosApiInstance.get('/users')
+}

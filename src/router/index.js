@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/users',
     name: 'users',
-    meta: { requiresAuth: true },
+    meta: { layout: 'auth' },
     component: () => import('@/views/UserList.vue'),
   },
    // violations router
@@ -20,6 +20,13 @@ const routes = [
     name: 'violations',
     meta: { layout: 'empty' },
     component: () => import('@/views/ViolationsPage.vue'),
+  },
+  // Owners router
+  {
+    path: '/owners',
+    name: 'owners',
+    meta: { layout: 'auth' },
+    component: () => import('@/views/OwnersPage.vue'),
   },
   // Auth router
   {
