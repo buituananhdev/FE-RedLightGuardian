@@ -40,19 +40,19 @@ export default {
         }
     },
     mounted() {
-        this.fetchData();
+        this.fetchData()
     },
     methods: {
         async fetchData() {
             try {
-                const response = await axios.get('https://65218eeca4199548356d5dd6.mockapi.io/api/test');
-                this.listData = response.data;
+                const response = await axios.get('https://65218eeca4199548356d5dd6.mockapi.io/api/test')
+                this.listData = response.data
                 console.log('res', this.listData)
             } catch (error) {
                 console.error(error)
             }
-        }
-    }
+        },
+    },
 }
 </script>
 <style lang="scss" scoped>
