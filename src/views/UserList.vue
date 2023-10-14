@@ -1,6 +1,6 @@
 <template>
     <div class="page-main">
-        <table-view :listHeader="listHeader" :requestUrl="'/vehicle'" ref="tableview" :listData="listData">
+        <table-view :listHeader="listHeader" :requestUrl="'/test'" ref="tableview" :listData="listData">
             <template v-slot:tbody>
                 <div
                     class="row"
@@ -8,13 +8,9 @@
                     :key="item.id"
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
-                    <span class="width-10">{{ item.id }}</span>
-                    <span class="width-20">{{ item.vehicleName }}</span>
-                    <span class="width-20">{{ item.licensePlate }}</span>
-                    <span class="width-10">{{ item.ownerID }}</span>
-                    <span class="width-20">{{ item.vehicleType }}</span>
-                    <span class="width-10">{{ item.brand }}</span>
-                    <div class="user-action width-10">
+                    <span class="user-id">{{ item.id }}</span>
+                    <span class="user-username">{{ item.username }}</span>
+                    <div class="user-action">
                         <img src="@/assets/icons/edit-icon.svg" alt="" width="20" height="20" />
                         <img src="@/assets/icons/delete-icon.svg" alt="" width="20" height="20" />
                     </div>
@@ -32,31 +28,15 @@ export default {
             listHeader: [
                 {
                     title: 'Id',
-                    width: 10,
-                },
-                {
-                    title: 'Vehicle Name',
                     width: 20,
                 },
                 {
-                    title: 'License Plate',
-                    width: 20,
-                },
-                {
-                    title: 'Owner ID',
-                    width: 10,
-                },
-                {
-                    title: 'Vehicle Type',
-                    width: 20,
-                },
-                {
-                    title: 'Brand',
-                    width: 10,
+                    title: 'User Name',
+                    width: 50,
                 },
                 {
                     title: 'Action',
-                    width: 10,
+                    width: 30,
                 },
             ],
             listData: [],
@@ -68,7 +48,7 @@ export default {
     methods: {
         async fetchData() {
             axios
-                .get('https://65240f70ea560a22a4e955b5.mockapi.io/vehicle')
+                .get('https://652182c1a4199548356d4f70.mockapi.io/violation/users')
                 .then((res) => {
                     this.listData = res.data
                 })
@@ -93,13 +73,14 @@ export default {
             justify-content: center;
             align-content: center;
         }
-        .width-10 {
-            width: 10%;
-        }
-        .width-20 {
+        .user-id {
             width: 20%;
         }
+        .user-username {
+            width: 50%;
+        }
         .user-action {
+            width: 30%;
             display: flex;
             gap: 40;
             justify-content: center;
