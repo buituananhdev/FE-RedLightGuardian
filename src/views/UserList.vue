@@ -1,24 +1,18 @@
 <template>
-    <div class="page-main">
-        <table-view :listHeader="listHeader" :requestUrl="'/test'" ref="tableview" :listData="listData">
+    <div class="page-users">
+        <table-view :listHeader="listHeader" :requestUrl="'/test'" ref="tableview" :listData="listData" class="page-users__table">
             <template v-slot:tbody>
                 <div
-                    class="row"
+                    class="page-users__table__row"
                     v-for="(item, index) in listData"
                     :key="item.id"
-                    :class="!(index % 2) ? 'bold' : ' unbold'"
+                    :class="{ 'bold': !(index % 2)}"
                 >
-                    <span class="user-id">{{ index + 1 }}</span>
-                    <span class="user-username">{{ item.username }}</span>
-                    <div class="user-action">
-                        <img src="@/assets/icons/edit-icon.svg" alt="edit" width="20" height="20" @click="editUser" />
-                        <img
-                            src="@/assets/icons/delete-icon.svg"
-                            alt="delete"
-                            width="20"
-                            height="20"
-                            @click="deleteUser(item.id)"
-                        />
+                    <span class="page-users__table__row__id">{{ index + 1 }}</span>
+                    <span class="page-users__table__row__username">{{ item.username }}</span>
+                    <div class="page-users__table__row__action">
+                        <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="editUser" />
+                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteUser(item.id)" />
                     </div>
                 </div>
             </template>
@@ -86,37 +80,42 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-main {
+.page-users {
     width: 100%;
     height: 100vh;
-    .row {
-        display: flex;
-        width: 100%;
-        gap: 20px;
-        span {
-            padding: 16px 24px;
+    &__table{
+        &__row {
             display: flex;
-            justify-content: center;
-            align-content: center;
-        }
-        .user-id {
-            width: 20%;
-        }
-        .user-username {
-            width: 50%;
-        }
-        .user-action {
-            width: 30%;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
+            width: 100%;
+            gap: 20px;
+            background: var(--neutral-100, #fafcfe);
+            span {
+                padding: 16px 24px;
+                display: flex;
+                justify-content: center;
+                align-content: center;
+            }
+            &__id {
+                width: 20%;
+            }
+            &__username {
+                width: 50%;
+            }
+            &__action {
+                width: 30%;
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                img {
+                    height: 20px;
+                    width: 25px;
+                }
+            }
+            &.bold {
+                background: var(--neutral-300, #f4f7fe);
+            }
         }
     }
-    .bold {
-        background: var(--neutral-300, #f4f7fe);
-    }
-    .unbold {
-        background: var(--neutral-100, #fafcfe);
-    }
+    
 }
 </style>
