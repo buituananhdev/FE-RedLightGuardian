@@ -87,7 +87,7 @@ export default {
         &__row {
             display: flex;
             width: 100%;
-            gap: 20px;
+            gap: 40px;
             background: var(--neutral-100, #fafcfe);
             span {
                 padding: 16px 24px;
