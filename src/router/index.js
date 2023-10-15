@@ -46,6 +46,18 @@ const routes = [
     meta: { layout: 'auth' },
     component: () => import('@/views/TestPage.vue')
   },
+  {
+    path: '/vehicle',
+    name: 'vehicle',
+    meta: { layout: 'auth' },
+    component: () => import('@/views/VehicleTable.vue')
+  },
+  {
+    path: '/violation',
+    name: 'violation',
+    meta: { layout: 'auth' },
+    component: () => import('@/views/ViolationTable.vue')
+  },
 ]
 const router = createRouter({
   history: createWebHistory(),

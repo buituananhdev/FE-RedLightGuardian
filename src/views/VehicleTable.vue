@@ -1,6 +1,6 @@
 <template>
     <div class="page-main">
-        <table-view :listHeader="listHeader" :requestUrl="'/test'" ref="tableview" :listData="listData">
+        <table-view :listHeader="listHeader" :requestUrl="'/vehicle'" ref="tableview" :listData="listData">
             <template v-slot:tbody>
                 <div
                     class="row"
@@ -9,11 +9,12 @@
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
                     <span class="width-10">{{ item.id }}</span>
-                    <span class="width-20">{{ item.name }}</span>
-                    <span class="width-10">{{ item.vehicleID }}</span>
-                    <span class="width-20">{{ item.time }}</span>
-                    <span class="width-20">{{ item.imageUrl }}</span>
-                    <div class="user-action width-20">
+                    <span class="width-20">{{ item.vehicleName }}</span>
+                    <span class="width-20">{{ item.licensePlate }}</span>
+                    <span class="width-10">{{ item.ownerID }}</span>
+                    <span class="width-20">{{ item.vehicleType }}</span>
+                    <span class="width-10">{{ item.brand }}</span>
+                    <div class="user-action width-10">
                         <img src="@/assets/icons/edit-icon.svg" alt="" width="20" height="20" />
                         <img src="@/assets/icons/delete-icon.svg" alt="" width="20" height="20" />
                     </div>
@@ -34,24 +35,28 @@ export default {
                     width: 10,
                 },
                 {
-                    title: 'Họ và tên',
+                    title: 'Vehicle Name',
                     width: 20,
                 },
                 {
-                    title: 'Id vehicle',
+                    title: 'License Plate',
+                    width: 20,
+                },
+                {
+                    title: 'Owner ID',
                     width: 10,
                 },
                 {
-                    title: 'Time',
+                    title: 'Vehicle Type',
                     width: 20,
                 },
                 {
-                    title: 'Image',
-                    width: 20,
+                    title: 'Brand',
+                    width: 10,
                 },
                 {
                     title: 'Action',
-                    width: 20,
+                    width: 10,
                 },
             ],
             listData: [],
@@ -63,7 +68,7 @@ export default {
     methods: {
         async fetchData() {
             axios
-                .get('https://65240f70ea560a22a4e955b5.mockapi.io/violation')
+                .get('https://65240f70ea560a22a4e955b5.mockapi.io/vehicle')
                 .then((res) => {
                     this.listData = res.data
                 })
