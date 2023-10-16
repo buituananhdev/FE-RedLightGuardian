@@ -18,3 +18,7 @@ export const deleteOwner = async (id) => {
 export const getAllOwners = async () => {
   return await axiosApiInstance.get('/owners')
 }
+
+export const getSingleOwner = async (id) => {
+    return await axiosApiInstance.get(`/owners/${id}`)
+  }

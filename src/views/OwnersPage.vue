@@ -5,7 +5,7 @@
             :requestUrl="'/test'"
             ref="tableview"
             :listData="listData"
-            :class="{'page-owners__table': true, 'w-100': isShowDetail, 'w-70': !isShowDetail }"
+            class="page-owners__table"
         >
             <template v-slot:tbody>
                 <div
@@ -15,22 +15,39 @@
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
                     <span class="page-owners__table__row__id">{{ index + 1 }}</span>
-                    <span class="page-owners__table__row__username">{{ item.name }}</span>
+                    <span class="page-owners__table__row__username" @click="getSingleOwner(item.id)">{{ item.name }}</span>
                     <span class="page-owners__table__row__address">{{ item.address }}</span>
                     <span class="page-owners__table__row__email">{{ item.email }}</span>
                     <div class="page-owners__table__row__action">
-                        <img src="@/assets/icons/edit-icon.svg" alt="edit" />
+                        <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate()" />
                         <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)"
                         />
                     </div>
                 </div>
             </template>
         </table-view>
+        <panel-view
+            :title="'test'"
+            class="page-owners__panel"
+            v-if="isShowDetail"
+            @close-panel="isShowDetail = false"
+        >
+        <template v-slot:pbody>
+            <div class="page-owners__panel__content">
+                <span>Name:</span>
+                <input type="text" v-model="currentOwner.name" name="" id="" :disabled="!isEdit">
+                <span>Address:</span>
+                <input type="text" v-model="currentOwner.address" :disabled="!isEdit">
+                <span>Email:</span>
+                <input type="text" v-model="currentOwner.email" name="" id="" :disabled="!isEdit">
+            </div>
+        </template>
+        </panel-view>
     </div>
 </template>
 
 <script>
-import { deleteOwner, getAllOwners } from '@/services/owner.service'
+import { deleteOwner, getAllOwners, getSingleOwner } from '@/services/owner.service'
 export default {
     data() {
         return {
@@ -57,6 +74,9 @@ export default {
                 },
             ],
             listData: [],
+            currentOwner: {},
+            isEdit: false,
+            isShowDetail: false,
         }
     },
     mounted() {
@@ -91,6 +111,19 @@ export default {
                     })
             }
             
+        },
+        async getSingleOwner(id) {
+            try {
+                const res = await getSingleOwner(id);
+                this.currentOwner = res.data.data;
+                this.isShowDetail = true
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        showUpdate() {
+            this.isEdit = true;
+            this.isShowDetail = true;
         }
     },
 }
@@ -102,9 +135,11 @@ export default {
     display: flex;
     &__table {
         &__row {
+            padding: 0 16px;
+            padding-right: 20px ;
             display: flex;
             width: 100%;
-            gap: 40px;
+            gap: 20px;
             background: var(--neutral-100, #fafcfe);
             &.bold {
                 background: var(--neutral-300, #f4f7fe);
@@ -136,18 +171,16 @@ export default {
             }
         }
     }
-    
-    .detail-infor {
-        width: 30%;
-        position: relative;
-        h3 {
-            font-weight: 600;
-            padding: 10px 0;
-        }
-        .close-icon {
-            position: absolute;
-            top:10px;
-            right: 10px;
+    &__panel {
+        &__content {
+            display: flex;
+            flex-direction: column;
+            input {
+                margin-bottom: 10px;
+            }
+            span {
+                padding: 7px 0;
+            }
         }
     }
 }
