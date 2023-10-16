@@ -8,7 +8,7 @@
                     class="signin__body__header__btn-close"
                     @click="onCloseAddNew"
                 >
-                    <img src="~/assets/icons/icon-close.svg" alt="" />
+                    <img src="@/assets/icons/close-icon.svg" alt="" />
                 </div>
             </div>
             <client-only>

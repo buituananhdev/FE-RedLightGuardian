@@ -33,7 +33,7 @@ export default {
 
 <style lang="scss" scoped>
 button {
-    padding: 10px 24px;
+    padding: 7px 24px;
     outline: none;
     // border: transparent;
     &:hover {
@@ -43,7 +43,7 @@ button {
         border-radius: 80px;
         // @include text-style(14px, 21px, 600, $neutral-0, 0px);
         background-color: $secondary-500;
-
+        color: $neutral-200;
         &:hover {
             background-color: $secondary-600;
         }

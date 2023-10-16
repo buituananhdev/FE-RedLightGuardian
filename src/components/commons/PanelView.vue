@@ -5,7 +5,15 @@
                 <img src="@/assets/icons/arrow-right-icon.svg" alt="close" @click="closePanel()">
                 <p class="panel-view__header__title__content">{{ title }}</p>
             </div>
-            <button class="panel-view__header__button" @click="updateObject()">Update</button>
+            <button v-if="isEdit" class="panel-view__header__button" @click="updateObject()">Update</button>
+            <!-- <button-vue
+                :typeBtn="'primary'"
+                :width="'120'"
+                v-if="isEdit"
+                @click="updateObject()"
+            >
+                Update
+            </button-vue> -->
         </div>
         
         <div class="panel-view__body">
@@ -14,12 +22,17 @@
     </div>
 </template>
 <script>
+import ButtonVue from '../Atoms/ButtonVue.vue';
 export default {
+  components: { ButtonVue },
     props: {
         title: {
             type: String,
         },
-
+        isEdit : {
+            type: Boolean,
+            default: false
+        }
     },
     methods: {
         closePanel() {

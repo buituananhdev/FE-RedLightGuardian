@@ -19,7 +19,7 @@
                     <span class="page-owners__table__row__address">{{ item.address }}</span>
                     <span class="page-owners__table__row__email">{{ item.email }}</span>
                     <div class="page-owners__table__row__action">
-                        <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate()" />
+                        <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
                         <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)"
                         />
                     </div>
@@ -27,10 +27,12 @@
             </template>
         </table-view>
         <panel-view
-            :title="'test'"
+            :title="title"
+            :isEdit="isEdit"
             class="page-owners__panel"
             v-if="isShowDetail"
             @close-panel="isShowDetail = false"
+            @update-object="updateOwner"
         >
         <template v-slot:pbody>
             <div class="page-owners__panel__content">
@@ -43,12 +45,28 @@
             </div>
         </template>
         </panel-view>
+        <div class="page-owners__overlay"></div>
+        <popup-view
+            title="Create Owner"
+            class="page-owners__popup"
+        >
+                <span>Name:</span>
+                <input type="text" v-model="currentOwner.name" name="" id="" :disabled="!isEdit">
+                <span>Address:</span>
+                <input type="text" v-model="currentOwner.address" :disabled="!isEdit">
+                <span>Email:</span>
+                <input type="text" v-model="currentOwner.email" name="" id="" :disabled="!isEdit">
+        </popup-view>
     </div>
 </template>
 
 <script>
-import { deleteOwner, getAllOwners, getSingleOwner } from '@/services/owner.service'
+import { deleteOwner, getAllOwners, getSingleOwner, updateOwner } from '@/services/owner.service'
+import ModalReason from '@/components/modals/ModalReason.vue'
+import ModalAlert from '@/components/modals/ModalAlert.vue'
+
 export default {
+  components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [
@@ -77,6 +95,7 @@ export default {
             currentOwner: {},
             isEdit: false,
             isShowDetail: false,
+            title: 'View Detail'
         }
     },
     mounted() {
@@ -116,14 +135,39 @@ export default {
             try {
                 const res = await getSingleOwner(id);
                 this.currentOwner = res.data.data;
-                this.isShowDetail = true
+                localStorage.setItem('idOwner', this.currentOwner.id);
+                this.isShowDetail = true;
             } catch (error) {
                 console.error(error);
             }
         },
-        showUpdate() {
+        async updateOwner(){
+            const id = localStorage.getItem('idOwner');
+            try {
+                const res = await updateOwner(id, this.currentOwner);
+                if(res.data.status === "success") {
+                    this.isShowDetail = false;
+                    this.isEdit = false;
+                    this.$notify({
+                        type: 'success',
+                        title: 'Update Owner',
+                        text: 'Update owner successfully!',
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                $notify({
+                        type: 'error',
+                        title: 'Update Owner',
+                        text: 'Update owner failed!',
+                        duration: 1000,
+                    })
+            }
+        },
+        showUpdate(id) {
             this.isEdit = true;
             this.isShowDetail = true;
+            this.getSingleOwner(id);
         }
     },
 }
@@ -163,6 +207,7 @@ export default {
                 width: 20%;
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 gap: 20px;
                 img {
                     height: 20px;
@@ -182,6 +227,23 @@ export default {
                 padding: 7px 0;
             }
         }
+    }
+    &__overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        background-color: $slate-400;
+        opacity: 0.7;
+    }
+    &__popup {
+        position: absolute;
+        top: 50%; /* Đặt vị trí top ở giữa trang */
+        left: 50%; /* Đặt vị trí left ở giữa trang */
+        transform: translate(-50%, -50%);
+        z-index: 3 ;
     }
 }
 </style>

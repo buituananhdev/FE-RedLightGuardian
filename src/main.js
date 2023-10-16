@@ -12,6 +12,8 @@ import TableView from '@/components/commons/TableView.vue';
 import PanelView from '@/components/commons/PanelView.vue';
 import authLayout from '@/layouts/authLayout.vue'
 import emptyLayout from '@/layouts/emptyLayout.vue'
+import ButtonVue from '@/components/Atoms/ButtonVue.vue'
+import PopupView from '@/components/commons/PopupView.vue';
 
 
 const initApp = async () => {
@@ -23,8 +25,10 @@ const initApp = async () => {
   app.component('modal-alert', ModalAlert)
   app.component('table-view', TableView)
   app.component('panel-view', PanelView)
+  app.component('popup-view', PopupView)
   app.component('default-layout', authLayout)
   app.component('empty-layout', emptyLayout)
+  app.component('button-vue', ButtonVue)
   app.use(Notifications)
   app.mount('#app')
 }

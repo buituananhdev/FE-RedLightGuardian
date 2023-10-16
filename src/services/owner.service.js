@@ -21,4 +21,8 @@ export const getAllOwners = async () => {
 
 export const getSingleOwner = async (id) => {
     return await axiosApiInstance.get(`/owners/${id}`)
-  }
+}
+
+export const updateOwner = async (id, newOwner) => {
+  return await axiosApiInstance.put(`/owners/${id}`, newOwner)
+}
