@@ -1,38 +1,33 @@
 <template>
-    <div class="page-violations">
+    <div class="page-vehicles">
         <table-view
             :listHeader="listHeader"
-            :requestUrl="'/violations'"
+            :requestUrl="'/vehicles'"
             ref="tableview"
             :listData="listData"
-            class="page-violations__table"
+            :class="{ 'page-vehicles__table': true, 'w-100': isShowDetail, 'w-70': !isShowDetail }"
         >
             <template v-slot:tbody>
                 <div
-                    class="page-violations__table__row"
+                    class="page-vehicles__table__row"
                     v-for="(item, index) in listData"
                     :key="item.id"
-                    :class="{ bold: !(index % 2) }"
+                    :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
-                    <span class="page-violations__table__row__id">{{ item.id }}</span>
-                    <span class="page-violations__table__row__name">{{ item.name }}</span>
-                    <span class="page-violations__table__row__id">{{ item.vehicleID }}</span>
-                    <span class="page-violations__table__row__time">{{ item.time }}</span>
-                    <span class="page-violations__table__row__imageUrl">{{ item.imageUrl }}</span>
-                    <div class="page-violations__table__row__action">
-                        <img
-                            src="@/assets/icons/edit-icon.svg"
-                            alt="edit"
-                            width="20"
-                            height="20"
-                            @click="editViolation"
-                        />
+                    <span class="page-vehicles__table__row__id">{{ item.id }}</span>
+                    <span class="page-vehicles__table__row__name">{{ item.vehicleName }}</span>
+                    <span class="page-vehicles__table__row__license">{{ item.licensePlate }}</span>
+                    <span class="page-vehicles__table__row__ownerId">{{ item.ownerID }}</span>
+                    <span class="page-vehicles__table__row__type">{{ item.vehicleType }}</span>
+                    <span class="page-vehicles__table__row__brand">{{ item.brand }}</span>
+                    <div class="page-vehicles__table__row__action">
+                        <img src="@/assets/icons/edit-icon.svg" alt="edit" width="20" height="20" />
                         <img
                             src="@/assets/icons/delete-icon.svg"
                             alt="delete"
                             width="20"
                             height="20"
-                            @click="deleteViolation(item.id)"
+                            @click="deleteVehicle(item.id)"
                         />
                     </div>
                 </div>
@@ -42,7 +37,7 @@
 </template>
 
 <script>
-import { getAllViolations, deleteViolation } from '@/services/violation.service'
+import { getAllVehicles, deleteVehicle } from '@/services/vehicle.service'
 export default {
     data() {
         return {
@@ -52,24 +47,28 @@ export default {
                     width: 10,
                 },
                 {
-                    title: 'Name',
+                    title: 'Vehicle Name',
                     width: 20,
                 },
                 {
-                    title: 'Vehicle Id',
+                    title: 'License Plate',
+                    width: 15,
+                },
+                {
+                    title: 'Owner ID',
                     width: 10,
                 },
                 {
-                    title: 'Time',
-                    width: 20,
+                    title: 'Vehicle Type',
+                    width: 15,
                 },
                 {
-                    title: 'Image Url',
-                    width: 20,
+                    title: 'Brand',
+                    width: 15,
                 },
                 {
                     title: 'Action',
-                    width: 20,
+                    width: 15,
                 },
             ],
             listData: [],
@@ -81,30 +80,28 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const res = await getAllViolations()
+                const res = await getAllVehicles()
                 this.listData = res.data.data
-                console.log('check', this.listData)
             } catch (error) {
                 console.error(error)
             }
         },
-        async deleteViolation(id) {
+        async deleteVehicle(id) {
             try {
-                const res = await deleteViolation(id)
+                const res = await deleteVehicle(id)
                 if (res.data.status === 'success') {
-                    this.listData = this.listData.filter((violation) => violation.id !== id)
+                    this.listData = this.listData.filter((vehicle) => vehicle.id !== id)
                     this.$notify({
                         type: 'success',
-                        title: 'Delete Violation',
-                        text: 'Delete violation successfully!',
+                        title: 'Delete Vehicle',
+                        text: 'Delete vehicle successfully!',
                     })
                 }
             } catch (error) {
-                console.error(error)
                 $notify({
                     type: 'error',
-                    title: 'Delete Violation',
-                    text: 'Delete violation failed!',
+                    title: 'Delete Vehicle',
+                    text: 'Delete vehicle failed!',
                     duration: 1000,
                 })
             }
@@ -113,15 +110,20 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-violations {
+.page-vehicles {
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    display: flex;
     &__table {
         &__row {
             display: flex;
             width: 100%;
             gap: 40px;
             background: $neutral-100;
+            &.bold {
+                background: $neutral-300;
+            }
+
             span {
                 padding: 16px 24px;
                 display: flex;
@@ -131,13 +133,17 @@ export default {
             &__id {
                 width: 10%;
             }
-            &__time,
-            &__imageUrl,
             &__name {
                 width: 20%;
             }
+            &__type,
+            &__brand,
+            &__license {
+                width: 15%;
+            }
+
             &__action {
-                width: 20%;
+                width: 15%;
                 display: flex;
                 justify-content: center;
                 gap: 20px;
@@ -146,9 +152,19 @@ export default {
                     width: 20px;
                 }
             }
-            &.bold {
-                background: $neutral-100;
-            }
+        }
+    }
+    .detail-infor {
+        width: 30%;
+        position: relative;
+        h3 {
+            font-weight: 600;
+            padding: 10px 0;
+        }
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
     }
 }
