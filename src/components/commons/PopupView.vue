@@ -2,9 +2,8 @@
     <div class="modal-alert" @click.stop>
         <div class="modal-alert__content">
             <h2 :class="typeModal">{{ title }}</h2>
-            <p v-html="content"></p>
         </div>
-
+        <slot />
         <div class="modal-alert__tool">
             <button-vue
                 v-if="isButtonCancel"
@@ -87,54 +86,49 @@ export default {
 <style lang="scss" scoped>
 .modal-alert {
     display: inline-flex;
-    padding: 60px;
+    padding: 40px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 32px;
-    border-radius: 40px;
+    border-radius: 35px;
     background: $neutral-100;
     /* Shadow/5 */
     box-shadow: 0px 16px 72px 0px rgba(71, 79, 98, 0.07);
     width: 520px;
-
+    // border: 1px solid black;
     &__content {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 10px;
         align-self: stretch;
-
         h2 {
             // width: 360px;
             text-align: center;
-
             &.success {
                 color: $success-700;
             }
-
             &.failed {
                 color: $danger-700;
             }
-
             &.confirm {
                 color: $text-light-icon-secondary-1;
+                font-weight: 700;
+                font-size: 18px;
             }
         }
-
         p {
             text-align: center;
             @include text-style(14px, 150%, 400, $text-light-icon-secondary-2, normal);
         }
     }
-
     &__tool {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 24px;
         align-self: stretch;
-
         .btn {
             display: flex;
             height: 46px;
@@ -146,7 +140,6 @@ export default {
         }
     }
 }
-
 .not-allow {
     cursor: not-allowed !important;
 }

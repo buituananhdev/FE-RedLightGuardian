@@ -170,29 +170,3 @@ const submit = async () => {
     }
 }
 </script>
-
-
-{
-  form: {
-    title: {
-      element: "h1",
-      content: "Hello"
-    },
-    describe: {
-      element: "p",
-      content: "hellooo"
-    }
-    questions: [
-      {
-        1: {
-          element: "input[type = "text"]",
-          content: "hellooo"
-        },
-        2: {
-          element: "input[type = "checkbox"]",
-          content: "hellooo"
-        }
-      }
-    ]
-  }
-}

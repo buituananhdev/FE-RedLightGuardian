@@ -19,3 +19,11 @@ export const deleteViolation = async (id) => {
 export const getAllViolations = async () => {
     return await axiosApiInstance.get('/violations')
 }
+
+export const getSingleViolation = async (id) => {
+    return await axiosApiInstance.get(`/violations/${id}`)
+}
+
+export const updateViolation = async (id, newViolation) => {
+    return await axiosApiInstance.put(`/violations/${id}`, newViolation)
+}
