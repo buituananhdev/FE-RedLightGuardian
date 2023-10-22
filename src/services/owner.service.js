@@ -26,3 +26,7 @@ export const getSingleOwner = async (id) => {
 export const updateOwner = async (id, newOwner) => {
   return await axiosApiInstance.put(`/owners/${id}`, newOwner)
 }
+
+export const addOwner = async (newOwner) => {
+  return await axiosApiInstance.post(`/owner`, newOwner)
+}

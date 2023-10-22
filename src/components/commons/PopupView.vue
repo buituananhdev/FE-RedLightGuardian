@@ -3,7 +3,7 @@
         <div class="modal-alert__content">
             <h2 :class="typeModal">{{ title }}</h2>
         </div>
-        <slot/>
+        <slot name="popupbody" />
         <div class="modal-alert__tool">
             <button-vue
                 v-if="isButtonCancel"
@@ -24,6 +24,7 @@
                 <span>{{ buttonOkContent }}</span>
             </button-vue>
         </div>
+        
     </div>
 </template>
 
@@ -35,10 +36,6 @@ export default {
     },
     props: {
         title: {
-            type: String,
-            required: true,
-        },
-        content: {
             type: String,
             required: true,
         },

@@ -1,5 +1,8 @@
 <template>
     <div class="page-owners">
+        <!-- <button class="page-owners" @click="showPopup">
+            <img src="@/assets/icons/close-icon.svg" alt="">
+        </button> -->
         <table-view
             :listHeader="listHeader"
             :requestUrl="'/test'"
@@ -15,13 +18,13 @@
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
                     <span class="page-owners__table__row__id">{{ index + 1 }}</span>
+                    <span class="page-owners__table__row__idCitizen">{{ item.citizen_identification }}</span>
                     <span class="page-owners__table__row__username" @click="getSingleOwner(item.id)">{{ item.name }}</span>
                     <span class="page-owners__table__row__address">{{ item.address }}</span>
                     <span class="page-owners__table__row__email">{{ item.email }}</span>
                     <div class="page-owners__table__row__action">
                         <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)"
-                        />
+                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)" />
                     </div>
                 </div>
             </template>
@@ -36,32 +39,59 @@
         >
         <template v-slot:pbody>
             <div class="page-owners__panel__content">
-                <span>Name:</span>
-                <input type="text" v-model="currentOwner.name" name="" id="" :disabled="!isEdit">
-                <span>Address:</span>
-                <input type="text" v-model="currentOwner.address" :disabled="!isEdit">
-                <span>Email:</span>
-                <input type="text" v-model="currentOwner.email" name="" id="" :disabled="!isEdit">
+                <div class="label-input">
+                    <span >Citizen id:</span>
+                    <input type="text" v-model="currentOwner.citizen_identification" name="" id="name"  :disabled="!isEdit">
+                </div>
+                <div class="label-input">
+                    <span >Name:</span>
+                    <input type="text" v-model="currentOwner.name" name="" id="name" :disabled="!isEdit">
+                </div>
+                <div class="label-input">
+                    <span>Address:</span>
+                    <input type="text" v-model="currentOwner.address" name="" id="address" :disabled="!isEdit">
+                </div>
+                <div class="label-input">
+                    <span>Email:</span>
+                    <input type="email" v-model="currentOwner.email" name="" id="" :disabled="!isEdit">
+                </div>
             </div>
         </template>
         </panel-view>
-        <div class="page-owners__overlay"></div>
+        <div class="page-owners__overlay" v-if="isShowPopup"></div>
         <popup-view
             title="Create Owner"
             class="page-owners__popup"
+            v-if="isShowPopup"
+            @onCancel="hiddenPopup"
+            @onOk="createOwner"
         >
-                <span>Name:</span>
-                <input type="text" v-model="currentOwner.name" name="" id="" :disabled="!isEdit">
-                <span>Address:</span>
-                <input type="text" v-model="currentOwner.address" :disabled="!isEdit">
-                <span>Email:</span>
-                <input type="text" v-model="currentOwner.email" name="" id="" :disabled="!isEdit">
+            <template v-slot:popupbody>
+                <div class="label-input">
+                    <span >Citizen id:</span>
+                    <input type="text" v-model="currentOwner.citizen_identification" name="" id="name" >
+                </div>
+                <div class="label-input">
+                    <span >Name:</span>
+                    <input type="text" v-model="currentOwner.name" name="" id="name" >
+                </div>
+                <div class="label-input">
+                    <span>Address:</span>
+                    <input type="text" v-model="currentOwner.address" name="" id="address" >
+                </div>
+                <div class="label-input">
+                    <span>Email:</span>
+                    <input type="email" v-model="currentOwner.email" name="" id="" >
+                </div>
+            </template>
         </popup-view>
+        <div>
+    </div>
     </div>
 </template>
 
 <script>
-import { deleteOwner, getAllOwners, getSingleOwner, updateOwner } from '@/services/owner.service'
+import { deleteOwner, getAllOwners, getSingleOwner, updateOwner, addOwner } from '@/services/owner.service'
 import ModalReason from '@/components/modals/ModalReason.vue'
 import ModalAlert from '@/components/modals/ModalAlert.vue'
 
@@ -75,27 +105,32 @@ export default {
                     width: 15,
                 },
                 {
+                    title: 'Citizen id',
+                    width: 15,
+                },
+                {
                     title: 'Name',
                     width: 20,
                 },
                 {
                     title: 'Address',
-                    width: 25,
+                    width: 20,
                 },
                 {
                     title: 'Email',
-                    width: 20,
+                    width: 15,
                 },
                 {
                     title: 'Action',
-                    width: 20,
+                    width: 15,
                 },
             ],
             listData: [],
             currentOwner: {},
             isEdit: false,
             isShowDetail: false,
-            title: 'View Detail'
+            title: 'View Detail',
+            isShowPopup: false,
         }
     },
     mounted() {
@@ -168,7 +203,37 @@ export default {
             this.isEdit = true;
             this.isShowDetail = true;
             this.getSingleOwner(id);
+        },
+        showPopup() {
+            this.currentOwner = {};
+            this.isShowPopup = true;
+        },
+        hiddenPopup(){
+            this.isShowPopup = false;
+        },
+        async createOwner(){
+            try {
+                const res = await addOwner(this.currentOwner);
+                if(res.data.status === "success") {
+                    this.isShowPopup = false;
+                    this.$notify({
+                        type: 'success',
+                        title: 'Add Owner',
+                        text: 'Add owner successfully!',
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                $notify({
+                        type: 'error',
+                        title: 'Add Owner',
+                        text: 'Add owner failed!',
+                        duration: 1000,
+                    })
+            }
+
         }
+
     },
 }
 </script>
@@ -194,14 +259,11 @@ export default {
                 justify-content: center;
                 align-content: center;
             }
-            &__id {
+            &__email, &__username, &__idCitizen, &__id {
                 width: 15%;
             }
-            &__email, &__username {
-                width: 20%;
-            }
             &__address {
-                width: 25%;
+                width: 20%;
             }
             &__action {
                 width: 20%;
