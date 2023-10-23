@@ -4,7 +4,10 @@
             <div class="signin__body__header">
                 <h2 class="">{{ $attrs.header }}</h2>
 
-                <div class="signin__body__header__btn-close" @click="onCloseAddNew">
+                <div
+                    class="signin__body__header__btn-close"
+                    @click="onCloseAddNew"
+                >
                     <img src="@/assets/icons/close-icon.svg" alt="" />
                 </div>
             </div>

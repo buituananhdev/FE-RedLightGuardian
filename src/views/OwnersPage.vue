@@ -1,67 +1,87 @@
 <template>
-    <div class="page-users">
-        <button class="page-users" @click="showPopup">
+    <div class="page-owners">
+        <!-- <button class="page-owners" @click="showPopup">
             <img src="@/assets/icons/close-icon.svg" alt="">
-        </button>
+        </button> -->
         <table-view
             :listHeader="listHeader"
             :requestUrl="'/test'"
             ref="tableview"
             :listData="listData"
-            class="page-users__table"
+            class="page-owners__table"
         >
             <template v-slot:tbody>
                 <div
-                    class="page-users__table__row"
+                    class="page-owners__table__row"
                     v-for="(item, index) in listData"
                     :key="item.id"
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
-                    <span class="page-users__table__row__id">{{ index + 1 }}</span>
-                    <span class="page-users__table__row__username" @click="getSingleUser(item.id)">{{ item.username }}</span>
-                    <div class="page-users__table__row__action">
+                    <span class="page-owners__table__row__id">{{ index + 1 }}</span>
+                    <span class="page-owners__table__row__idCitizen">{{ item.citizen_identification }}</span>
+                    <span class="page-owners__table__row__username" @click="getSingleOwner(item.id)">{{ item.name }}</span>
+                    <span class="page-owners__table__row__address">{{ item.address }}</span>
+                    <span class="page-owners__table__row__email">{{ item.email }}</span>
+                    <div class="page-owners__table__row__action">
                         <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteUser(item.id)" /></div>
+                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)" />
+                    </div>
                 </div>
             </template>
         </table-view>
         <panel-view
             :title="title"
             :isEdit="isEdit"
-            class="page-users__panel"
+            class="page-owners__panel"
             v-if="isShowDetail"
             @close-panel="isShowDetail = false"
-            @update-object="updateUser"
+            @update-object="updateOwner"
         >
         <template v-slot:pbody>
-            <div class="page-users__panel__content">
+            <div class="page-owners__panel__content">
                 <div class="label-input">
-                    <span >Username:</span>
-                    <input type="text" v-model="currentUser.username" name="" id="name" :disabled="!isEdit">
+                    <span >Citizen id:</span>
+                    <input type="text" v-model="currentOwner.citizen_identification" name="" id="name"  :disabled="!isEdit">
                 </div>
                 <div class="label-input">
-                    <span>Password:</span>
-                    <input type="password" v-model="currentUser.password" name="" id="address" :disabled="!isEdit">
+                    <span >Name:</span>
+                    <input type="text" v-model="currentOwner.name" name="" id="name" :disabled="!isEdit">
+                </div>
+                <div class="label-input">
+                    <span>Address:</span>
+                    <input type="text" v-model="currentOwner.address" name="" id="address" :disabled="!isEdit">
+                </div>
+                <div class="label-input">
+                    <span>Email:</span>
+                    <input type="email" v-model="currentOwner.email" name="" id="" :disabled="!isEdit">
                 </div>
             </div>
         </template>
         </panel-view>
-        <div class="page-users__overlay" v-if="isShowPopup"></div>
+        <div class="page-owners__overlay" v-if="isShowPopup"></div>
         <popup-view
-            title="Create User"
-            class="page-users__popup"
+            title="Create Owner"
+            class="page-owners__popup"
             v-if="isShowPopup"
             @onCancel="hiddenPopup"
-            @onOk="createUser"
+            @onOk="createOwner"
         >
             <template v-slot:popupbody>
                 <div class="label-input">
-                    <span >Username:</span>
-                    <input type="text" v-model="currentUser.username" name="" id="name" >
+                    <span >Citizen id:</span>
+                    <input type="text" v-model="currentOwner.citizen_identification" name="" id="name" >
                 </div>
                 <div class="label-input">
-                    <span>Password:</span>
-                    <input type="password" v-model="currentUser.password" name="" id="address" >
+                    <span >Name:</span>
+                    <input type="text" v-model="currentOwner.name" name="" id="name" >
+                </div>
+                <div class="label-input">
+                    <span>Address:</span>
+                    <input type="text" v-model="currentOwner.address" name="" id="address" >
+                </div>
+                <div class="label-input">
+                    <span>Email:</span>
+                    <input type="email" v-model="currentOwner.email" name="" id="" >
                 </div>
             </template>
         </popup-view>
@@ -71,7 +91,7 @@
 </template>
 
 <script>
-import { deleteUser, getAllUsers, getSingleUser, updateUser, addUser } from '@/services/user.service'
+import { deleteOwner, getAllOwners, getSingleOwner, updateOwner, addOwner } from '@/services/owner.service'
 import ModalReason from '@/components/modals/ModalReason.vue'
 import ModalAlert from '@/components/modals/ModalAlert.vue'
 
@@ -81,20 +101,32 @@ export default {
         return {
             listHeader: [
                 {
-                    title: 'Id Citizen',
+                    title: 'Id',
+                    width: 15,
+                },
+                {
+                    title: 'Citizen id',
+                    width: 15,
+                },
+                {
+                    title: 'Name',
                     width: 20,
                 },
                 {
-                    title: 'User Name',
-                    width: 50,
+                    title: 'Address',
+                    width: 20,
+                },
+                {
+                    title: 'Email',
+                    width: 15,
                 },
                 {
                     title: 'Action',
-                    width: 30,
+                    width: 15,
                 },
             ],
             listData: [],
-            currentUser: {},
+            currentOwner: {},
             isEdit: false,
             isShowDetail: false,
             title: 'View Detail',
@@ -107,62 +139,62 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const res = await getAllUsers();
+                const res = await getAllOwners();
                 this.listData = res.data.data
             } catch (error) {
                 console.error(error)
             }
         },
-        async deleteUser(id) {
+        async deleteOwner(id) {
             try {
-                const res = await deleteUser(id);
+                const res = await deleteOwner(id);
                 if(res.data.status === "success") {
-                    this.listData  = this.listData.filter( user => user.id !== id);
+                    this.listData  = this.listData.filter( owner => owner.id !== id);
                     this.$notify({
                         type: 'success',
-                        title: 'Delete User',
-                        text: 'Delete user successfully!',
+                        title: 'Delete Owner',
+                        text: 'Delete owner successfully!',
                     })
                 }
             } catch (error) {
                 $notify({
                         type: 'error',
-                        title: 'Delete User',
-                        text: 'Delete user failed!',
+                        title: 'Delete Owner',
+                        text: 'Delete owner failed!',
                         duration: 1000,
                     })
             }
             
         },
-        async getSingleUser(id) {
+        async getSingleOwner(id) {
             try {
-                const res = await getSingleUser(id);
-                this.currentUser = res.data.data;
-                localStorage.setItem('idUser', this.currentUser.id);
-                this.isShowDetail = true;   
+                const res = await getSingleOwner(id);
+                this.currentOwner = res.data.data;
+                localStorage.setItem('idOwner', this.currentOwner.id);
+                this.isShowDetail = true;
             } catch (error) {
                 console.error(error);
             }
         },
-        async updateUser(){
-            const id = localStorage.getItem('idUser');
+        async updateOwner(){
+            const id = localStorage.getItem('idOwner');
             try {
-                const res = await updateUser(id, this.currentUser);
+                const res = await updateOwner(id, this.currentOwner);
                 if(res.data.status === "success") {
                     this.isShowDetail = false;
                     this.isEdit = false;
                     this.$notify({
                         type: 'success',
-                        title: 'Update User',
-                        text: 'Update user successfully!',
+                        title: 'Update Owner',
+                        text: 'Update owner successfully!',
                     })
                 }
             } catch (error) {
                 console.error(error);
                 $notify({
                         type: 'error',
-                        title: 'Update User',
-                        text: 'Update user failed!',
+                        title: 'Update Owner',
+                        text: 'Update owner failed!',
                         duration: 1000,
                     })
             }
@@ -170,33 +202,32 @@ export default {
         showUpdate(id) {
             this.isEdit = true;
             this.isShowDetail = true;
-            this.getSingleUser(id);
+            this.getSingleOwner(id);
         },
         showPopup() {
-            this.currentUser = {};
+            this.currentOwner = {};
             this.isShowPopup = true;
         },
         hiddenPopup(){
             this.isShowPopup = false;
         },
-        async createUser(){
-            console.log('this.currentUser',this.currentUser);
+        async createOwner(){
             try {
-                const res = await addUser(this.currentUser);
+                const res = await addOwner(this.currentOwner);
                 if(res.data.status === "success") {
                     this.isShowPopup = false;
                     this.$notify({
                         type: 'success',
-                        title: 'Add User',
-                        text: 'Add user successfully!',
+                        title: 'Add Owner',
+                        text: 'Add owner successfully!',
                     })
                 }
             } catch (error) {
                 console.error(error);
                 $notify({
                         type: 'error',
-                        title: 'Add User',
-                        text: 'Add user failed!',
+                        title: 'Add Owner',
+                        text: 'Add owner failed!',
                         duration: 1000,
                     })
             }
@@ -207,7 +238,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-users {
+.page-owners {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -228,20 +259,21 @@ export default {
                 justify-content: center;
                 align-content: center;
             }
-            &__id {
+            &__email, &__username, &__idCitizen, &__id {
+                width: 15%;
+            }
+            &__address {
                 width: 20%;
             }
-            &__username {
-                width: 50%;
-            }
             &__action {
-                width: 30%;
+                width: 20%;
                 display: flex;
                 justify-content: center;
-                gap: 10px;
+                align-items: center;
+                gap: 20px;
                 img {
                     height: 20px;
-                    width: 25px;
+                    width: 20px;
                 }
             }
         }
