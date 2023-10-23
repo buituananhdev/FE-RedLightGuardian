@@ -67,28 +67,42 @@
                 </div>
             </template>
         </panel-view>
-        <!-- <div class="page-vehicles__overlay"></div>
+        <div class="page-vehicles__overlay"></div>
         <popup-view title="Create Vehicle" class="page-vehicles__popup">
-            <span>Name:</span>
-            <input type="text" v-model="currentVehicle.vehicleName" name="" id="" :disabled="!isEdit" />
-            <span>License plate:</span>
-            <input type="text" v-model="currentVehicle.licensePlate" :disabled="!isEdit" />
-            <span>Owner ID:</span>
-            <input type="text" v-model="currentVehicle.ownerID" name="" id="" :disabled="!isEdit" />
-            <span>Vehicle type:</span>
-            <input type="text" v-model="currentVehicle.vehicleType" name="" id="" :disabled="!isEdit" />
-            <span>Brand:</span>
-            <input type="text" v-model="currentVehicle.brand" name="" id="" :disabled="!isEdit" />
-        </popup-view> -->
+            <template v-slot:mbody>
+                <div class="page-vehicles__popup__content">
+                    <span>Vehicle Name:</span>
+                    <input type="text" v-model="currentVehicle.vehicleName" :disabled="!isEdit" />
+                    <span>License Plate:</span>
+                    <input type="text" v-model="currentVehicle.licensePlate" :disabled="!isEdit" />
+                    <span>Owner ID:</span>
+                    <input type="text" v-model="currentVehicle.ownerID" :disabled="!isEdit" />
+                    <span>Vehicle Type:</span>
+                    <input type="text" v-model="currentVehicle.vehicleType" :disabled="!isEdit" />
+                    <span>Engine Capacity:</span>
+                    <input type="text" v-model="currentVehicle.engineCapacity" :disabled="!isEdit" />
+                    <span>Color:</span>
+                    <input type="text" v-model="currentVehicle.color" :disabled="!isEdit" />
+                    <span>Frame Number:</span>
+                    <input type="text" v-model="currentVehicle.frameNumber" :disabled="!isEdit" />
+                    <span>Engine Number:</span>
+                    <input type="text" v-model="currentVehicle.engineNumber" :disabled="!isEdit" />
+                    <span>Brand:</span>
+                    <input type="text" v-model="currentVehicle.brand" :disabled="!isEdit" />
+                    <span>Image URL:</span>
+                    <input type="text" v-model="currentVehicle.imageUrl" :disabled="!isEdit" />
+                </div>
+            </template>
+        </popup-view>
     </div>
 </template>
 
 <script>
 import { getAllVehicles, deleteVehicle, getSingleVehicle, updateVehicle } from '@/services/vehicle.service'
-// import ModalReason from '@/components/modals/ModalReason.vue'
-// import ModalAlert from '@/components/modals/ModalAlert.vue'
+import ModalReason from '@/components/modals/ModalReason.vue'
+import ModalAlert from '@/components/modals/ModalAlert.vue'
 export default {
-    // components: { ModalReason, ModalAlert },
+    components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [
@@ -144,6 +158,7 @@ export default {
             listData: [],
             currentVehicle: {},
             isEdit: false,
+            isCreate: false,
             isShowDetail: false,
             title: 'View Detail',
         }
@@ -326,6 +341,21 @@ export default {
         left: 50%; /* Đặt vị trí left ở giữa trang */
         transform: translate(-50%, -50%);
         z-index: 6;
+        width: 30%;
+        height: 100%;
+        overflow: auto;
+        &__content {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+
+            input {
+                margin-bottom: 10px;
+            }
+            span {
+                padding: 7px 0;
+            }
+        }
     }
 }
 </style>
