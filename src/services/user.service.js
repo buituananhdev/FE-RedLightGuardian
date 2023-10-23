@@ -15,22 +15,15 @@ export const changeBalance = async (userID, balance) => {
 export const deleteUser = async (id) => {
     return await axiosApiInstance.delete(`/users/${id}`)
 }
-
-export const getAllUsers = async (id) => {
+export const getAllUsers = async () => {
     return await axiosApiInstance.get('/users')
 }
-export const deleteUser = async (id) => {
-  return await axiosApiInstance.delete(`/users/${id}`)
-}
-export const getAllUsers = async () => {
-  return await axiosApiInstance.get('/users')
-}
 export const updateUser = async (id, newUser) => {
-  return await axiosApiInstance.put(`/users/${id}`, newUser)
+    return await axiosApiInstance.put(`/users/${id}`, newUser)
 }
 export const getSingleUser = async (id) => {
-  return await axiosApiInstance.get(`/users/${id}`)
+    return await axiosApiInstance.get(`/users/${id}`)
 }
 export const addUser = async (newUser) => {
-  return await axiosApiInstance.post(`/users`, newUser)
+    return await axiosApiInstance.post(`/users`, newUser)
 }
