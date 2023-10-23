@@ -6,14 +6,6 @@
                 <p class="panel-view__header__title__content">{{ title }}</p>
             </div>
             <button v-if="isEdit" class="panel-view__header__button" @click="updateObject()">Update</button>
-            <!-- <button-vue
-                :typeBtn="'primary'"
-                :width="'120'"
-                v-if="isEdit"
-                @click="updateObject()"
-            >
-                Update
-            </button-vue> -->
         </div>
         
         <div class="panel-view__body">
@@ -24,7 +16,7 @@
 <script>
 import ButtonVue from '../Atoms/ButtonVue.vue';
 export default {
-  components: { ButtonVue },
+    components: { ButtonVue },
     props: {
         title: {
             type: String,

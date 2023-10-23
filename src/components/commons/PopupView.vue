@@ -94,7 +94,6 @@ export default {
     box-shadow: 0px 16px 72px 0px rgba(71, 79, 98, 0.07);
     width: 520px;
     // border: 1px solid black;
-
     &__content {
         display: flex;
         flex-direction: column;
@@ -140,7 +139,6 @@ export default {
         align-items: center;
         gap: 24px;
         align-self: stretch;
-
         .btn {
             display: flex;
             height: 46px;
@@ -152,7 +150,6 @@ export default {
         }
     }
 }
-
 .not-allow {
     cursor: not-allowed !important;
 }

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import ButtonVue from '@/components/Atoms/ButtonVue.vue';
+import ButtonVue from '@/components/Atoms/ButtonVue.vue'
 export default {
     components: {
         ButtonVue,
@@ -70,18 +70,18 @@ export default {
     },
     methods: {
         onCancel() {
-            if (!this.isButtonCancel) return;
-            this.$emit('onCancel');
+            if (!this.isButtonCancel) return
+            this.$emit('onCancel')
         },
         onOk() {
-            if (!this.isButtonOk) return;
-            this.$emit('onOk');
+            if (!this.isButtonOk) return
+            this.$emit('onOk')
         },
         onClick(event) {
-            console.log('target', event.target);
+            console.log('target', event.target)
         },
     },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -124,13 +124,7 @@ export default {
 
         p {
             text-align: center;
-            @include text-style(
-                14px,
-                150%,
-                400,
-                $text-light-icon-secondary-2,
-                normal
-            );
+            @include text-style(14px, 150%, 400, $text-light-icon-secondary-2, normal);
         }
     }
 

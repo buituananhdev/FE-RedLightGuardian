@@ -1,9 +1,5 @@
 <template>
-    <button
-        :class="[`btn-${typeBtn}`]"
-        :style="computedStyles"
-        @click="$emit('click')"
-    >
+    <button :class="[`btn-${typeBtn}`]" :style="computedStyles" @click="$emit('click')">
         <slot />
     </button>
 </template>
@@ -24,11 +20,11 @@ export default {
         computedStyles() {
             return {
                 width: this.width,
-            };
+            }
         },
     },
     methods: {},
-};
+}
 </script>
 
 <style lang="scss" scoped>

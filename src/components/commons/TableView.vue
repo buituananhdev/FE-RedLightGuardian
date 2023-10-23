@@ -43,8 +43,8 @@ export default {
         },
         listData: {
             type: Array,
-            default: []
-        }
+            default: [],
+        },
     },
     data() {
         return {

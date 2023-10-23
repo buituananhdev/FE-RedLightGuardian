@@ -12,15 +12,8 @@
                 </div>
             </div>
             <client-only>
-                <ValidationObserver
-                    v-slot="{ handleSubmit }"
-                    class="form-validate"
-                    tag="div"
-                >
-                    <form
-                        class="form-validate"
-                        @submit.prevent="handleSubmit(onSubmit)"
-                    >
+                <ValidationObserver v-slot="{ handleSubmit }" class="form-validate" tag="div">
+                    <form class="form-validate" @submit.prevent="handleSubmit(onSubmit)">
                         <div class="form-validate__body">
                             <input-validation
                                 id="reason"
@@ -33,9 +26,7 @@
                             />
                         </div>
 
-                        <button type="submit" class="form-validate__submit">
-                            Submit
-                        </button>
+                        <button type="submit" class="form-validate__submit">Submit</button>
                     </form>
                 </ValidationObserver>
             </client-only>
@@ -65,18 +56,18 @@ export default {
     data() {
         return {
             reason: '',
-        };
+        }
     },
     methods: {
         onSubmit() {
-            this.changeStatus(this.user, this.reason);
-            this.$emit('close-modal', true);
+            this.changeStatus(this.user, this.reason)
+            this.$emit('close-modal', true)
         },
         onCloseAddNew() {
-            this.$emit('close-modal', false);
+            this.$emit('close-modal', false)
         },
     },
-};
+}
 </script>
 
 <style lang="scss" scoped>
