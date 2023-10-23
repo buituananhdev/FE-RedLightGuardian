@@ -1,5 +1,5 @@
 <template>
-    <div class="tableview" :class="{ 'half-width': isSplitScreen }">
+    <div class="tableview" :class="{ 'half-width': true }">
         <div class="tableview__container" :class="{ 'blank-pagination': !listData.length }">
             <div class="tableview__container__head">
                 <div class="tableview__container__head__row">
@@ -43,8 +43,8 @@ export default {
         },
         listData: {
             type: Array,
-            default: []
-        }
+            default: [],
+        },
     },
     data() {
         return {
@@ -158,6 +158,10 @@ export default {
             display: block;
             overflow-y: scroll;
             height: calc(100% - 45px);
+            @include custom-scrollbar();
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
             &__row {
                 width: 100%;
                 display: flex !important;

@@ -7,8 +7,8 @@ export const authStore = ref({
 
 export const initAuthStore = async () => {
   if (localStorage.getItem('access_token')) {
-    const { data } = await getInfo()
-    authStore.value.user = data
+    // const { data } = await getInfo()
+    // authStore.value.user = data
     authStore.value.isLoggedIn = true
     console.log('initAuthStore', authStore.value)
   }
