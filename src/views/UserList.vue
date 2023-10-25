@@ -1,7 +1,7 @@
 <template>
     <div class="page-users">
         <button class="page-users" @click="showPopup">
-            <img src="@/assets/icons/close-icon.svg" alt="">
+            <img src="@/assets/icons/close-icon.svg" alt="" />
         </button>
         <table-view
             :listHeader="listHeader"
@@ -18,10 +18,13 @@
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
                     <span class="page-users__table__row__id">{{ index + 1 }}</span>
-                    <span class="page-users__table__row__username" @click="getSingleUser(item.id)">{{ item.username }}</span>
+                    <span class="page-users__table__row__username" @click="getSingleUser(item.id)">{{
+                        item.username
+                    }}</span>
                     <div class="page-users__table__row__action">
                         <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteUser(item.id)" /></div>
+                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteUser(item.id)" />
+                    </div>
                 </div>
             </template>
         </table-view>
@@ -33,18 +36,24 @@
             @close-panel="isShowDetail = false"
             @update-object="updateUser"
         >
-        <template v-slot:pbody>
-            <div class="page-users__panel__content">
-                <div class="label-input">
-                    <span >Username:</span>
-                    <input type="text" v-model="currentUser.username" name="" id="name" :disabled="!isEdit">
+            <template v-slot:pbody>
+                <div class="page-users__panel__content">
+                    <div class="label-input">
+                        <span>Username:</span>
+                        <input type="text" v-model="currentUser.username" name="" id="name" :disabled="!isEdit" />
+                    </div>
+                    <div class="label-input">
+                        <span>Password:</span>
+                        <input
+                            type="password"
+                            v-model="currentUser.password"
+                            name=""
+                            id="address"
+                            :disabled="!isEdit"
+                        />
+                    </div>
                 </div>
-                <div class="label-input">
-                    <span>Password:</span>
-                    <input type="password" v-model="currentUser.password" name="" id="address" :disabled="!isEdit">
-                </div>
-            </div>
-        </template>
+            </template>
         </panel-view>
         <div class="page-users__overlay" v-if="isShowPopup"></div>
         <popup-view
@@ -56,17 +65,16 @@
         >
             <template v-slot:popupbody>
                 <div class="label-input">
-                    <span >Username:</span>
-                    <input type="text" v-model="currentUser.username" name="" id="name" >
+                    <span>Username:</span>
+                    <input type="text" v-model="currentUser.username" name="" id="name" />
                 </div>
                 <div class="label-input">
                     <span>Password:</span>
-                    <input type="password" v-model="currentUser.password" name="" id="address" >
+                    <input type="password" v-model="currentUser.password" name="" id="address" />
                 </div>
             </template>
         </popup-view>
-        <div>
-    </div>
+        <div></div>
     </div>
 </template>
 
@@ -76,7 +84,7 @@ import ModalReason from '@/components/modals/ModalReason.vue'
 import ModalAlert from '@/components/modals/ModalAlert.vue'
 
 export default {
-  components: { ModalReason, ModalAlert },
+    components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [
@@ -107,7 +115,7 @@ export default {
     methods: {
         async fetchData() {
             try {
-                const res = await getAllUsers();
+                const res = await getAllUsers()
                 this.listData = res.data.data
             } catch (error) {
                 console.error(error)
@@ -115,9 +123,9 @@ export default {
         },
         async deleteUser(id) {
             try {
-                const res = await deleteUser(id);
-                if(res.data.status === "success") {
-                    this.listData  = this.listData.filter( user => user.id !== id);
+                const res = await deleteUser(id)
+                if (res.data.status === 'success') {
+                    this.listData = this.listData.filter((user) => user.id !== id)
                     this.$notify({
                         type: 'success',
                         title: 'Delete User',
@@ -125,32 +133,31 @@ export default {
                     })
                 }
             } catch (error) {
-                $notify({
-                        type: 'error',
-                        title: 'Delete User',
-                        text: 'Delete user failed!',
-                        duration: 1000,
-                    })
+                this.$notify({
+                    type: 'error',
+                    title: 'Delete User',
+                    text: 'Delete user failed!',
+                    duration: 1000,
+                })
             }
-            
         },
         async getSingleUser(id) {
             try {
-                const res = await getSingleUser(id);
-                this.currentUser = res.data.data;
-                localStorage.setItem('idUser', this.currentUser.id);
-                this.isShowDetail = true;   
+                const res = await getSingleUser(id)
+                this.currentUser = res.data.data
+                localStorage.setItem('idUser', this.currentUser.id)
+                this.isShowDetail = true
             } catch (error) {
-                console.error(error);
+                console.error(error)
             }
         },
-        async updateUser(){
-            const id = localStorage.getItem('idUser');
+        async updateUser() {
+            const id = localStorage.getItem('idUser')
             try {
-                const res = await updateUser(id, this.currentUser);
-                if(res.data.status === "success") {
-                    this.isShowDetail = false;
-                    this.isEdit = false;
+                const res = await updateUser(id, this.currentUser)
+                if (res.data.status === 'success') {
+                    this.isShowDetail = false
+                    this.isEdit = false
                     this.$notify({
                         type: 'success',
                         title: 'Update User',
@@ -158,33 +165,33 @@ export default {
                     })
                 }
             } catch (error) {
-                console.error(error);
-                $notify({
-                        type: 'error',
-                        title: 'Update User',
-                        text: 'Update user failed!',
-                        duration: 1000,
-                    })
+                console.error(error)
+                this.$notify({
+                    type: 'error',
+                    title: 'Update User',
+                    text: 'Update user failed!',
+                    duration: 1000,
+                })
             }
         },
         showUpdate(id) {
-            this.isEdit = true;
-            this.isShowDetail = true;
-            this.getSingleUser(id);
+            this.isEdit = true
+            this.isShowDetail = true
+            this.getSingleUser(id)
         },
         showPopup() {
-            this.currentUser = {};
-            this.isShowPopup = true;
+            this.currentUser = {}
+            this.isShowPopup = true
         },
-        hiddenPopup(){
-            this.isShowPopup = false;
+        hiddenPopup() {
+            this.isShowPopup = false
         },
-        async createUser(){
-            console.log('this.currentUser',this.currentUser);
+        async createUser() {
+            console.log('this.currentUser', this.currentUser)
             try {
-                const res = await addUser(this.currentUser);
-                if(res.data.status === "success") {
-                    this.isShowPopup = false;
+                const res = await addUser(this.currentUser)
+                if (res.data.status === 'success') {
+                    this.isShowPopup = false
                     this.$notify({
                         type: 'success',
                         title: 'Add User',
@@ -192,17 +199,15 @@ export default {
                     })
                 }
             } catch (error) {
-                console.error(error);
-                $notify({
-                        type: 'error',
-                        title: 'Add User',
-                        text: 'Add user failed!',
-                        duration: 1000,
-                    })
+                console.error(error)
+                this.$notify({
+                    type: 'error',
+                    title: 'Add User',
+                    text: 'Add user failed!',
+                    duration: 1000,
+                })
             }
-
-        }
-
+        },
     },
 }
 </script>
@@ -214,7 +219,7 @@ export default {
     &__table {
         &__row {
             padding: 0 16px;
-            padding-right: 20px ;
+            padding-right: 20px;
             display: flex;
             width: 100%;
             gap: 20px;
@@ -273,7 +278,7 @@ export default {
         top: 50%; /* Đặt vị trí top ở giữa trang */
         left: 50%; /* Đặt vị trí left ở giữa trang */
         transform: translate(-50%, -50%);
-        z-index: 3 ;
+        z-index: 3;
     }
 }
 </style>

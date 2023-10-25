@@ -30,3 +30,7 @@ export const getSingleVehicle = async (id) => {
 export const updateVehicle = async (id, newVehicle) => {
     return await axiosApiInstance.put(`/vehicles/${id}`, newVehicle)
 }
+
+export const addVehicle = async (newVehicle) => {
+    return await axiosApiInstance.post(`/vehicles`, newVehicle)
+}
