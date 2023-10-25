@@ -49,7 +49,13 @@ export default {
             align-items: center;
             gap: 5px;
             img {
-                width: 10px;
+                width: 14px;
+                margin-right: 8px;
+                border-radius: 50%;
+                &:hover {
+                    opacity: 0.8;
+                    cursor: pointer;
+                }
             }
             &__content {
                 font-size: 20px;
