@@ -7,7 +7,6 @@
             </div>
             <button v-if="isEdit" class="panel-view__header__button" @click="updateObject()">Update</button>
         </div>
-
         <div class="panel-view__body">
             <slot name="pbody"></slot>
         </div>

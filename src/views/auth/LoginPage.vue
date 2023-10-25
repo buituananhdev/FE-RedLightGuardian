@@ -128,6 +128,7 @@
     </div>
 </template>
 <script setup>
+// eslint-disable-next-line no-unused-vars
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { initAuthStore } from '@/stores/auth.store'

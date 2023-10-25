@@ -1,8 +1,8 @@
 <template>
     <div class="page-users">
-        <button class="page-users" @click="showPopup">
+        <!-- <button class="page-users" @click="showPopup">
             <img src="@/assets/icons/close-icon.svg" alt="" />
-        </button>
+        </button> -->
         <table-view
             :listHeader="listHeader"
             :requestUrl="'/test'"
@@ -80,11 +80,7 @@
 
 <script>
 import { deleteUser, getAllUsers, getSingleUser, updateUser, addUser } from '@/services/user.service'
-import ModalReason from '@/components/modals/ModalReason.vue'
-import ModalAlert from '@/components/modals/ModalAlert.vue'
-
 export default {
-    components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [

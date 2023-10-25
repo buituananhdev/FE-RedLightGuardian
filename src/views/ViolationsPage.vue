@@ -6,6 +6,7 @@
             ref="tableview"
             :listData="listData"
             class="page-violations__table"
+            @open-popup="isShowPopup = true"
         >
             <template v-slot:tbody>
                 <div
@@ -374,6 +375,25 @@ export default {
         left: 50%; /* Đặt vị trí left ở giữa trang */
         transform: translate(-50%, -50%);
         z-index: 6;
+        width: 30%;
+        height: 100%;
+        overflow: auto;
+        // background-color: $neutral-100;
+        @include custom-scrollbar();
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        &__content {
+            display: flex;
+            flex-direction: column;
+
+            input {
+                margin-bottom: 10px;
+            }
+            span {
+                padding: 7px 0;
+            }
+        }
     }
 }
 </style>

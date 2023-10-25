@@ -99,11 +99,8 @@
 
 <script>
 import { deleteOwner, getAllOwners, getSingleOwner, updateOwner, addOwner } from '@/services/owner.service'
-import ModalReason from '@/components/modals/ModalReason.vue'
-import ModalAlert from '@/components/modals/ModalAlert.vue'
 
 export default {
-    components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [
@@ -164,7 +161,7 @@ export default {
                     })
                 }
             } catch (error) {
-                $notify({
+                this.$notify({
                     type: 'error',
                     title: 'Delete Owner',
                     text: 'Delete owner failed!',
@@ -172,7 +169,7 @@ export default {
                 })
             }
         },
-        async getSingleOwner(id) {
+        async getSingleOwnerF(id) {
             try {
                 const res = await getSingleOwner(id)
                 this.currentOwner = res.data.data
@@ -197,7 +194,7 @@ export default {
                 }
             } catch (error) {
                 console.error(error)
-                $notify({
+                this.$notify({
                     type: 'error',
                     title: 'Update Owner',
                     text: 'Update owner failed!',
@@ -230,7 +227,7 @@ export default {
                 }
             } catch (error) {
                 console.error(error)
-                $notify({
+                this.$notify({
                     type: 'error',
                     title: 'Add Owner',
                     text: 'Add owner failed!',
