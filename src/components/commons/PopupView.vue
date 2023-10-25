@@ -10,7 +10,7 @@
                 class="btn button--secondary"
                 :type-btn="'secondary'"
                 :width="'100px'"
-                @click="onCancel()"
+                @click-button="onCancel"
             >
                 <span>{{ buttonCancelContent }}</span>
             </button-vue>
@@ -19,7 +19,7 @@
                 class="btn button--primary"
                 :type-btn="'primary'"
                 :width="'100px'"
-                @click="onOk()"
+                @click-button="onOk"
             >
                 <span>{{ buttonOkContent }}</span>
             </button-vue>
@@ -66,11 +66,11 @@ export default {
     methods: {
         onCancel() {
             if (!this.isButtonCancel) return
-            this.$emit('onCancel')
+            return this.$emit('onCancel')
         },
         onOk() {
             if (!this.isButtonOk) return
-            this.$emit('onOk')
+            return this.$emit('onOk')
         },
         onClick(event) {
             console.log('target', event.target)

@@ -135,7 +135,7 @@ export default {
                 }
             } catch (error) {
                 console.error(error)
-                $notify({
+                this.$notify({
                     type: 'error',
                     title: 'Delete Violation',
                     text: 'Delete violation failed!',
@@ -169,7 +169,7 @@ export default {
                 }
             } catch (error) {
                 console.error(error)
-                $notify({
+                this.$notify({
                     type: 'error',
                     title: 'Update Violation',
                     text: 'Update violation failed!',

@@ -4,17 +4,18 @@
             <img src="@/assets/icons/close-icon.svg" alt="" />
         </button> -->
         <table-view
-            :listHeader="listHeader"
-            :requestUrl="'/test'"
             ref="tableview"
-            :listData="listData"
             class="page-users__table"
+            :list-header="listHeader"
+            :request-url="'/test'"
+            :list-data="listData"
+            @click-button="showPopup"
         >
             <template v-slot:tbody>
                 <div
-                    class="page-users__table__row"
                     v-for="(item, index) in listData"
                     :key="item.id"
+                    class="page-users__table__row"
                     :class="!(index % 2) ? 'bold' : ' unbold'"
                 >
                     <span class="page-users__table__row__id">{{ index + 1 }}</span>
@@ -74,7 +75,6 @@
                 </div>
             </template>
         </popup-view>
-        <div></div>
     </div>
 </template>
 
@@ -118,6 +118,7 @@ export default {
             }
         },
         async deleteUser(id) {
+            this.isShowDetail = false
             try {
                 const res = await deleteUser(id)
                 if (res.data.status === 'success') {
@@ -178,13 +179,14 @@ export default {
         showPopup() {
             this.currentUser = {}
             this.isShowPopup = true
+            this.isShowDetail = false
         },
         hiddenPopup() {
             this.isShowPopup = false
         },
         async createUser() {
-            console.log('this.currentUser', this.currentUser)
             try {
+                this.isShowPopup = false
                 const res = await addUser(this.currentUser)
                 if (res.data.status === 'success') {
                     this.isShowPopup = false
@@ -193,6 +195,7 @@ export default {
                         title: 'Add User',
                         text: 'Add user successfully!',
                     })
+                    this.listData.push(res.data.data)
                 }
             } catch (error) {
                 console.error(error)
@@ -227,7 +230,7 @@ export default {
                 padding: 16px 24px;
                 display: flex;
                 justify-content: center;
-                align-content: center;
+                align-items: center;
             }
             &__id {
                 width: 20%;
@@ -239,6 +242,7 @@ export default {
                 width: 30%;
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 gap: 10px;
                 img {
                     height: 20px;

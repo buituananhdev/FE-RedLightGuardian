@@ -1,5 +1,19 @@
 <template>
     <div class="tableview" :class="{ 'half-width': true }">
+        <div class="tableview__header">
+            <div class="tableview__header__search">
+                <img src="@/assets/icons/glass-icon.svg" alt="">
+                <input type="text" class="tableview__header__search" />
+            </div>
+            <button-vue
+                :type-btn="'secondary'"
+                :width="'100px'"
+                class="tableview__header__button"
+                @click-button="$emit('click-button')"
+            >
+                + Add
+            </button-vue>
+        </div>
         <div class="tableview__container" :class="{ 'blank-pagination': !listData.length }">
             <div class="tableview__container__head">
                 <div class="tableview__container__head__row">
@@ -46,6 +60,7 @@ export default {
             default: [],
         },
     },
+    emits: ['click'],
     data() {
         return {
             currentPage: 1,
@@ -99,6 +114,34 @@ export default {
     align-items: center;
     align-self: stretch;
     // padding-top: 45px;
+    &__header {
+        padding: 10px 40px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &__search {
+            position: relative;
+            img {
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                z-index: 2;
+                width: 20px;
+            }
+            input {
+                padding: 6px 10px 6px 35px;
+                border-radius: 7px;
+                border: 1.5px solid $violet-500;
+            }
+        }
+        &__button {
+            padding: 6px 25px;
+            color: $slate-50;
+            border-radius: 80px;
+            background: var(--gradient-default, linear-gradient(135deg, #868cff 0%, #4318ff 100%));
+        }
+    }
     &__pagination {
         display: flex;
         padding: 20px 0px;
