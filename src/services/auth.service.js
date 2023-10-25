@@ -9,7 +9,7 @@ export const refreshAccessToken = async () => {
     return await axios.post('/auth/refresh-tokens', data)
 }
 export const loginApi = async (data) => {
-    return await axiosApiInstance.post('/users/login', data)
+    return await axiosApiInstance.post('/auth/login', data)
 }
 export const loginGGApi = async (data) => {
     return await axiosApiInstance.post('/auth/login-gg', data)

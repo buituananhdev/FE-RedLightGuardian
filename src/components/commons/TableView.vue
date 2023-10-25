@@ -16,6 +16,7 @@
         </div>
         <div class="tableview__container" :class="{ 'blank-pagination': !listData.length }">
             <div class="tableview__container__head">
+                <button class="tableview__container__head__button" @click="openPopup()">Add +</button>
                 <div class="tableview__container__head__row">
                     <div
                         class="tableview__container__head__row__cell"
@@ -57,7 +58,9 @@ export default {
         },
         listData: {
             type: Array,
-            default: [],
+            default() {
+                return []
+            },
         },
     },
     emits: ['click'],
@@ -100,6 +103,9 @@ export default {
             if (this.currentPage > 1) {
                 this.currentPage--
             }
+        },
+        openPopup() {
+            this.$emit('open-popup')
         },
     },
 }
@@ -173,11 +179,26 @@ export default {
         width: 100%;
         position: relative;
         height: calc(100% - 74px);
+        overflow: auto;
         &__head {
-            display: block;
+            // display: block;
             width: 100%;
-            position: sticky;
-            top: 0;
+            // position: sticky;
+            // top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: flex-end;
+
+            &__button {
+                right: 10px;
+                left: auto;
+                padding: 6px 25px;
+                color: $slate-50;
+                margin: 20px 30px 10px 0;
+                border-radius: 80px;
+                background: var(--gradient-default, linear-gradient(135deg, #868cff 0%, #4318ff 100%));
+            }
             &__row {
                 width: 100%;
                 padding-right: 4px;

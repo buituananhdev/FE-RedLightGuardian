@@ -9,12 +9,11 @@ import { authMiddleware } from '@/router/router.middleware'
 import ModalAlert from '@/components/modals/ModalAlert.vue'
 import FullModal from '@/components/modals/FullModal.vue'
 import TableView from '@/components/commons/TableView.vue'
-import authLayout from '@/layouts/authLayout.vue'
-import emptyLayout from '@/layouts/emptyLayout.vue'
 import PanelView from '@/components/commons/PanelView.vue'
 import PopupView from '@/components/commons/PopupView.vue'
+import authLayout from '@/layouts/authLayout.vue'
+import emptyLayout from '@/layouts/emptyLayout.vue'
 import ButtonVue from '@/components/Atoms/ButtonVue.vue'
-
 
 const initApp = async () => {
     authMiddleware()

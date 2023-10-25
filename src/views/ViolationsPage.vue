@@ -6,13 +6,14 @@
             ref="tableview"
             :listData="listData"
             class="page-violations__table"
+            @open-popup="isShowPopup = true"
         >
             <template v-slot:tbody>
                 <div
                     class="page-violations__table__row"
                     v-for="(item, index) in listData"
                     :key="item.id"
-                    :class="{ bold: !(index % 2) }"
+                    :class="!(index % 2) ? 'bold' : ' unbold'"
                     @click="getSingleViolation(item.id)"
                 >
                     <span class="page-violations__table__row__id">{{ item.id }}</span>
@@ -40,29 +41,92 @@
         >
             <template v-slot:pbody>
                 <div class="page-violations__panel__content">
+                    <div class="label-input">
+                        <span>Type:</span>
+                        <input type="text" v-model="currentViolation.type" :disabled="!isEdit" />
+                    </div>
+                    <div class="label-input">
+                        <span>Deadline:</span>
+                        <input type="text" v-model="currentViolation.deadline" :disabled="!isEdit" />
+                    </div>
+                    <div class="label-input">
+                        <span>Status:</span>
+                        <input type="text" v-model="currentViolation.status" :disabled="!isEdit" />
+                    </div>
+                    <div class="label-input">
+                        <span>Vehicle ID:</span>
+                        <input type="text" v-model="currentViolation.vehicleID" :disabled="!isEdit" />
+                    </div>
+                    <div class="label-input">
+                        <span>Time:</span>
+                        <input type="text" v-model="currentViolation.time" :disabled="!isEdit" />
+                    </div>
+                    <div class="label-input">
+                        <span>Camera ID:</span>
+                        <input type="text" v-model="currentViolation.cameraID" :disabled="!isEdit" />
+                    </div>
+                    <div class="label-input">
+                        <span>Image URL:</span>
+                        <input type="text" v-model="currentViolation.imageUrl" :disabled="!isEdit" />
+                    </div>
+                </div>
+            </template>
+        </panel-view>
+        <div class="page-violations__overlay" v-if="isShowPopup"></div>
+        <popup-view
+            v-if="isShowPopup"
+            title="Create Violation"
+            class="page-violations__popup"
+            @onCancel="hiddenPopup"
+            @onOk="createViolation"
+        >
+            <template v-slot:popupbody>
+                <div class="label-input">
                     <span>Type:</span>
                     <input type="text" v-model="currentViolation.type" :disabled="!isEdit" />
+                </div>
+                <div class="label-input">
                     <span>Deadline:</span>
                     <input type="text" v-model="currentViolation.deadline" :disabled="!isEdit" />
+                </div>
+                <div class="label-input">
                     <span>Status:</span>
                     <input type="text" v-model="currentViolation.status" :disabled="!isEdit" />
+                </div>
+                <div class="label-input">
                     <span>Vehicle ID:</span>
                     <input type="text" v-model="currentViolation.vehicleID" :disabled="!isEdit" />
+                </div>
+                <div class="label-input">
                     <span>Time:</span>
                     <input type="text" v-model="currentViolation.time" :disabled="!isEdit" />
+                </div>
+                <div class="label-input">
                     <span>Camera ID:</span>
                     <input type="text" v-model="currentViolation.cameraID" :disabled="!isEdit" />
+                </div>
+                <div class="label-input">
                     <span>Image URL:</span>
                     <input type="text" v-model="currentViolation.imageUrl" :disabled="!isEdit" />
                 </div>
             </template>
-        </panel-view>
+        </popup-view>
+        <div></div>
     </div>
 </template>
 
 <script>
-import { getAllViolations, deleteViolation, getSingleViolation, updateViolation } from '@/services/violation.service'
+import {
+    getAllViolations,
+    deleteViolation,
+    getSingleViolation,
+    updateViolation,
+    addViolation,
+} from '@/services/violation.service'
+// import ModalReason from '@/components/modals/ModalReason.vue'
+// import ModalAlert from '@/components/modals/ModalAlert.vue'
 export default {
+    // components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [
@@ -108,6 +172,7 @@ export default {
             isEdit: false,
             isShowDetail: false,
             title: 'View Detail',
+            isShowPopup: false,
         }
     },
     mounted() {
@@ -177,6 +242,27 @@ export default {
                 })
             }
         },
+        async createViolation() {
+            try {
+                const res = await addViolation(this.currentViolation)
+                if (res.data.status === 'success') {
+                    this.isShowPopup = false
+                    this.$notify({
+                        type: 'success',
+                        title: 'Add Violation',
+                        text: 'Add violation successfully!',
+                    })
+                }
+            } catch (error) {
+                console.error(error)
+                this.$notify({
+                    type: 'error',
+                    title: 'Add Violation',
+                    text: 'Add violation failed!',
+                    duration: 1000,
+                })
+            }
+        },
         showUpdate(id) {
             this.isEdit = true
             this.isShowDetail = true
@@ -185,6 +271,13 @@ export default {
         closePanelView() {
             this.isShowDetail = false
             this.isEdit = false
+        },
+        showPopup() {
+            this.currentViolation = {}
+            this.isShowPopup = true
+        },
+        hiddenPopup() {
+            this.isShowPopup = false
         },
     },
 }
@@ -282,6 +375,25 @@ export default {
         left: 50%; /* Đặt vị trí left ở giữa trang */
         transform: translate(-50%, -50%);
         z-index: 6;
+        width: 30%;
+        height: 100%;
+        overflow: auto;
+        // background-color: $neutral-100;
+        @include custom-scrollbar();
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        &__content {
+            display: flex;
+            flex-direction: column;
+
+            input {
+                margin-bottom: 10px;
+            }
+            span {
+                padding: 7px 0;
+            }
+        }
     }
 }
 </style>

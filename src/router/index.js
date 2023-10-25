@@ -14,6 +14,13 @@ const routes = [
         meta: { layout: 'auth' },
         component: () => import('@/views/UserList.vue'),
     },
+    // vehicles router
+    {
+        path: '/vehicles',
+        name: 'vehicles',
+        meta: { layout: 'empty' },
+        component: () => import('@/views/VehiclesPage.vue'),
+    },
     // violations router
     {
         path: '/violations',
@@ -52,18 +59,6 @@ const routes = [
         name: 'test',
         meta: { layout: 'auth' },
         component: () => import('@/views/TestPage.vue'),
-    },
-    {
-        path: '/vehicle',
-        name: 'vehicle',
-        meta: { layout: 'auth' },
-        component: () => import('@/views/VehicleTable.vue'),
-    },
-    {
-        path: '/violation',
-        name: 'violation',
-        meta: { layout: 'auth' },
-        component: () => import('@/views/ViolationTable.vue'),
     },
 ]
 const router = createRouter({
