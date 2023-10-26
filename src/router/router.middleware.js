@@ -9,24 +9,24 @@ export const authMiddleware = () => {
             if (!isLoggedIn) {
                 next({ name: 'login' })
                 console.log('3')
-            } 
-            // else {
-            //     console.log('4')
+            } else {
+                console.log('4')
 
-            //     next({ name: 'dashboard' })
-            //     // handle logged in user permission
-            //     // const user = authStore.value.user
-            //     // const userRole = user.role
-            //     // if (to.meta.roles && !to.meta.roles.includes(userRole)) {
-            //     //     console.log('403')
-            //     // }
-            // }
+                next()
+                // handle logged in user permission
+                // const user = authStore.value.user
+                // const userRole = user.role
+                // if (to.meta.roles && !to.meta.roles.includes(userRole)) {
+                //     console.log('403')
+                // }
+            }
         } else {
             if (isLoggedIn && to.name == 'login') {
                 console.log('5')
                 next({ name: 'dashboard' })
+            } else {
+                next()
             }
         }
-        next()
     })
 }
