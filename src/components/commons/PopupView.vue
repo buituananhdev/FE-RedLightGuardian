@@ -99,7 +99,6 @@ export default {
         align-items: center;
         gap: 10px;
         align-self: stretch;
-        margin-top: 250px;
 
         h2 {
             // width: 360px;

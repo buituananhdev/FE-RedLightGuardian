@@ -18,5 +18,6 @@ export const registerApi = async (data) => {
     return await axiosApiInstance.post('/users', data)
 }
 export const getInfo = async () => {
-    return await axiosApiInstance.get('/users/me')
+    const id = localStorage.getItem('idUser')
+    return await axiosApiInstance.get(`/users/${id}`)
 }
