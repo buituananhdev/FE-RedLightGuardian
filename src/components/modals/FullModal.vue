@@ -1,18 +1,8 @@
 <template>
     <div name="modal">
         <div class="modal-mask">
-            <div
-                class="modal-mask"
-                role="dialog"
-                aria-modal="true"
-                aria-hidden="true"
-                tabindex="-1"
-            >
-                <div
-                    @click="closeModal"
-                    class="modal-container-x"
-                    :class="{ bgblur: bgblur }"
-                >
+            <div class="modal-mask" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+                <div @click="closeModal" class="modal-container-x" :class="{ bgblur: bgblur }">
                     <slot></slot>
                 </div>
             </div>
@@ -34,23 +24,23 @@ export default {
     props: {
         bgblur: Boolean,
     },
+    beforeUnmount() {
+        document.body.classList.remove('no-scroll')
+    },
     methods: {
         closeModal() {
-            this.$emit('close-modal');
+            this.$emit('close-modal')
         },
     },
     mounted() {
         addEventListener('keyup', (e) => {
             if (e.keyCode === 27) {
-                this.$emit('close-modal');
+                this.$emit('close-modal')
             }
-        });
-        document.body.classList.add('no-scroll');
+        })
+        document.body.classList.add('no-scroll')
     },
-    beforeDestroy() {
-        document.body.classList.remove('no-scroll');
-    },
-};
+}
 </script>
 
 <style scope>
@@ -82,11 +72,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(
-        0deg,
-        rgba(163, 174, 208, 0.8) 0%,
-        rgba(163, 174, 208, 0.8) 100%
-    );
+    background: linear-gradient(0deg, rgba(163, 174, 208, 0.8) 0%, rgba(163, 174, 208, 0.8) 100%);
     cursor: pointer;
 }
 

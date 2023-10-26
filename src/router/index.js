@@ -5,7 +5,7 @@ const routes = [
         path: '/',
         name: 'dashboard',
         component: () => import('@/views/Dashboard.vue'),
-        meta: { requiresAuth: true },
+        meta: { layout: 'empty', requiresAuth: true },
     },
     // Users router
     {
@@ -18,21 +18,21 @@ const routes = [
     {
         path: '/vehicles',
         name: 'vehicles',
-        meta: { layout: 'empty' },
+        meta: { layout: 'empty', requiresAuth: true },
         component: () => import('@/views/VehiclesPage.vue'),
     },
     // violations router
     {
         path: '/violations',
         name: 'violations',
-        meta: { layout: 'empty' },
+        meta: { layout: 'empty', requiresAuth: true },
         component: () => import('@/views/ViolationsPage.vue'),
     },
     // Owners router
     {
         path: '/owners',
         name: 'owners',
-        meta: { layout: 'auth' },
+        meta: { layout: 'auth', requiresAuth: true },
         component: () => import('@/views/OwnersPage.vue'),
     },
     // Auth router

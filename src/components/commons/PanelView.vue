@@ -38,7 +38,8 @@ export default {
     padding: 12px 20px;
     border-radius: 4px 4px 0px 0px;
     border-left: 1px solid $neutral-400;
-    width: 30%;
+    width: 40%;
+    background-color: #ffff;
     &__header {
         display: flex;
         justify-content: space-between;
