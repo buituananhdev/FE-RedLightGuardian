@@ -82,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 .modal-alert {
     display: inline-flex;
-    padding: 40px;
+    padding: 40px 50px;
     flex-direction: column;
     justify-content: center;
     align-items: center;

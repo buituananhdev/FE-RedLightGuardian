@@ -1,21 +1,21 @@
 <template>
     <div class="tableview" :class="{ 'half-width': true }">
+        <div class="tableview__header">
+            <div class="tableview__header__search">
+                <img src="@/assets/icons/glass-icon.svg" alt="" />
+                <input type="text" class="tableview__header__search" />
+            </div>
+            <button-vue
+                :type-btn="'secondary'"
+                :width="'100px'"
+                class="tableview__header__button"
+                @click-button="$emit('click-button')"
+            >
+                + Add
+            </button-vue>
+        </div>
         <div class="tableview__container" :class="{ 'blank-pagination': !listData.length }">
             <div class="tableview__container__head">
-                <div class="tableview__header">
-                    <div class="tableview__header__search">
-                        <img src="@/assets/icons/glass-icon.svg" alt="">
-                        <input type="text" class="tableview__header__search" />
-                    </div>
-                    <button-vue
-                        :type-btn="'secondary'"
-                        :width="'100px'"
-                        class="tableview__header__button"
-                        @click-button="$emit('click-button')"
-                    >
-                        + Add
-                    </button-vue>
-                </div>
                 <div class="tableview__container__head__row">
                     <div
                         class="tableview__container__head__row__cell"
@@ -118,6 +118,7 @@ export default {
     flex-direction: column;
     align-items: center;
     align-self: stretch;
+    overflow: hidden;
     // padding-top: 45px;
     &__header {
         padding: 10px 40px;
@@ -125,6 +126,8 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding-top: 20px;
+        background-color: #ffff;
         &__search {
             position: relative;
             img {
@@ -178,12 +181,13 @@ export default {
         width: 100%;
         position: relative;
         height: calc(100% - 74px);
-        overflow: auto;
+        overflow: hidden;
         &__head {
             // display: block;
             width: 100%;
             // position: sticky;
             // top: 0;
+            background-color: #ffff;
             display: flex;
             flex-direction: column;
             justify-content: space-around;

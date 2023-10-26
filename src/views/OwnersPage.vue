@@ -1,100 +1,109 @@
 <template>
-    <div class="page-owners">
-        <!-- <button class="page-owners" @click="showPopup">
+    <div class="container-owner">
+        <!-- <button class="container-owner__page" @click="showPopup">
             <img src="@/assets/icons/close-icon.svg" alt="" >
         </button> -->
-        <table-view
-            ref="tableview"
-            :list-header="listHeader"
-            :request-url="'/test'"
-            :list-data="listData"
-            class="page-owners__table"
-            @click-button="showPopup"
-        >
-            <template #tbody>
-                <div
-                    v-for="(item, index) in listData"
-                    :key="item.id"
-                    class="page-owners__table__row"
-                    :class="!(index % 2) ? 'bold' : ''"
+        <div class="container-owner__page table-primary">
+            <table-view
+                ref="tableview"
+                :list-header="listHeader"
+                :request-url="'/test'"
+                :list-data="listData"
+                class="container-owner__page__table"
+                @click-button="showPopup"
+            >
+                <template #tbody>
+                    <div
+                        v-for="(item, index) in listData"
+                        :key="item.id"
+                        class="container-owner__page__table__row"
+                        :class="!(index % 2) ? 'bold' : ''"
+                    >
+                        <span class="container-owner__page__table__row__id">{{ index + 1 }}</span>
+                        <span class="container-owner__page__table__row__idCitizen">{{
+                            item.citizen_identification
+                        }}</span>
+                        <span class="container-owner__page__table__row__username" @click="getSingleOwner(item.id)">{{
+                            item.name
+                        }}</span>
+                        <span class="container-owner__page__table__row__address">{{ item.address }}</span>
+                        <span class="container-owner__page__table__row__email">{{ item.email }}</span>
+                        <div class="container-owner__page__table__row__action">
+                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
+                            <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)" />
+                        </div>
+                    </div>
+                </template>
+            </table-view>
+            <panel-view
+                v-if="isShowDetail"
+                :title="title"
+                :is-edit="isEdit"
+                class="container-owner__page__panel"
+                @close-panel="isShowDetail = false"
+                @update-object="updateOwner"
+            >
+                <template #pbody>
+                    <div class="container-owner__page__panel__content">
+                        <div class="label-input">
+                            <span>Citizen id:</span>
+                            <input
+                                id="name"
+                                v-model="currentOwner.citizen_identification"
+                                type="text"
+                                name=""
+                                :disabled="!isEdit"
+                            />
+                        </div>
+                        <div class="label-input">
+                            <span>Name:</span>
+                            <input v-model="currentOwner.name" type="text" id="name" name="" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Address:</span>
+                            <input
+                                v-model="currentOwner.address"
+                                type="text"
+                                name=""
+                                id="address"
+                                :disabled="!isEdit"
+                            />
+                        </div>
+                        <div class="label-input">
+                            <span>Email:</span>
+                            <input type="email" v-model="currentOwner.email" name="" id="" :disabled="!isEdit" />
+                        </div>
+                    </div>
+                </template>
+            </panel-view>
+            <full-modal v-if="isShowPopup">
+                <popup-view
+                    title="Create Owner"
+                    class="container-owner__page__popup"
+                    @on-cancel="hiddenPopup"
+                    @on-ok="createOwner"
                 >
-                    <span class="page-owners__table__row__id">{{ index + 1 }}</span>
-                    <span class="page-owners__table__row__idCitizen">{{ item.citizen_identification }}</span>
-                    <span class="page-owners__table__row__username" @click="getSingleOwner(item.id)">{{
-                        item.name
-                    }}</span>
-                    <span class="page-owners__table__row__address">{{ item.address }}</span>
-                    <span class="page-owners__table__row__email">{{ item.email }}</span>
-                    <div class="page-owners__table__row__action">
-                        <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)" />
-                    </div>
-                </div>
-            </template>
-        </table-view>
-        <panel-view
-            v-if="isShowDetail"
-            :title="title"
-            :is-edit="isEdit"
-            class="page-owners__panel"
-            @close-panel="isShowDetail = false"
-            @update-object="updateOwner"
-        >
-            <template #pbody>
-                <div class="page-owners__panel__content">
-                    <div class="label-input">
-                        <span>Citizen id:</span>
-                        <input
-                            id="name"
-                            v-model="currentOwner.citizen_identification"
-                            type="text"
-                            name=""
-                            :disabled="!isEdit"
-                        />
-                    </div>
-                    <div class="label-input">
-                        <span>Name:</span>
-                        <input v-model="currentOwner.name" type="text" id="name" name="" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Address:</span>
-                        <input v-model="currentOwner.address" type="text" name="" id="address" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Email:</span>
-                        <input type="email" v-model="currentOwner.email" name="" id="" :disabled="!isEdit" />
-                    </div>
-                </div>
-            </template>
-        </panel-view>
-        <div class="page-owners__overlay" v-if="isShowPopup"></div>
-        <popup-view
-            v-if="isShowPopup"
-            title="Create Owner"
-            class="page-owners__popup"
-            @on-cancel="hiddenPopup"
-            @on-ok="createOwner"
-        >
-            <template #popupbody>
-                <div class="label-input">
-                    <span>Citizen id:</span>
-                    <input type="text" v-model="currentOwner.citizen_identification" name="" id="name" />
-                </div>
-                <div class="label-input">
-                    <span>Name:</span>
-                    <input type="text" v-model="currentOwner.name" name="" id="name" />
-                </div>
-                <div class="label-input">
-                    <span>Address:</span>
-                    <input id="address" v-model="currentOwner.address" type="text" name="" />
-                </div>
-                <div class="label-input">
-                    <span>Email:</span>
-                    <input id="" v-model="currentOwner.email" type="email" name="" />
-                </div>
-            </template>
-        </popup-view>
-        <div></div>
+                    <template #popupbody>
+                        <div class="label-input">
+                            <span>Citizen id:</span>
+                            <input type="text" v-model="currentOwner.citizen_identification" name="" id="name" />
+                        </div>
+                        <div class="label-input">
+                            <span>Name:</span>
+                            <input type="text" v-model="currentOwner.name" name="" id="name" />
+                        </div>
+                        <div class="label-input">
+                            <span>Address:</span>
+                            <input id="address" v-model="currentOwner.address" type="text" name="" />
+                        </div>
+                        <div class="label-input">
+                            <span>Email:</span>
+                            <input id="" v-model="currentOwner.email" type="email" name="" />
+                        </div>
+                    </template>
+                </popup-view>
+            </full-modal>
+        </div>
     </div>
 </template>
 
@@ -245,77 +254,71 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-owners {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    &__table {
-        &__row {
-            padding: 0 16px;
-            padding-right: 20px;
-            display: flex;
-            width: 100%;
-            gap: 20px;
-            background: var(--neutral-100, #fafcfe);
-            &.bold {
-                background: var(--neutral-300, #f4f7fe);
-            }
-            span {
-                padding: 16px 24px;
+.container-owner {
+    padding: 20px;
+    border-radius: 8px;
+    &__page {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        &__table {
+            &__row {
+                padding: 0 16px;
+                padding-right: 20px;
                 display: flex;
-                justify-content: center;
-                align-content: center;
-            }
-            &__email,
-            &__idCitizen,
-            &__id {
-                width: 15%;
-            }
-            &__username,
-            &__address {
-                width: 20%;
-            }
-            &__action {
-                width: 15%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                width: 100%;
                 gap: 20px;
-                img {
-                    height: 20px;
-                    width: 20px;
+                background: var(--neutral-100, #fafcfe);
+                &.bold {
+                    background: var(--neutral-300, #f4f7fe);
+                }
+                span {
+                    padding: 16px 24px;
+                    display: flex;
+                    justify-content: center;
+                    align-content: center;
+                }
+                &__email,
+                &__idCitizen,
+                &__id {
+                    width: 15%;
+                }
+                &__username,
+                &__address {
+                    width: 20%;
+                }
+                &__action {
+                    width: 15%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 20px;
+                    img {
+                        height: 20px;
+                        width: 20px;
+                    }
                 }
             }
         }
-    }
-    &__panel {
-        &__content {
-            display: flex;
-            flex-direction: column;
-            input {
-                margin-bottom: 10px;
-            }
-            span {
-                padding: 7px 0;
+        &__panel {
+            &__content {
+                display: flex;
+                flex-direction: column;
+                input {
+                    margin-bottom: 10px;
+                }
+                span {
+                    padding: 7px 0;
+                }
             }
         }
-    }
-    &__overlay {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 2;
-        background-color: $slate-400;
-        opacity: 0.7;
-    }
-    &__popup {
-        position: absolute;
-        top: 50%; /* Đặt vị trí top ở giữa trang */
-        left: 50%; /* Đặt vị trí left ở giữa trang */
-        transform: translate(-50%, -50%);
-        z-index: 3;
+        &__popup {
+            position: absolute;
+            top: 50%; /* Đặt vị trí top ở giữa trang */
+            left: 50%; /* Đặt vị trí left ở giữa trang */
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
     }
 }
 </style>
