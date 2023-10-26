@@ -6,7 +6,7 @@
             ref="tableview"
             :listData="listData"
             class="page-vehicles__table"
-            @open-popup="isShowPopup = true"
+            @open-popup="showPopup()"
         >
             <template v-slot:tbody>
                 <div
@@ -281,6 +281,7 @@ export default {
                 const res = await addVehicle(this.currentVehicle)
                 if (res.data.status === 'success') {
                     this.isShowPopup = false
+                    this.isEdit = false
                     this.$notify({
                         type: 'success',
                         title: 'Add Vehicle',
@@ -308,10 +309,12 @@ export default {
         },
         showPopup() {
             this.currentVehicle = {}
+            this.isEdit = true
             this.isShowPopup = true
         },
         hiddenPopup() {
             this.isShowPopup = false
+            this.isEdit = false
         },
     },
 }
