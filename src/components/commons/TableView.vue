@@ -1,22 +1,21 @@
 <template>
     <div class="tableview" :class="{ 'half-width': true }">
-        <div class="tableview__header">
-            <div class="tableview__header__search">
-                <img src="@/assets/icons/glass-icon.svg" alt="">
-                <input type="text" class="tableview__header__search" />
-            </div>
-            <button-vue
-                :type-btn="'secondary'"
-                :width="'100px'"
-                class="tableview__header__button"
-                @click-button="$emit('click-button')"
-            >
-                + Add
-            </button-vue>
-        </div>
         <div class="tableview__container" :class="{ 'blank-pagination': !listData.length }">
             <div class="tableview__container__head">
-                <button class="tableview__container__head__button" @click="openPopup()">Add +</button>
+                <div class="tableview__header">
+                    <div class="tableview__header__search">
+                        <img src="@/assets/icons/glass-icon.svg" alt="">
+                        <input type="text" class="tableview__header__search" />
+                    </div>
+                    <button-vue
+                        :type-btn="'secondary'"
+                        :width="'100px'"
+                        class="tableview__header__button"
+                        @click-button="$emit('click-button')"
+                    >
+                        + Add
+                    </button-vue>
+                </div>
                 <div class="tableview__container__head__row">
                     <div
                         class="tableview__container__head__row__cell"

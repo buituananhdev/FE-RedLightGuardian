@@ -24,7 +24,6 @@ export const authMiddleware = () => {
         } else {
             if (isLoggedIn && to.name == 'login') {
                 console.log('5')
-
                 next({ name: 'dashboard' })
             }
         }
