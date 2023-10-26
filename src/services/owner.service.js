@@ -1,22 +1,22 @@
 import axiosApiInstance from '@/plugins/api'
 export const getOwnersApi = async () => {
-  return await axiosApiInstance.get('/owners')
+    return await axiosApiInstance.get('/owners')
 }
 export const updateOwnerApi = async (id, data) => {
-  delete data.id
-  delete data.isEmailVerified
-  delete data.balance
-  return await axiosApiInstance.patch(`/owners/${id}`, data)
+    delete data.id
+    delete data.isEmailVerified
+    delete data.balance
+    return await axiosApiInstance.patch(`/owners/${id}`, data)
 }
 export const changeBalance = async (ownerID, balance) => {
-  return await axiosApiInstance.patch(`/owners/${ownerID}/change-balance`, { balance: balance })
+    return await axiosApiInstance.patch(`/owners/${ownerID}/change-balance`, { balance: balance })
 }
 export const deleteOwner = async (id) => {
-  return await axiosApiInstance.delete(`/owners/${id}`)
+    return await axiosApiInstance.delete(`/owners/${id}`)
 }
 
 export const getAllOwners = async () => {
-  return await axiosApiInstance.get('/owners')
+    return await axiosApiInstance.get('/owners')
 }
 
 export const getSingleOwner = async (id) => {
@@ -24,9 +24,9 @@ export const getSingleOwner = async (id) => {
 }
 
 export const updateOwner = async (id, newOwner) => {
-  return await axiosApiInstance.put(`/owners/${id}`, newOwner)
+    return await axiosApiInstance.put(`/owners/${id}`, newOwner)
 }
 
 export const addOwner = async (newOwner) => {
-  return await axiosApiInstance.post(`/owner`, newOwner)
+    return await axiosApiInstance.post(`/owners`, newOwner)
 }

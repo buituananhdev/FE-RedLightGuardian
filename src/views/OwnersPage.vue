@@ -1,21 +1,22 @@
 <template>
     <div class="page-owners">
         <!-- <button class="page-owners" @click="showPopup">
-            <img src="@/assets/icons/close-icon.svg" alt="">
+            <img src="@/assets/icons/close-icon.svg" alt="" >
         </button> -->
         <table-view
-            :listHeader="listHeader"
-            :requestUrl="'/test'"
             ref="tableview"
-            :listData="listData"
+            :list-header="listHeader"
+            :request-url="'/test'"
+            :list-data="listData"
             class="page-owners__table"
+            @click-button="showPopup"
         >
-            <template v-slot:tbody>
+            <template #tbody>
                 <div
-                    class="page-owners__table__row"
                     v-for="(item, index) in listData"
                     :key="item.id"
-                    :class="!(index % 2) ? 'bold' : ' unbold'"
+                    class="page-owners__table__row"
+                    :class="!(index % 2) ? 'bold' : ''"
                 >
                     <span class="page-owners__table__row__id">{{ index + 1 }}</span>
                     <span class="page-owners__table__row__idCitizen">{{ item.citizen_identification }}</span>
@@ -32,32 +33,32 @@
             </template>
         </table-view>
         <panel-view
-            :title="title"
-            :isEdit="isEdit"
-            class="page-owners__panel"
             v-if="isShowDetail"
+            :title="title"
+            :is-edit="isEdit"
+            class="page-owners__panel"
             @close-panel="isShowDetail = false"
             @update-object="updateOwner"
         >
-            <template v-slot:pbody>
+            <template #pbody>
                 <div class="page-owners__panel__content">
                     <div class="label-input">
                         <span>Citizen id:</span>
                         <input
-                            type="text"
-                            v-model="currentOwner.citizen_identification"
-                            name=""
                             id="name"
+                            v-model="currentOwner.citizen_identification"
+                            type="text"
+                            name=""
                             :disabled="!isEdit"
                         />
                     </div>
                     <div class="label-input">
                         <span>Name:</span>
-                        <input type="text" v-model="currentOwner.name" name="" id="name" :disabled="!isEdit" />
+                        <input v-model="currentOwner.name" type="text" id="name" name="" :disabled="!isEdit" />
                     </div>
                     <div class="label-input">
                         <span>Address:</span>
-                        <input type="text" v-model="currentOwner.address" name="" id="address" :disabled="!isEdit" />
+                        <input v-model="currentOwner.address" type="text" name="" id="address" :disabled="!isEdit" />
                     </div>
                     <div class="label-input">
                         <span>Email:</span>
@@ -68,13 +69,13 @@
         </panel-view>
         <div class="page-owners__overlay" v-if="isShowPopup"></div>
         <popup-view
+            v-if="isShowPopup"
             title="Create Owner"
             class="page-owners__popup"
-            v-if="isShowPopup"
-            @onCancel="hiddenPopup"
-            @onOk="createOwner"
+            @on-cancel="hiddenPopup"
+            @on-ok="createOwner"
         >
-            <template v-slot:popupbody>
+            <template #popupbody>
                 <div class="label-input">
                     <span>Citizen id:</span>
                     <input type="text" v-model="currentOwner.citizen_identification" name="" id="name" />
@@ -85,11 +86,11 @@
                 </div>
                 <div class="label-input">
                     <span>Address:</span>
-                    <input type="text" v-model="currentOwner.address" name="" id="address" />
+                    <input id="address" v-model="currentOwner.address" type="text" name="" />
                 </div>
                 <div class="label-input">
                     <span>Email:</span>
-                    <input type="email" v-model="currentOwner.email" name="" id="" />
+                    <input id="" v-model="currentOwner.email" type="email" name="" />
                 </div>
             </template>
         </popup-view>
@@ -150,6 +151,7 @@ export default {
             }
         },
         async deleteOwner(id) {
+            this.isShowDetail = false
             try {
                 const res = await deleteOwner(id)
                 if (res.data.status === 'success') {
@@ -169,7 +171,7 @@ export default {
                 })
             }
         },
-        async getSingleOwnerF(id) {
+        async getSingleOwner(id) {
             try {
                 const res = await getSingleOwner(id)
                 this.currentOwner = res.data.data
@@ -191,6 +193,7 @@ export default {
                         title: 'Update Owner',
                         text: 'Update owner successfully!',
                     })
+                    this.getAllOwners()
                 }
             } catch (error) {
                 console.error(error)
@@ -210,12 +213,14 @@ export default {
         showPopup() {
             this.currentOwner = {}
             this.isShowPopup = true
+            this.isShowDetail = false
         },
         hiddenPopup() {
             this.isShowPopup = false
         },
         async createOwner() {
             try {
+                this.isShowPopup = false
                 const res = await addOwner(this.currentOwner)
                 if (res.data.status === 'success') {
                     this.isShowPopup = false
@@ -224,6 +229,7 @@ export default {
                         title: 'Add Owner',
                         text: 'Add owner successfully!',
                     })
+                    this.listData.push(res.data.data)
                 }
             } catch (error) {
                 console.error(error)
@@ -261,16 +267,16 @@ export default {
                 align-content: center;
             }
             &__email,
-            &__username,
             &__idCitizen,
             &__id {
                 width: 15%;
             }
+            &__username,
             &__address {
                 width: 20%;
             }
             &__action {
-                width: 20%;
+                width: 15%;
                 display: flex;
                 justify-content: center;
                 align-items: center;

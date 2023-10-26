@@ -13,6 +13,7 @@ import PanelView from '@/components/commons/PanelView.vue'
 import PopupView from '@/components/commons/PopupView.vue'
 import authLayout from '@/layouts/authLayout.vue'
 import emptyLayout from '@/layouts/emptyLayout.vue'
+import ButtonVue from '@/components/Atoms/ButtonVue.vue'
 
 const initApp = async () => {
     authMiddleware()
@@ -26,6 +27,8 @@ const initApp = async () => {
     app.component('popup-view', PopupView)
     app.component('default-layout', authLayout)
     app.component('empty-layout', emptyLayout)
+    app.component('button-vue', ButtonVue)
+
     app.use(Notifications)
     app.mount('#app')
 }
