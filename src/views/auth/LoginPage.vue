@@ -178,7 +178,7 @@ const submit = async () => {
             localStorage.setItem('refresh_token', data.refresh_token)
         })
         await initAuthStore()
-        router.push('/vehicles')
+        router.push({ name: 'users' })
     } catch (error) {
         notification.notify({
             type: 'error',

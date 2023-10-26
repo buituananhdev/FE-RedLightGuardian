@@ -11,7 +11,7 @@ const routes = [
     {
         path: '/users',
         name: 'users',
-        meta: { layout: 'auth' },
+        meta: { layout: 'auth', requiresAuth: true },
         component: () => import('@/views/UserList.vue'),
     },
     // vehicles router
@@ -39,7 +39,7 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        meta: { layout: 'auth' },
+        meta: { layout: 'empty' },
         component: () => import('@/views/auth/LoginPage.vue'),
     },
     {

@@ -25,7 +25,7 @@ const initApp = async () => {
     app.component('table-view', TableView)
     app.component('panel-view', PanelView)
     app.component('popup-view', PopupView)
-    app.component('default-layout', authLayout)
+    app.component('auth-layout', authLayout)
     app.component('empty-layout', emptyLayout)
     app.component('button-vue', ButtonVue)
 
