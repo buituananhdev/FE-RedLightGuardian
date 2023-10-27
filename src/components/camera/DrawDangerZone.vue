@@ -4,11 +4,11 @@
             ref="canvas"
             @mousedown="startDrawing"
             @mouseup="stopDrawing"
-            @mousemove="draw"
-            width="1600"
-            height="600"
+            width="1280"
+            height="720"
             style="border: 1px solid black"
-        ></canvas>
+        >
+        </canvas>
         <br />
         <button @click="saveCoordinates">Lưu Tọa Độ vào JSON</button>
         <br />
@@ -31,12 +31,18 @@ export default {
             dangerZone: [],
             isConfirmed: false,
             coordinatesData: [],
+            drawDelay: 500, // Thời gian trễ (0.5 giây)
         }
+    },
+    computed: {
+        canStartDrawing() {
+            return !this.isDrawing
+        },
     },
     mounted() {
         this.canvas = this.$refs.canvas
         this.ctx = this.canvas.getContext('2d')
-        this.tryLoadCoordinates(); // Thử tải tọa độ khi component được mounted
+        // this.tryLoadCoordinates() // Thử tải tọa độ khi component được mounted
     },
     methods: {
         tryLoadCoordinates() {
@@ -52,8 +58,7 @@ export default {
                 })
         },
         startDrawing(event) {
-            if (this.dangerZone.length < 4) {
-                // Giới hạn số lượng điểm được click
+            if (this.dangerZone.length < 4 && !this.isDrawing) {
                 this.isDrawing = true
                 const x = event.clientX - this.canvas.getBoundingClientRect().left
                 const y = event.clientY - this.canvas.getBoundingClientRect().top
@@ -62,16 +67,9 @@ export default {
                 this.isConfirmed = false
 
                 if (this.dangerZone.length === 4) {
-                    this.confirmDrawing() // Xác nhận tự động khi có 4 điểm
+                    this.confirmDrawing()
                 }
             }
-        },
-        draw(event) {
-            if (!this.isDrawing) return
-            const x = event.clientX - this.canvas.getBoundingClientRect().left
-            const y = event.clientY - this.canvas.getBoundingClientRect().top
-            this.dangerZone.push({ x, y })
-            this.drawPoint(x, y)
         },
         stopDrawing() {
             this.isDrawing = false
@@ -140,3 +138,10 @@ export default {
     },
 }
 </script>
+<style lang="scss" scoped>
+canvas {
+    background-image: url('../../assets/img/test-draw.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+</style>
