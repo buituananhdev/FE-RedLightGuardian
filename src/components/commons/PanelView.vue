@@ -59,7 +59,9 @@ export default {
                 }
             }
             &__content {
-                font-size: 20px;
+                color: $text-light-icon-secondary-1;
+                text-align: center;
+                font-size: 28px;
                 font-weight: 700;
             }
         }

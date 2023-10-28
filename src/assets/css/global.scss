@@ -13,15 +13,22 @@ body {
     width: 100%;
     span {
         padding: 5px 0;
-        font-weight: 600;
-        color: $gray-500;
+        @include text-style(12px, 150%, 600, $text-light-icon-secondary-1, 0);
     }
 
     input {
-        padding: 6px 6px 6px 10px;
         border: 1.5px solid $zinc-400;
         width: 100%;
         border-radius: 8px;
+        display: flex;
+        padding: 12px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        align-self: stretch;
+        border-radius: 8px;
+        border: 1px solid $primary-500;
+        @include text-style(14px, 150%, 400, $text-light-icon-secondary-1,0);
 
     }
 }
