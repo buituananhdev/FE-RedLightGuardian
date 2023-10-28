@@ -145,9 +145,9 @@ export default {
         }
         &__button {
             padding: 6px 25px;
-            color: $slate-50;
             border-radius: 80px;
-            background: var(--gradient-default, linear-gradient(135deg, #868cff 0%, #4318ff 100%));
+            background: $gradient-default;
+            @include text-style(14px, 150%, 600, $slate-50, 0);
         }
     }
     &__pagination {
@@ -243,7 +243,7 @@ export default {
 
                     span {
                         @include truncate(1);
-                        @include text-style(14px, 150%, 400, $text-light-secondary-1, normal);
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
                     }
                     button {
                         @include truncate(1);
