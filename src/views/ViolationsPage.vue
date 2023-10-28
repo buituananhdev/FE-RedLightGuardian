@@ -1,117 +1,124 @@
 <template>
-    <div class="page-violations">
-        <table-view
-            :listHeader="listHeader"
-            :requestUrl="'/violations'"
-            ref="tableview"
-            :listData="listData"
-            class="page-violations__table"
-            @open-popup="isShowPopup = true"
-        >
-            <template v-slot:tbody>
-                <div
-                    class="page-violations__table__row"
-                    v-for="(item, index) in listData"
-                    :key="item.id"
-                    :class="!(index % 2) ? 'bold' : ' unbold'"
-                    @click="getSingleViolation(item.id)"
+    <div class="container-violation">
+        <div class="container-violation__page">
+            <table-view
+                ref="tableview"
+                :list-header="listHeader"
+                :request-url="'/violations'"
+                :list-data="listData"
+                class="container-violation__page__table"
+                @click-button="showPopup"
+            >
+                <template #tbody>
+                    <div
+                        v-for="(item, index) in listData"
+                        :key="item.id"
+                        class="container-violation__page__table__row"
+                        :class="!(index % 2) ? 'bold' : ''"
+                        @click="getSingleViolation(item.id)"
+                    >
+                        <span class="container-violation__page__table__row__violationId">{{ item.id }}</span>
+                        <span class="container-violation__page__table__row__type">{{ item.type }}</span>
+                        <span class="container-violation__page__table__row__deadline">{{ item.deadline }}</span>
+                        <span class="container-violation__page__table__row__status">{{ item.status }}</span>
+                        <span class="container-violation__page__table__row__vehicleId">{{ item.vehicleID }}</span>
+                        <span class="container-violation__page__table__row__time">{{ item.time }}</span>
+                        <span class="container-violation__page__table__row__cameraId">{{ item.cameraID }}</span>
+                        <span class="container-violation__page__table__row__imageUrl">{{ item.imageUrl }}</span>
+                        <div class="container-violation__page__table__row__action">
+                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
+                            <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteViolation(item.id)" />
+                        </div>
+                    </div>
+                </template>
+            </table-view>
+            <panel-view
+                v-if="isShowDetail"
+                :title="title"
+                :is-edit="isEdit"
+                class="container-violation__page__panel"
+                @close-panel="closePanelView"
+                @update-object="updateViolation"
+            >
+                <template #pbody>
+                    <div class="container-violation__page__panel__content">
+                        <div class="label-input">
+                            <span>Type:</span>
+                            <input v-model="currentViolation.type" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Deadline:</span>
+                            <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Status:</span>
+                            <input v-model="currentViolation.status" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Vehicle ID:</span>
+                            <input v-model="currentViolation.vehicleID" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Time:</span>
+                            <input v-model="currentViolation.time" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Camera ID:</span>
+                            <input v-model="currentViolation.cameraID" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Image URL:</span>
+                            <input v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit" />
+                        </div>
+                    </div>
+                </template>
+            </panel-view>
+            <full-modal v-if="isShowPopup">
+                <popup-view
+                    title="Create Violation"
+                    class="container-violation__page__popup"
+                    @on-cancel="hiddenPopup"
+                    @on-ok="createViolation"
                 >
-                    <span class="page-violations__table__row__id">{{ item.id }}</span>
-                    <span class="page-violations__table__row__type">{{ item.type }}</span>
-                    <span class="page-violations__table__row__deadline">{{ item.deadline }}</span>
-                    <span class="page-violations__table__row__status">{{ item.status }}</span>
-                    <span class="page-violations__table__row__id">{{ item.vehicleID }}</span>
-                    <span class="page-violations__table__row__time">{{ item.time }}</span>
-                    <span class="page-violations__table__row__id">{{ item.cameraID }}</span>
-                    <span class="page-violations__table__row__imageUrl">{{ item.imageUrl }}</span>
-                    <div class="page-violations__table__row__action">
-                        <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                        <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteViolation(item.id)" />
-                    </div>
-                </div>
-            </template>
-        </table-view>
-        <panel-view
-            :title="title"
-            :isEdit="isEdit"
-            class="page-violations__panel"
-            v-if="isShowDetail"
-            @close-panel="closePanelView"
-            @update-object="updateViolation"
-        >
-            <template v-slot:pbody>
-                <div class="page-violations__panel__content">
-                    <div class="label-input">
-                        <span>Type:</span>
-                        <input type="text" v-model="currentViolation.type" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Deadline:</span>
-                        <input type="text" v-model="currentViolation.deadline" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Status:</span>
-                        <input type="text" v-model="currentViolation.status" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Vehicle ID:</span>
-                        <input type="text" v-model="currentViolation.vehicleID" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Time:</span>
-                        <input type="text" v-model="currentViolation.time" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Camera ID:</span>
-                        <input type="text" v-model="currentViolation.cameraID" :disabled="!isEdit" />
-                    </div>
-                    <div class="label-input">
-                        <span>Image URL:</span>
-                        <input type="text" v-model="currentViolation.imageUrl" :disabled="!isEdit" />
-                    </div>
-                </div>
-            </template>
-        </panel-view>
-        <div class="page-violations__overlay" v-if="isShowPopup"></div>
-        <popup-view
-            v-if="isShowPopup"
-            title="Create Violation"
-            class="page-violations__popup"
-            @onCancel="hiddenPopup"
-            @onOk="createViolation"
-        >
-            <template v-slot:popupbody>
-                <div class="label-input">
-                    <span>Type:</span>
-                    <input type="text" v-model="currentViolation.type" :disabled="!isEdit" />
-                </div>
-                <div class="label-input">
-                    <span>Deadline:</span>
-                    <input type="text" v-model="currentViolation.deadline" :disabled="!isEdit" />
-                </div>
-                <div class="label-input">
-                    <span>Status:</span>
-                    <input type="text" v-model="currentViolation.status" :disabled="!isEdit" />
-                </div>
-                <div class="label-input">
-                    <span>Vehicle ID:</span>
-                    <input type="text" v-model="currentViolation.vehicleID" :disabled="!isEdit" />
-                </div>
-                <div class="label-input">
-                    <span>Time:</span>
-                    <input type="text" v-model="currentViolation.time" :disabled="!isEdit" />
-                </div>
-                <div class="label-input">
-                    <span>Camera ID:</span>
-                    <input type="text" v-model="currentViolation.cameraID" :disabled="!isEdit" />
-                </div>
-                <div class="label-input">
-                    <span>Image URL:</span>
-                    <input type="text" v-model="currentViolation.imageUrl" :disabled="!isEdit" />
-                </div>
-            </template>
-        </popup-view>
-        <div></div>
+                    <template #popupbody>
+                        <div class="container-violation__page__popup__content">
+                            <div class="container-violation__page__popup__content__box1">
+                                <div class="label-input">
+                                    <span>Type:</span>
+                                    <input v-model="currentViolation.type" type="text" :disabled="!isEdit" />
+                                </div>
+                                <div class="label-input">
+                                    <span>Deadline:</span>
+                                    <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit" />
+                                </div>
+                                <div class="label-input">
+                                    <span>Status:</span>
+                                    <input v-model="currentViolation.status" type="text" :disabled="!isEdit" />
+                                </div>
+                                <div class="label-input">
+                                    <span>Vehicle ID:</span>
+                                    <input v-model="currentViolation.vehicleID" type="text" :disabled="!isEdit" />
+                                </div>
+                            </div>
+                            <div>
+                                <div class="label-input">
+                                    <span>Time:</span>
+                                    <input v-model="currentViolation.time" type="text" :disabled="!isEdit" />
+                                </div>
+                                <div class="label-input">
+                                    <span>Camera ID:</span>
+                                    <input v-model="currentViolation.cameraID" type="text" :disabled="!isEdit" />
+                                </div>
+                                <div class="label-input">
+                                    <span>Image URL:</span>
+                                    <input v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit" />
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </popup-view>
+            </full-modal>
+        </div>
     </div>
 </template>
 
@@ -140,11 +147,11 @@ export default {
                 },
                 {
                     title: 'Deadline',
-                    width: 15,
+                    width: 10,
                 },
                 {
                     title: 'Status',
-                    width: 10,
+                    width: 15,
                 },
                 {
                     title: 'Vehicle ID',
@@ -152,7 +159,7 @@ export default {
                 },
                 {
                     title: 'Time',
-                    width: 15,
+                    width: 10,
                 },
                 {
                     title: 'Camera ID',
@@ -160,7 +167,7 @@ export default {
                 },
                 {
                     title: 'Image Url',
-                    width: 20,
+                    width: 25,
                 },
                 {
                     title: 'Action',
@@ -274,124 +281,105 @@ export default {
         },
         showPopup() {
             this.currentViolation = {}
+            this.isEdit = true
             this.isShowPopup = true
         },
         hiddenPopup() {
+            this.isEdit = false
             this.isShowPopup = false
         },
     },
 }
 </script>
 <style lang="scss" scoped>
-.page-violations {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    z-index: 1;
-    &__table {
-        &__row {
-            padding: 0 16px;
-            padding-right: 20px;
-            display: flex;
-            width: 100%;
-            gap: 20px;
-            cursor: pointer;
-            background: $neutral-100;
-            &:hover {
-                opacity: 0.7;
-            }
-            &.bold {
-                background: $neutral-300;
-            }
-            span {
-                padding: 16px 20px;
+.container-violation {
+    padding: 20px;
+    border-radius: 8px;
+    &__page {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        &__table {
+            &__row {
+                padding: 0 16px;
+                padding-right: 20px;
                 display: flex;
-                justify-content: center;
-                align-content: center;
-                overflow: hidden;
-            }
-            &__id {
-                width: 5%;
-            }
-            &__time,
-            &__type,
-            &__deadline {
-                width: 15%;
-            }
-            &__status {
-                width: 10%;
-            }
-            &__imageUrl {
-                width: 20%;
-            }
-            &__action {
-                width: 10%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                flex: 1;
+                width: 100%;
                 gap: 20px;
-                img {
-                    height: 20px;
-                    width: 20px;
-                    cursor: pointer;
+                cursor: pointer;
+                background: $neutral-100;
+                overflow: auto;
+                &:hover {
+                    opacity: 0.7;
+                }
+                &.bold {
+                    background: $neutral-300;
+                }
+                span {
+                    padding: 16px 20px;
+                    display: flex;
+                    justify-content: center;
+                    align-content: center;
+                    overflow: hidden;
+                }
+                &__cameraId,
+                &__violationId,
+                &__vehicleId {
+                    width: 5%;
+                }
+                &__time,
+                &__deadline {
+                    width: 10%;
+                }
+                &__type,
+                &__status {
+                    width: 15%;
+                }
+                &__imageUrl {
+                    width: 25%;
+                }
+                &__action {
+                    width: 10%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 20px;
+                    img {
+                        height: 20px;
+                        width: 20px;
+                        cursor: pointer;
+                    }
                 }
             }
         }
-    }
-    &__panel {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translate(0, -50%);
-        z-index: 2;
-        width: 30%;
-        height: 100%;
-        background-color: $neutral-200;
-        // padding: 20px;
-        &__content {
-            display: flex;
-            flex-direction: column;
-            input {
-                margin-bottom: 10px;
-            }
-            span {
-                padding: 7px 0;
-            }
-        }
-    }
-    &__overlay {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 5;
-        background-color: $slate-400;
-        opacity: 0.7;
-    }
-    &__popup {
-        position: absolute;
-        top: 50%; /* Đặt vị trí top ở giữa trang */
-        left: 50%; /* Đặt vị trí left ở giữa trang */
-        transform: translate(-50%, -50%);
-        z-index: 6;
-        width: 30%;
-        height: 100%;
-        overflow: auto;
-        // background-color: $neutral-100;
-        @include custom-scrollbar();
-        &::-webkit-scrollbar {
-            width: 6px;
-        }
-        &__content {
-            display: flex;
-            flex-direction: column;
+        &__panel {
+            &__content {
+                display: flex;
+                flex-direction: column;
 
-            input {
-                margin-bottom: 10px;
+                input {
+                    margin-bottom: 8px;
+                }
+                span {
+                    padding: 7px 0;
+                }
             }
-            span {
-                padding: 7px 0;
+        }
+        &__popup {
+            position: absolute;
+            top: 50%; /* Đặt vị trí top ở giữa trang */
+            left: 50%; /* Đặt vị trí left ở giữa trang */
+            transform: translate(-50%, -50%);
+            z-index: 6;
+            width: auto;
+            height: auto;
+            overflow: auto;
+            &__content {
+                display: flex;
+                &__box1 {
+                    margin-right: 50px;
+                }
             }
         }
     }

@@ -36,7 +36,12 @@
                     <img src="@/assets/icons/note-icon.svg" alt="" />
                     Thông tin đã gửi
                 </div>
-                <div class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3">
+                <router-link
+                    class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
+                    :class="{ 'bg-[#5d87ff] text-white hover:bg-[#5d87ff]': isDropdownOpen }"
+                    @click="toggleDropdown"
+                    to="/users"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
                         <path
                             fill="currentColor"
@@ -44,6 +49,43 @@
                         />
                     </svg>
                     Quản lý thông tin
+                    <img v-if="!isDropdownOpen" src="@/assets/icons/arrow-bottom-icon.svg" alt="" class="ml-4" />
+                    <img v-if="isDropdownOpen" src="@/assets/icons/arrow-top-icon.svg" alt="" class="ml-4" />
+                </router-link>
+                <!-- Danh sách các trang -->
+                <div v-if="isDropdownOpen">
+                    <router-link
+                        to="/users"
+                        class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
+                        :class="{ 'text-[#5d87ff]': isUser }"
+                    >
+                        <img src="@/assets/icons/user-icon.svg" alt="" />
+                        User
+                    </router-link>
+                    <router-link
+                        to="/owners"
+                        class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
+                        :class="{ 'text-[#5d87ff]': isOwner }"
+                    >
+                        <img src="@/assets/icons/user-icon.svg" alt="" />
+                        Owner
+                    </router-link>
+                    <router-link
+                        to="/vehicles"
+                        class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
+                        :class="{ 'text-[#5d87ff]': isVehicle }"
+                    >
+                        <img src="@/assets/icons/car-icon.svg" alt="" />
+                        Vehicle
+                    </router-link>
+                    <router-link
+                        to="/violations"
+                        class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
+                        :class="{ 'text-[#5d87ff]': isViolation }"
+                    >
+                        <img src="@/assets/icons/violation-icon.svg" alt="" />
+                        Violation
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -55,8 +97,38 @@ import { authStore } from '@/stores/auth.store'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const isDashboard = computed(() => route.name === 'dashboard')
+const isUser = computed(() => route.name === 'users')
+const isOwner = computed(() => route.name === 'owners')
+const isVehicle = computed(() => route.name === 'vehicles')
+const isViolation = computed(() => route.name === 'violations')
+
+
 const user = computed(() => authStore.value.user)
 onBeforeMount(() => {
     console.log(user.value, route)
 })
 </script>
+
+<script>
+export default {
+    data() {
+        return {
+            isDropdownOpen: false,
+            isUser: false, // Đổi giá trị này tùy theo trạng thái người dùng
+        }
+    },
+    methods: {
+        toggleDropdown() {
+            this.isDropdownOpen = !this.isDropdownOpen
+        },
+    },
+}
+</script>
+<style>
+:root {
+    --gradient-default: linear-gradient(135deg, #868cff 0%, #4318ff 100%);
+}
+.gradient-color {
+    color: var(--gradient-default);
+}
+</style>
