@@ -22,8 +22,8 @@ export const changeBalance = async (userID, balance) => {
 export const deleteUser = async (id) => {
     return await axiosApiInstance.delete(`/users/${id}`)
 }
-export const getAllUsers = async () => {
-    return await axiosApiInstance.get('/users')
+export const getAllUsers = async (key_word = '', page = 1, pageSize = 10) => {
+    return await axiosApiInstance.get(`/users?key_word=${key_word}&page=${page}&pageSize=${pageSize}`)
 }
 export const updateUser = async (id, newUser) => {
     return await axiosApiInstance.put(`/users/${id}`, newUser)
