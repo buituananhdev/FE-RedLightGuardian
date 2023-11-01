@@ -6,8 +6,10 @@
                 :list-header="listHeader"
                 :request-url="'/violations'"
                 :list-data="listData"
+                :search-value-props="searchValue"
                 class="container-violation__page__table"
                 @click-button="showPopup"
+                @on-search="onSearchInput"
             >
                 <template #tbody>
                     <div
@@ -43,6 +45,8 @@
                 class="container-violation__page__panel"
                 @close-panel="closePanelView"
                 @update-object="updateViolation"
+                @allow-update="isEdit = true"
+                @cancel="isEdit = false"
             >
                 <template #pbody>
                     <div class="container-violation__page__panel__content">

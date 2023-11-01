@@ -6,8 +6,10 @@
                 :list-header="listHeader"
                 :request-url="'/vehicles'"
                 :list-data="listData"
+                :search-value-props="searchValue"
                 class="container-vehicle__page__table"
                 @click-button="showPopup"
+                @on-search="onSearchInput"
             >
                 <template #tbody>
                     <div
@@ -48,6 +50,8 @@
                 class="container-vehicle__page__panel"
                 @close-panel="closePanelView"
                 @update-object="updateVehicle"
+                @allow-update="isEdit = true"
+                @cancel="isEdit = false"
             >
                 <template #pbody>
                     <div class="container-vehicle__page__panel__content">
