@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 // import { getInfo } from '@/services/auth.service'
 export const authStore = ref({
-    user: null,
+    // user: null,
     isLoggedIn: false,
 })
 

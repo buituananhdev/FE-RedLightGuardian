@@ -126,18 +126,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-canvas {
-    background-image: url('../../assets/img/test-draw.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100% 100%;
-}
 .draw-container {
     display: flex;
     align-items: center;
     widows: 100%;
     height: 100%;
     canvas {
+        background-image: url('../../assets/img/test-draw.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
         width: 100%;
         height: 100%;
     }
@@ -145,10 +143,9 @@ canvas {
         display: flex;
         flex-direction: column;
         margin-left: 30px; /* Tạo khoảng cách từ canvas */
+        button {
+            margin-top: 20px; /* Tạo khoảng cách giữa các nút */
+        }
     }
-}
-
-button {
-    margin-top: 20px; /* Tạo khoảng cách giữa các nút */
 }
 </style>
