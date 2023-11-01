@@ -5,7 +5,13 @@
                 <img src="@/assets/icons/arrow-right-icon.svg" alt="close" @click="closePanel()" />
                 <p class="panel-view__header__title__content">{{ title }}</p>
             </div>
-            <button v-if="isEdit" class="panel-view__header__button" @click="updateObject()">Update</button>
+            <div class="panel-view__header__group-button">
+                <button v-if="!isEdit" class="btn button--primary btn__update" @click="allowUpdate">Update</button>
+                <div v-else class="panel-view__header__group-button__confirm">
+                    <button @click="cancel" class="btn button--secondary">Cancel</button>
+                    <button @click="updateObject" class="btn button--primary">Save</button>
+                </div>
+            </div>
         </div>
         <div class="panel-view__body">
             <slot name="pbody"></slot>
@@ -29,6 +35,12 @@ export default {
         },
         updateObject() {
             this.$emit('update-object')
+        },
+        allowUpdate() {
+            this.$emit('allow-update')
+        },
+        cancel() {
+            this.$emit('cancel')
         },
     },
 }
@@ -61,16 +73,53 @@ export default {
             &__content {
                 color: $text-light-icon-secondary-1;
                 text-align: center;
-                font-size: 28px;
+                font-size: 22px;
                 font-weight: 700;
             }
         }
-        &__button {
-            padding: 6px 25px;
-            color: $slate-50;
-            margin-top: 20px;
-            border-radius: 80px;
-            background: var(--gradient-default, linear-gradient(135deg, #868cff 0%, #4318ff 100%));
+        &__group-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            align-self: stretch;
+            &__confirm {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+            .btn {
+                display: flex;
+                width: 60px;
+                height: 36px;
+                padding: 6px 10px;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                border-radius: 80px;
+                font-size: 12px;
+                &__update {
+                    width: 80px;
+                }
+                &.button--primary {
+                    background: $gradient-default;
+                    text-align: center;
+                    @include text-style(14px, 150%, 600, $neutral-100, 0);
+                    &:hover {
+                        background: $gradient-hover;
+                    }
+                }
+                &.button--secondary {
+                    border: 1px solid $primary-500;
+                    @include text-style(14px, 150%, 600, $primary-500, 0);
+                    &:hover {
+                        background: $gradient-default;
+                        border: none;
+                        color: #ffff;
+                    }
+                }
+            }
         }
     }
 }

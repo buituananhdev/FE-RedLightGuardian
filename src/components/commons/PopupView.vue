@@ -145,19 +145,18 @@ export default {
                 background: $gradient-default;
                 text-align: center;
                 @include text-style(14px, 150%, 600, $neutral-100, 0);
-
-            }
-            &.button--primary:hover {
-                background: $gradient-hover;
+                &:hover {
+                    background: $gradient-hover;
+                }
             }
             &.button--secondary {
                 border: 1px solid $primary-500;
                 @include text-style(14px, 150%, 600, $primary-500, 0);
-            }
-            &.button--secondary:hover {
-                background: $gradient-default;
-                border: none;
-                color: #ffff;
+                &:hover {
+                    background: $gradient-default;
+                    border: none;
+                    color: #ffff;
+                }
             }
         }
     }

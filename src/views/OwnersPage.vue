@@ -9,8 +9,10 @@
                 :list-header="listHeader"
                 :request-url="'/test'"
                 :list-data="listData"
+                :search-value-props="searchValue"
                 class="container-owner__page__table"
                 @click-button="showPopup"
+                @on-search="onSearchInput"
             >
                 <template #tbody>
                     <div
@@ -40,8 +42,10 @@
                 :title="title"
                 :is-edit="isEdit"
                 class="container-owner__page__panel"
-                @close-panel="isShowDetail = false"
+                @close-panel="closePanel"
                 @update-object="updateOwner"
+                @allow-update="isEdit = true"
+                @cancel="isEdit = false"
             >
                 <template #pbody>
                     <div class="container-owner__page__panel__content">
@@ -115,19 +119,19 @@ export default {
         return {
             listHeader: [
                 {
-                    title: 'Id',
+                    title: 'STT',
                     width: 15,
                 },
                 {
-                    title: 'Citizen id',
+                    title: 'CCCD',
                     width: 15,
                 },
                 {
-                    title: 'Name',
+                    title: 'Tên',
                     width: 20,
                 },
                 {
-                    title: 'Address',
+                    title: 'Địa chỉ',
                     width: 20,
                 },
                 {
@@ -145,12 +149,33 @@ export default {
             isShowDetail: false,
             title: 'View Detail',
             isShowPopup: false,
+            searchValue: '',
+            timeOutId: null,
         }
     },
+    computed: {
+        pageSearch() {
+            return this.$route.query.search
+        },
+    },
+    watch: {
+        pageParam: async function () {
+            this.refreshData()
+        },
+    },
     mounted() {
-        this.fetchData()
+        // this.fetchData()
+        this.searchValue = this.pageSearch
+        this.refreshData()
     },
     methods: {
+        refreshData() {
+            if (this.searchValue !== '') {
+                this.Search()
+            } else {
+                this.fetchData()
+            }
+        },
         async fetchData() {
             try {
                 const res = await getAllOwners()
@@ -197,12 +222,12 @@ export default {
                 if (res.data.status === 'success') {
                     this.isShowDetail = false
                     this.isEdit = false
+                    this.fetchData()
                     this.$notify({
                         type: 'success',
                         title: 'Update Owner',
                         text: 'Update owner successfully!',
                     })
-                    this.getAllOwners()
                 }
             } catch (error) {
                 console.error(error)
@@ -249,6 +274,36 @@ export default {
                     duration: 1000,
                 })
             }
+        },
+        async Search() {
+            try {
+                // const { searchValue } = this
+                // let url = `/assets&pageSize=10`
+                // if (searchValue) {
+                //     url += `&searchQuery=${searchValue}`
+                // }
+                const res = await getAllOwners(this.searchValue)
+                this.listData = res.data.data
+                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
+                const query = {}
+                if (this.searchValue) {
+                    query.search = this.searchValue
+                }
+                this.$router.push({ path: `/owners`, query })
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        closePanel() {
+            this.isShowDetail = false
+            this.isEdit = false
+        },
+        onSearchInput(searchValue) {
+            this.searchValue = searchValue
+            clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
+            this.timeoutId = setTimeout(() => {
+                this.Search()
+            }, 700) // tạo mới setTimeout() với thời gian chờ là 700ms
         },
     },
 }
