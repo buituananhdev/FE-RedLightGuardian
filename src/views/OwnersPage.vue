@@ -20,14 +20,13 @@
                         :key="item.id"
                         class="container-owner__page__table__row"
                         :class="!(index % 2) ? 'bold' : ''"
+                        @click="getSingleOwner(item.id)"
                     >
                         <span class="container-owner__page__table__row__id">{{ index + 1 }}</span>
                         <span class="container-owner__page__table__row__idCitizen">{{
                             item.citizen_identification
                         }}</span>
-                        <span class="container-owner__page__table__row__username" @click="getSingleOwner(item.id)">{{
-                            item.name
-                        }}</span>
+                        <span class="container-owner__page__table__row__username">{{ item.name }}</span>
                         <span class="container-owner__page__table__row__address">{{ item.address }}</span>
                         <span class="container-owner__page__table__row__email">{{ item.email }}</span>
                         <div class="container-owner__page__table__row__action">
