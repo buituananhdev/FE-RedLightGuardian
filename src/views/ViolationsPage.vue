@@ -1,6 +1,6 @@
 <template>
     <div class="container-violation">
-        <div class="container-violation__page">
+        <div class="container-violation__page table-primary">
             <table-view
                 ref="tableview"
                 :list-header="listHeader"
@@ -17,7 +17,7 @@
                         :class="!(index % 2) ? 'bold' : ''"
                         @click="getSingleViolation(item.id)"
                     >
-                        <span class="container-violation__page__table__row__violationId">{{ item.id }}</span>
+                        <span class="container-violation__page__table__row__violationId">{{ index + 1 }}</span>
                         <span class="container-violation__page__table__row__type">{{ item.type }}</span>
                         <span class="container-violation__page__table__row__deadline">{{ item.deadline }}</span>
                         <span class="container-violation__page__table__row__status">{{ item.status }}</span>
@@ -27,7 +27,11 @@
                         <span class="container-violation__page__table__row__imageUrl">{{ item.imageUrl }}</span>
                         <div class="container-violation__page__table__row__action">
                             <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteViolation(item.id)" />
+                            <img
+                                src="@/assets/icons/delete-icon.svg"
+                                alt="delete"
+                                @click.stop="showDeleteVerifiedPopup()"
+                            />
                         </div>
                     </div>
                 </template>
@@ -118,6 +122,20 @@
                     </template>
                 </popup-view>
             </full-modal>
+            <full-modal v-if="isShowDeleteVerifiedPopup">
+                <popup-view
+                    title="Xác nhận xóa vi phạm"
+                    class="container-violation__page__popup"
+                    @on-cancel="hiddenDeleteVerifiedPopup"
+                    @on-ok="deleteViolation()"
+                >
+                    <template #popupbody>
+                        <div class="container-violation__page__popup__content">
+                            <span>Bạn xác nhận sẽ xóa vi phạm giao thông này?</span>
+                        </div>
+                    </template>
+                </popup-view>
+            </full-modal>
         </div>
     </div>
 </template>
@@ -138,39 +156,39 @@ export default {
         return {
             listHeader: [
                 {
-                    title: 'Id',
+                    title: 'STT',
                     width: 5,
                 },
                 {
-                    title: 'Type',
+                    title: 'Loại vi phạm',
                     width: 15,
                 },
                 {
-                    title: 'Deadline',
+                    title: 'Hạn xử lý',
                     width: 10,
                 },
                 {
-                    title: 'Status',
+                    title: 'Trạng thái',
                     width: 15,
                 },
                 {
-                    title: 'Vehicle ID',
+                    title: 'Mã xe',
                     width: 5,
                 },
                 {
-                    title: 'Time',
+                    title: 'Thời gian vi phạm',
                     width: 10,
                 },
                 {
-                    title: 'Camera ID',
+                    title: 'Mã máy ảnh',
                     width: 5,
                 },
                 {
-                    title: 'Image Url',
+                    title: 'Hình ảnh vi phạm',
                     width: 25,
                 },
                 {
-                    title: 'Action',
+                    title: 'Thao tác',
                     width: 10,
                 },
             ],
@@ -180,6 +198,7 @@ export default {
             isShowDetail: false,
             title: 'View Detail',
             isShowPopup: false,
+            isShowDeleteVerifiedPopup: false,
         }
     },
     mounted() {
@@ -194,10 +213,12 @@ export default {
                 console.error(error)
             }
         },
-        async deleteViolation(id) {
+        async deleteViolation() {
+            const id = localStorage.getItem('idViolation')
             try {
                 const res = await deleteViolation(id)
                 if (res.data.status === 'success') {
+                    this.isShowDeleteVerifiedPopup = false
                     this.listData = this.listData.filter((violation) => violation.id !== id)
                     this.$notify({
                         type: 'success',
@@ -288,6 +309,12 @@ export default {
             this.isEdit = false
             this.isShowPopup = false
         },
+        showDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = true
+        },
+        hiddenDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = false
+        },
     },
 }
 </script>
@@ -304,7 +331,6 @@ export default {
                 padding: 0 16px;
                 padding-right: 20px;
                 display: flex;
-                flex: 1;
                 width: 100%;
                 gap: 20px;
                 cursor: pointer;
@@ -354,10 +380,14 @@ export default {
             }
         }
         &__panel {
+            overflow: auto;
+            @include custom-scrollbar();
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
             &__content {
                 display: flex;
                 flex-direction: column;
-
                 input {
                     margin-bottom: 8px;
                 }
@@ -371,7 +401,7 @@ export default {
             top: 50%; /* Đặt vị trí top ở giữa trang */
             left: 50%; /* Đặt vị trí left ở giữa trang */
             transform: translate(-50%, -50%);
-            z-index: 6;
+            z-index: 3;
             width: auto;
             height: auto;
             overflow: auto;
@@ -379,6 +409,9 @@ export default {
                 display: flex;
                 &__box1 {
                     margin-right: 50px;
+                }
+                input {
+                    min-width: 300px;
                 }
             }
         }

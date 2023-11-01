@@ -34,12 +34,12 @@
     <PopupEditUsers v-if="isEditPopupVisible" :user="isEditPopupVisible" @close="exitPopupEdit" />
 </template>
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref } from 'vue'
 import { authStore } from '@/stores/auth.store'
 import PopupEditUsers from '../Users/PopupEditUsers.vue'
 const isPopupVisible = ref(false)
 const isEditPopupVisible = ref(false)
-const emits = defineEmits(['close'])
+// const emits = defineEmits(['close'])
 
 const togglePopup = () => {
     console.log('togglePopup')

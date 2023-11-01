@@ -13,6 +13,9 @@
             <the-footer />
         </div>
     </div>
+    <!-- <div v-if="authStore.isLoggedIn" class="rounded">
+        <slot></slot>
+    </div> -->
 </template>
 
 <script setup>
