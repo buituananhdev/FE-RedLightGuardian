@@ -15,7 +15,9 @@
     "element-plus": "^2.3.14",
     "qs": "^6.11.2",
     "sass": "^1.69.0",
+    "vee-validate": "3",
     "vue": "^3.2.47",
+    "vue-multiselect": "^2.1.8",
     "vue-router": "^4.1.6",
     "vue3-apexcharts": "^1.4.1"
   },

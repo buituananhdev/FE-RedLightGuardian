@@ -162,7 +162,7 @@ export default {
             this.refreshData()
         },
     },
-    mounted() {
+    created() {
         // this.fetchData()
         this.searchValue = this.pageSearch
         this.refreshData()
