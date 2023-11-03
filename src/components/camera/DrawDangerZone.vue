@@ -1,22 +1,12 @@
 <template>
-    <div>
-        <canvas
-            ref="canvas"
-            @mousedown="startDrawing"
-            @mouseup="stopDrawing"
-            @mousemove="draw"
-            width="1600"
-            height="600"
-            style="border: 1px solid black"
-        ></canvas>
-        <br />
-        <button @click="saveCoordinates">Lưu Tọa Độ vào JSON</button>
-        <br />
-        <button @click="tryLoadCoordinates">Tải Tọa Độ từ JSON</button>
-        <br />
-        <button @click="resetDrawing">Xóa Hình</button>
-        <br />
-        <button @click="confirmDrawing">Xác Nhận</button>
+    <div class="draw-container">
+        <canvas ref="canvas" @mousedown="startDrawing" @mouseup="stopDrawing" style="border: 1px solid black"> </canvas>
+        <div class="button-container">
+            <button @click="saveCoordinates">Lưu Tọa Độ vào JSON</button>
+            <button @click="tryLoadCoordinates">Tải Tọa Độ từ JSON</button>
+            <button @click="resetDrawing">Xóa Hình</button>
+            <button @click="confirmDrawing">Xác Nhận</button>
+        </div>
     </div>
 </template>
 
@@ -31,17 +21,23 @@ export default {
             dangerZone: [],
             isConfirmed: false,
             coordinatesData: [],
+            drawDelay: 500, // Thời gian trễ (0.5 giây)
         }
+    },
+    computed: {
+        canStartDrawing() {
+            return !this.isDrawing
+        },
     },
     mounted() {
         this.canvas = this.$refs.canvas
         this.ctx = this.canvas.getContext('2d')
-        this.tryLoadCoordinates(); // Thử tải tọa độ khi component được mounted
+        this.tryLoadCoordinates() // Thử tải tọa độ khi component được mounted
     },
     methods: {
         tryLoadCoordinates() {
             axios
-                .get('/coordinates.json') // Thay đổi đường dẫn tới tệp JSON của bạn
+                .get('https://quy-1.pularbacc.com/api/cameras/1/coordinates') // Thay đổi đường dẫn tới tệp JSON của bạn
                 .then((response) => {
                     this.dangerZone = response.data
                     this.redrawCoordinates() // Gọi hàm vẽ lại hình sau khi tải dữ liệu
@@ -52,8 +48,7 @@ export default {
                 })
         },
         startDrawing(event) {
-            if (this.dangerZone.length < 4) {
-                // Giới hạn số lượng điểm được click
+            if (this.dangerZone.length < 4 && !this.isDrawing) {
                 this.isDrawing = true
                 const x = event.clientX - this.canvas.getBoundingClientRect().left
                 const y = event.clientY - this.canvas.getBoundingClientRect().top
@@ -62,16 +57,9 @@ export default {
                 this.isConfirmed = false
 
                 if (this.dangerZone.length === 4) {
-                    this.confirmDrawing() // Xác nhận tự động khi có 4 điểm
+                    this.confirmDrawing()
                 }
             }
-        },
-        draw(event) {
-            if (!this.isDrawing) return
-            const x = event.clientX - this.canvas.getBoundingClientRect().left
-            const y = event.clientY - this.canvas.getBoundingClientRect().top
-            this.dangerZone.push({ x, y })
-            this.drawPoint(x, y)
         },
         stopDrawing() {
             this.isDrawing = false
@@ -115,9 +103,6 @@ export default {
             a.click()
             URL.revokeObjectURL(jsonUrl)
         },
-        loadCoordinates() {
-            this.tryLoadCoordinates() // Thử tải tọa độ khi nút "Tải Tọa Độ từ JSON" được nhấn
-        },
         resetDrawing() {
             this.isDrawing = false
             this.dangerZone = []
@@ -140,3 +125,27 @@ export default {
     },
 }
 </script>
+<style lang="scss" scoped>
+.draw-container {
+    display: flex;
+    align-items: center;
+    widows: 100%;
+    height: 100%;
+    canvas {
+        background-image: url('../../assets/img/test-draw.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+        width: 100%;
+        height: 100%;
+    }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        margin-left: 30px; /* Tạo khoảng cách từ canvas */
+        button {
+            margin-top: 20px; /* Tạo khoảng cách giữa các nút */
+        }
+    }
+}
+</style>

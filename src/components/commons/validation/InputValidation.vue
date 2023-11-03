@@ -23,35 +23,35 @@ export default {
             dataTest: '',
             isFocused: false,
             isShowPassword: false,
-        };
+        }
     },
     computed: {
         modelValue: {
             get() {
-                return this.value;
+                return this.value
             },
             set(newVal) {
-                this.$emit('input', newVal);
+                this.$emit('input', newVal)
             },
         },
     },
     methods: {
         toggleShowPassword() {
-            this.isShowPassword = !this.isShowPassword;
+            this.isShowPassword = !this.isShowPassword
         },
         onFocus() {
-            this.isFocused = true;
+            this.isFocused = true
         },
         onBlur() {
-            this.isFocused = false;
+            this.isFocused = false
         },
     },
     watch: {
         value() {
-            this.$emit('resetInvalidInput');
+            this.$emit('resetInvalidInput')
         },
     },
-};
+}
 </script>
 <template>
     <ValidationProvider
@@ -62,18 +62,12 @@ export default {
         tag="div"
     >
         <div class="input-validation__label">
-            <label :for="$attrs.id" class="sr-only"
-                >{{ $attrs.nameField }}
-            </label>
+            <label :for="$attrs.id" class="sr-only">{{ $attrs.nameField }} </label>
             <span v-if="$attrs.isRequired" class="isRequired">*</span>
         </div>
         <div
             class="input__container"
-            :class="[
-                { focused: isFocused },
-                { error: !!errors[0] },
-                { noResetValidate: noResetValidate },
-            ]"
+            :class="[{ focused: isFocused }, { error: !!errors[0] }, { noResetValidate: noResetValidate }]"
         >
             <input
                 :id="$attrs.id"
@@ -112,25 +106,14 @@ export default {
                 src="~/assets/icons/icon-eye-off.svg"
                 alt=""
             />
-            <img
-                v-if="$attrs.type === 'date'"
-                src="~/assets/icons/icon-calendar.svg"
-                alt=""
-            />
+            <img v-if="$attrs.type === 'date'" src="~/assets/icons/icon-calendar.svg" alt="" />
         </div>
         <span v-if="!isValid" class="input-validation__error">
             <img src="~/assets/icons/icon-dangerous.svg" alt="" />
             <span>{{ invalidContent }}</span>
         </span>
-        <span
-            v-else-if="(errors[0] && isFocused) || noResetValidate"
-            class="input-validation__error"
-        >
-            <img
-                v-if="errors[0]"
-                src="~/assets/icons/icon-dangerous.svg"
-                alt=""
-            />
+        <span v-else-if="(errors[0] && isFocused) || noResetValidate" class="input-validation__error">
+            <img v-if="errors[0]" src="~/assets/icons/icon-dangerous.svg" alt="" />
             <span>
                 {{ errors[0] }}
             </span>
@@ -152,13 +135,7 @@ export default {
         gap: 3px;
         align-items: center;
         label {
-            @include text-style(
-                12px,
-                150%,
-                600,
-                $text-light-icon-secondary-1,
-                normal
-            );
+            @include text-style(12px, 150%, 600, $text-light-icon-secondary-1, normal);
         }
         span {
             font-family: Montserrat !important;
@@ -184,23 +161,11 @@ export default {
             outline: none;
             border: none;
             background: transparent;
-            @include text-style(
-                14px,
-                150%,
-                400,
-                $text-light-icon-secondary-1,
-                normal
-            );
+            @include text-style(14px, 150%, 400, $text-light-icon-secondary-1, normal);
         }
 
         input::placeholder {
-            @include text-style(
-                14px,
-                150%,
-                400,
-                $text-light-icon-disabled,
-                normal
-            );
+            @include text-style(14px, 150%, 400, $text-light-icon-disabled, normal);
         }
 
         input:-webkit-autofill,

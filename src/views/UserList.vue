@@ -17,43 +17,18 @@
                         :class="!(index % 2) ? 'bold' : ' unbold'"
                     >
                         <span class="container-user__page__table__row__id">{{ index + 1 }}</span>
-                        <span class="container-user__page__table__row__username" @click="getSingleUser(item.id)">{{
-                            item.username
-                        }}</span>
+                        <span class="container-user__page__table__row__username">
+                            {{ item.username }}
+                        </span>
+                        <span class="container-user__page__table__row__email">
+                            {{ item.email }}
+                        </span>
                         <div class="container-user__page__table__row__action">
-                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
                             <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteUser(item.id)" />
                         </div>
                     </div>
                 </template>
             </table-view>
-            <panel-view
-                :title="title"
-                :isEdit="isEdit"
-                class="container-user__page__panel"
-                v-if="isShowDetail"
-                @close-panel="isShowDetail = false"
-                @update-object="updateUser"
-            >
-                <template v-slot:pbody>
-                    <div class="container-user__page__panel__content">
-                        <div class="label-input">
-                            <span>Username:</span>
-                            <input type="text" v-model="currentUser.username" name="" id="name" :disabled="!isEdit" />
-                        </div>
-                        <div class="label-input">
-                            <span>Password:</span>
-                            <input
-                                type="password"
-                                v-model="currentUser.password"
-                                name=""
-                                id="address"
-                                :disabled="!isEdit"
-                            />
-                        </div>
-                    </div>
-                </template>
-            </panel-view>
             <full-modal v-if="isShowPopup">
                 <popup-view
                     title="Create User"
@@ -70,6 +45,10 @@
                             <span>Password:</span>
                             <input type="password" v-model="currentUser.password" name="" id="address" />
                         </div>
+                        <div class="label-input">
+                            <span>Email:</span>
+                            <input type="email" v-model="currentUser.email" name="" id="email" />
+                        </div>
                     </template>
                 </popup-view>
             </full-modal>
@@ -78,28 +57,31 @@
 </template>
 
 <script>
-import { deleteUser, getAllUsers, getSingleUser, updateUser, addUser } from '@/services/user.service'
+import { deleteUser, getAllUsers, updateUser, addUser } from '@/services/user.service'
 export default {
     data() {
         return {
             listHeader: [
                 {
-                    title: 'Id Citizen',
-                    width: 20,
+                    title: 'STT',
+                    width: 15,
                 },
                 {
-                    title: 'User Name',
-                    width: 50,
+                    title: 'Tên người dùng',
+                    width: 35,
+                },
+                {
+                    title: 'Email',
+                    width: 30,
                 },
                 {
                     title: 'Action',
-                    width: 30,
+                    width: 20,
                 },
             ],
             listData: [],
             currentUser: {},
             isEdit: false,
-            isShowDetail: false,
             title: 'View Detail',
             isShowPopup: false,
         }
@@ -117,7 +99,6 @@ export default {
             }
         },
         async deleteUser(id) {
-            this.isShowDetail = false
             try {
                 const res = await deleteUser(id)
                 if (res.data.status === 'success') {
@@ -137,22 +118,11 @@ export default {
                 })
             }
         },
-        async getSingleUser(id) {
-            try {
-                const res = await getSingleUser(id)
-                this.currentUser = res.data.data
-                localStorage.setItem('idUser', this.currentUser.id)
-                this.isShowDetail = true
-            } catch (error) {
-                console.error(error)
-            }
-        },
         async updateUser() {
             const id = localStorage.getItem('idUser')
             try {
                 const res = await updateUser(id, this.currentUser)
                 if (res.data.status === 'success') {
-                    this.isShowDetail = false
                     this.isEdit = false
                     this.$notify({
                         type: 'success',
@@ -170,15 +140,9 @@ export default {
                 })
             }
         },
-        showUpdate(id) {
-            this.isEdit = true
-            this.isShowDetail = true
-            this.getSingleUser(id)
-        },
         showPopup() {
             this.currentUser = {}
             this.isShowPopup = true
-            this.isShowDetail = false
         },
         hiddenPopup() {
             this.isShowPopup = false
@@ -236,13 +200,16 @@ export default {
                     align-items: center;
                 }
                 &__id {
-                    width: 20%;
+                    width: 15%;
                 }
                 &__username {
-                    width: 50%;
+                    width: 35%;
+                }
+                &__email {
+                    width: 30%;
                 }
                 &__action {
-                    width: 30%;
+                    width: 20%;
                     display: flex;
                     justify-content: center;
                     align-items: center;

@@ -48,7 +48,7 @@ export default {
         },
         typeModal: {
             type: String,
-            default: 'confirm',
+            default: 'header',
         },
         buttonOkContent: {
             type: String,
@@ -112,16 +112,17 @@ export default {
                 color: $danger-700;
             }
 
-            &.confirm {
+            &.header {
                 color: $text-light-icon-secondary-1;
+                text-align: center;
+                font-size: 28px;
                 font-weight: 700;
-                font-size: 18px;
             }
         }
 
         p {
             text-align: center;
-            @include text-style(14px, 150%, 400, $text-light-icon-secondary-2, normal);
+            @include text-style(14px, 150%, 400, $text-light-icon-secondary-2, 0);
         }
     }
 
@@ -133,12 +134,30 @@ export default {
         align-self: stretch;
         .btn {
             display: flex;
-            height: 46px;
-            padding: 16px 24px;
+            width: 120px;
+            height: 36px;
+            padding: 8px 16px;
             justify-content: center;
             align-items: center;
             gap: 4px;
-            flex: 1 0 0;
+            &.button--primary {
+                border-radius: 80px;
+                background: $gradient-default;
+                text-align: center;
+                @include text-style(14px, 150%, 600, $neutral-100, 0);
+                &:hover {
+                    background: $gradient-hover;
+                }
+            }
+            &.button--secondary {
+                border: 1px solid $primary-500;
+                @include text-style(14px, 150%, 600, $primary-500, 0);
+                &:hover {
+                    background: $gradient-default;
+                    border: none;
+                    color: #ffff;
+                }
+            }
         }
     }
 }
