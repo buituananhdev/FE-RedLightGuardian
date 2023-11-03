@@ -3,7 +3,7 @@
         <div class="tableview__header">
             <div class="tableview__header__search">
                 <img src="@/assets/icons/glass-icon.svg" alt="" />
-                <input type="text" class="tableview__header__search" />
+                <input v-model="searchValue" type="text" @input="onSearchInput" />
             </div>
             <button-vue
                 :type-btn="'secondary'"
@@ -18,9 +18,9 @@
             <div class="tableview__container__head">
                 <div class="tableview__container__head__row">
                     <div
-                        class="tableview__container__head__row__cell"
                         v-for="(item, index) in listHeaderFiltered"
                         :key="index"
+                        class="tableview__container__head__row__cell"
                         :style="{ width: columnStyle(item) + '%' }"
                         :class="{
                             'left-align': item.textAlign === 'left',
@@ -61,11 +61,16 @@ export default {
                 return []
             },
         },
+        searchValueProps: {
+            type: String,
+            default: '',
+        },
     },
     emits: ['click'],
     data() {
         return {
             currentPage: 1,
+            searchValue: this.searchValueProps,
         }
     },
     computed: {
@@ -80,6 +85,9 @@ export default {
             const endIndex = startIndex + this.itemsPerPage
             return this.listData.slice(startIndex, endIndex)
         },
+    },
+    mounted() {
+        this.searchValue = this.searchValueProps
     },
     methods: {
         columnStyle(item) {
@@ -106,6 +114,10 @@ export default {
         openPopup() {
             this.$emit('open-popup')
         },
+        onSearchInput() {
+            console.log('this', this.searchValueProps)
+            this.$emit('on-search', this.searchValue)
+        },
     },
 }
 </script>
@@ -130,24 +142,43 @@ export default {
         background-color: #ffff;
         &__search {
             position: relative;
+            width: 40%;
+            height: 100%;
             img {
                 position: absolute;
-                left: 10px;
-                top: 10px;
-                z-index: 2;
-                width: 20px;
+                left: 16px;
+                top: 12px;
             }
             input {
-                padding: 6px 10px 6px 35px;
-                border-radius: 7px;
-                border: 1.5px solid $violet-500;
+                display: flex;
+                padding: 10px 16px;
+                padding-left: 36px;
+                align-items: center;
+                gap: 4px;
+                align-self: stretch;
+                width: 100%;
+                height: 100%;
+                border: 1px solid $neutral-400;
+                background: $neutral-0;
+                border-radius: 8px;
+                @include text-style(12px, 18px, 400, $text-light-secondary-1, 0px);
+                &::placeholder {
+                    @include text-style(12, 18, 400, $text-light-icon-disabled, 0);
+                }
+                &:focus {
+                    border-color: $primary-500;
+                    outline-width: 0;
+                }
             }
         }
         &__button {
             padding: 6px 25px;
-            color: $slate-50;
             border-radius: 80px;
-            background: var(--gradient-default, linear-gradient(135deg, #868cff 0%, #4318ff 100%));
+            background: $gradient-default;
+            @include text-style(14px, 150%, 600, $slate-50, 0);
+            &:hover {
+                background: $gradient-hover;
+            }
         }
     }
     &__pagination {
@@ -213,9 +244,10 @@ export default {
                     display: flex;
                     padding: 12px 24px;
                     text-align: center;
+                    font-family: Noto Sans;
                     span {
                         width: 100%;
-                        @include text-style(14px, 150%, 500, $text-light-icon-secondary-2, normal);
+                        @include text-style(17px, 150%, 600, $text-light-icon-secondary-2, normal);
                         @include truncate(1);
                     }
                 }
@@ -243,7 +275,7 @@ export default {
 
                     span {
                         @include truncate(1);
-                        @include text-style(14px, 150%, 400, $text-light-secondary-1, normal);
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
                     }
                     button {
                         @include truncate(1);
