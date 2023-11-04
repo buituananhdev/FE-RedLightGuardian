@@ -1,9 +1,14 @@
 <template>
     <div class="tableview" :class="{ 'half-width': true }">
         <div class="tableview__header">
-            <div class="tableview__header__search">
-                <img src="@/assets/icons/glass-icon.svg" alt="" />
-                <input v-model="searchValue" type="text" @input="onSearchInput" />
+            <div class="tableview__header__filter-container">
+                <div class="tableview__header__filter-container__search">
+                    <img src="@/assets/icons/glass-icon.svg" alt="" />
+                    <input v-model="searchValue" type="text" @input="onSearchInput" />
+                </div>
+                <div class="tableview__header__filter-container__filter">
+                    <multi-select v-model="value" :options="options"></multi-select>
+                </div>
             </div>
             <button-vue
                 :type-btn="'secondary'"
@@ -65,12 +70,23 @@ export default {
             type: String,
             default: '',
         },
+        valueProps: {
+            type: String,
+            default: '',
+        },
+        options: {
+            type: Array,
+            default() {
+                return []
+            },
+        },
     },
     emits: ['click'],
     data() {
         return {
             currentPage: 1,
             searchValue: this.searchValueProps,
+            value: this.valueProps,
         }
     },
     computed: {
@@ -88,6 +104,7 @@ export default {
     },
     mounted() {
         this.searchValue = this.searchValueProps
+        this.value = this.valueProps
     },
     methods: {
         columnStyle(item) {
@@ -140,35 +157,46 @@ export default {
         align-items: center;
         padding-top: 20px;
         background-color: #ffff;
-        &__search {
-            position: relative;
-            width: 40%;
-            height: 100%;
-            img {
-                position: absolute;
-                left: 16px;
-                top: 12px;
-            }
-            input {
-                display: flex;
-                padding: 10px 16px;
-                padding-left: 36px;
-                align-items: center;
-                gap: 4px;
-                align-self: stretch;
-                width: 100%;
+        &__filter-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 80%;
+            &__search {
+                position: relative;
+                width: 40%;
                 height: 100%;
-                border: 1px solid $neutral-400;
-                background: $neutral-0;
-                border-radius: 8px;
-                @include text-style(12px, 18px, 400, $text-light-secondary-1, 0px);
-                &::placeholder {
-                    @include text-style(12, 18, 400, $text-light-icon-disabled, 0);
+                img {
+                    position: absolute;
+                    left: 16px;
+                    top: 12px;
                 }
-                &:focus {
-                    border-color: $primary-500;
-                    outline-width: 0;
+                input {
+                    display: flex;
+                    padding: 10px 16px;
+                    padding-left: 36px;
+                    align-items: center;
+                    gap: 4px;
+                    align-self: stretch;
+                    width: 100%;
+                    height: 100%;
+                    border: 1px solid $neutral-400;
+                    background: $neutral-0;
+                    border-radius: 8px;
+                    @include text-style(12px, 18px, 400, $text-light-secondary-1, 0px);
+                    &::placeholder {
+                        @include text-style(12, 18, 400, $text-light-icon-disabled, 0);
+                    }
+                    &:focus {
+                        border-color: $primary-500;
+                        outline-width: 0;
+                    }
                 }
+            }
+            &__filter {
+                width: 30%;
+                height: 40px;
+                border: 1px solid black;
             }
         }
         &__button {
@@ -244,7 +272,6 @@ export default {
                     display: flex;
                     padding: 12px 24px;
                     text-align: center;
-                    font-family: Noto Sans;
                     span {
                         width: 100%;
                         @include text-style(17px, 150%, 600, $text-light-icon-secondary-2, normal);

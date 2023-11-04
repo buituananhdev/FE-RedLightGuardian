@@ -5,7 +5,7 @@ import './assets/css/tailwind.css'
 import './assets/css/global.scss'
 import Notifications from '@kyvg/vue3-notification'
 import Multiselect from 'vue-multiselect'
-import { ValidationProvider } from 'vee-validate'
+// import { ValidationProvider } from 'vee-validate'
 import { initAuthStore } from '@/stores/auth.store'
 import { authMiddleware } from '@/router/router.middleware'
 import ModalAlert from '@/components/modals/ModalAlert.vue'
@@ -31,7 +31,7 @@ const initApp = async () => {
     app.component('empty-layout', emptyLayout)
     app.component('button-vue', ButtonVue)
     app.component('multi-select', Multiselect)
-    app.component('ValidationProvider', ValidationProvider)
+    // app.component('ValidationProvider', ValidationProvider)
 
     app.use(Notifications)
     app.mount('#app')

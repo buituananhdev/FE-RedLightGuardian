@@ -33,7 +33,7 @@
             </table-view>
             <full-modal v-if="isShowPopup">
                 <popup-view
-                    title="Create User"
+                    title="Create Người dùng"
                     class="container-user__page__popup"
                     @onCancel="hiddenPopup"
                     @onOk="createUser"
@@ -77,7 +77,7 @@ export default {
                     width: 30,
                 },
                 {
-                    title: 'Action',
+                    title: 'Hành động',
                     width: 20,
                 },
             ],
@@ -129,15 +129,15 @@ export default {
                     this.listData = this.listData.filter((user) => user.id !== id)
                     this.$notify({
                         type: 'success',
-                        title: 'Delete User',
-                        text: 'Delete user successfully!',
+                        title: 'Xóa Người dùng',
+                        text: 'Xóa người dùng thành công!',
                     })
                 }
             } catch (error) {
                 this.$notify({
                     type: 'error',
-                    title: 'Delete User',
-                    text: 'Delete user failed!',
+                    title: 'Xóa Người dùng',
+                    text: 'Xóa người dùng thất bại!',
                     duration: 1000,
                 })
             }
@@ -150,16 +150,16 @@ export default {
                     this.isEdit = false
                     this.$notify({
                         type: 'success',
-                        title: 'Update User',
-                        text: 'Update user successfully!',
+                        title: 'Update Người dùng',
+                        text: 'Update người dùng thành công!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Update User',
-                    text: 'Update user failed!',
+                    title: 'Update Người dùng',
+                    text: 'Update người dùng thất bại!',
                     duration: 1000,
                 })
             }
@@ -179,8 +179,8 @@ export default {
                     this.isShowPopup = false
                     this.$notify({
                         type: 'success',
-                        title: 'Add User',
-                        text: 'Add user successfully!',
+                        title: 'Add Người dùng',
+                        text: 'Add người dùng thành công!',
                     })
                     this.listData.push(res.data.data)
                 }
@@ -188,8 +188,8 @@ export default {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Add User',
-                    text: 'Add user failed!',
+                    title: 'Add Người dùng',
+                    text: 'Add người dùng thất bại!',
                     duration: 1000,
                 })
             }
