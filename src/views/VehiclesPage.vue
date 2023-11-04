@@ -19,7 +19,7 @@
                         :class="!(index % 2) ? 'bold' : ''"
                         @click="getSingleVehicle(item.id)"
                     >
-                        <span class="container-vehicle__page__table__row__id">{{ item.id }}</span>
+                        <span class="container-vehicle__page__table__row__id">{{ index + 1 }}</span>
                         <span class="container-vehicle__page__table__row__name">{{ item.vehicleName }}</span>
                         <span class="container-vehicle__page__table__row__license">{{ item.licensePlate }}</span>
                         <span class="container-vehicle__page__table__row__ownerId">{{ item.ownerID }}</span>
@@ -34,7 +34,11 @@
                         <span class="container-vehicle__page__table__row__imageUrl">{{ item.imageUrl }}</span> -->
                         <div class="container-vehicle__page__table__row__action">
                             <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteVehicle(item.id)" />
+                            <img
+                                src="@/assets/icons/delete-icon.svg"
+                                alt="delete"
+                                @click.stop="showDeleteVerifiedPopup()"
+                            />
                         </div>
                     </div>
                 </template>
@@ -151,6 +155,20 @@
                     </template>
                 </popup-view>
             </full-modal>
+            <full-modal v-if="isShowDeleteVerifiedPopup">
+                <popup-view
+                    title="Xác nhận xóa phương tiện"
+                    class="container-vehicle__page__popup"
+                    @on-cancel="hiddenDeleteVerifiedPopup"
+                    @on-ok="deleteVehicle()"
+                >
+                    <template #popupbody>
+                        <div class="container-vehicle__page__popup__content">
+                            <span>Bạn xác nhận sẽ xóa phương tiện giao thông này?</span>
+                        </div>
+                    </template>
+                </popup-view>
+            </full-modal>
         </div>
     </div>
 </template>
@@ -165,23 +183,23 @@ export default {
         return {
             listHeader: [
                 {
-                    title: 'ID',
+                    title: 'STT',
                     width: 10,
                 },
                 {
-                    title: 'Vehicle Name',
+                    title: 'Tên xe',
                     width: 20,
                 },
                 {
-                    title: 'License Plate',
+                    title: 'Biển số',
                     width: 20,
                 },
                 {
-                    title: 'Owner ID',
+                    title: 'Mã số chủ xe',
                     width: 10,
                 },
                 {
-                    title: 'Vehicle Type',
+                    title: 'Loại xe',
                     width: 20,
                 },
                 // {
@@ -209,7 +227,7 @@ export default {
                 //     width: 17,
                 // },
                 {
-                    title: 'Action',
+                    title: 'Thao tác',
                     width: 20,
                 },
             ],
@@ -219,6 +237,7 @@ export default {
             isShowDetail: false,
             title: 'View Detail',
             isShowPopup: false,
+            isShowDeleteVerifiedPopup: false,
         }
     },
     mounted() {
@@ -233,10 +252,12 @@ export default {
                 console.error(error)
             }
         },
-        async deleteVehicle(id) {
+        async deleteVehicle() {
+            const id = localStorage.getItem('idVehicle')
             try {
                 const res = await deleteVehicle(id)
                 if (res.data.status === 'success') {
+                    this.isShowDeleteVerifiedPopup = false
                     this.listData = this.listData.filter((vehicle) => vehicle.id !== id)
                     this.$notify({
                         type: 'success',
@@ -298,6 +319,7 @@ export default {
                         title: 'Add Vehicle',
                         text: 'Add vehicle successfully!',
                     })
+                    this.listData.push(res.data.data)
                 }
             } catch (error) {
                 console.error(error)
@@ -327,11 +349,18 @@ export default {
             this.isShowPopup = false
             this.isEdit = false
         },
+        showDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = true
+        },
+        hiddenDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = false
+        },
     },
 }
 </script>
 <style lang="scss" scoped>
 .container-vehicle {
+    background-color: #ffff;
     padding: 20px;
     border-radius: 8px;
     &__page {
@@ -358,7 +387,6 @@ export default {
                     display: flex;
                     justify-content: center;
                     align-content: center;
-                    overflow: hidden;
                 }
                 &__id,
                 &__ownerId {
@@ -386,14 +414,6 @@ export default {
         }
 
         &__panel {
-            // position: absolute;
-            // right: 0;
-            // top: 50%;
-            // transform: translate(0, -50%);
-            // z-index: 2;
-            // width: 30%;
-            // height: 100%;
-            // background-color: $neutral-200;
             overflow: auto;
             @include custom-scrollbar();
             &::-webkit-scrollbar {
@@ -422,7 +442,11 @@ export default {
             &__content {
                 display: flex;
                 &__box1 {
-                    margin-right: 50px;
+                    margin-right: 70px;
+                }
+                input {
+                    min-width: 300px;
+                    margin-bottom: 10px;
                 }
             }
         }

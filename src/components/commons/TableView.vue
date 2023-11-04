@@ -244,9 +244,10 @@ export default {
                     display: flex;
                     padding: 12px 24px;
                     text-align: center;
+                    font-family: Noto Sans;
                     span {
                         width: 100%;
-                        @include text-style(14px, 150%, 500, $text-light-icon-secondary-2, normal);
+                        @include text-style(17px, 150%, 600, $text-light-icon-secondary-2, normal);
                         @include truncate(1);
                     }
                 }
