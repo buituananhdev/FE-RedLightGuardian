@@ -35,6 +35,13 @@ body {
             outline-width: 0;
         }
     }
+
+    img {
+        border-radius: 8px;
+        border: 1px solid $neutral-400;
+        gap: 4px;
+    }
+
 }
 
 .table-primary {

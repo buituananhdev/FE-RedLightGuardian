@@ -1,6 +1,14 @@
 <template>
     <div class="draw-container">
-        <canvas ref="canvas" @mousedown="startDrawing" @mouseup="stopDrawing" style="border: 1px solid black"> </canvas>
+        <canvas
+            ref="canvas"
+            width="1280"
+            height="720"
+            style="border: 1px solid black"
+            @mousedown="startDrawing"
+            @mouseup="stopDrawing"
+        >
+        </canvas>
         <div class="button-container">
             <button @click="saveCoordinates">Lưu Tọa Độ vào JSON</button>
             <button @click="tryLoadCoordinates">Tải Tọa Độ từ JSON</button>
@@ -37,21 +45,31 @@ export default {
     methods: {
         tryLoadCoordinates() {
             axios
-                .get('https://quy-1.pularbacc.com/api/cameras/1/coordinates') // Thay đổi đường dẫn tới tệp JSON của bạn
+                .get('http://localhost:3011/api/cameras/1') // Thay đổi URL để lấy thông tin của camera có id 1
                 .then((response) => {
-                    this.dangerZone = response.data
-                    this.redrawCoordinates() // Gọi hàm vẽ lại hình sau khi tải dữ liệu
+                    const cameraData = response.data
+                    if (cameraData.coordinates) {
+                        // Kiểm tra nếu camera có thông tin tọa độ
+                        this.dangerZone = JSON.parse(cameraData.coordinates) // Chuyển chuỗi JSON thành mảng tọa độ
+                        this.redrawCoordinates() // Gọi hàm vẽ lại hình sau khi tải dữ liệu
+                    } else {
+                        alert('Camera không có thông tin tọa độ.')
+                    }
                 })
                 .catch((error) => {
-                    console.error('Lỗi khi tải dữ liệu từ JSON:', error)
-                    alert('Có lỗi xảy ra khi tải dữ liệu từ JSON.')
+                    console.error('Lỗi khi tải dữ liệu từ API:', error)
+                    alert('Có lỗi xảy ra khi tải dữ liệu từ API.')
                 })
         },
         startDrawing(event) {
             if (this.dangerZone.length < 4 && !this.isDrawing) {
                 this.isDrawing = true
-                const x = event.clientX - this.canvas.getBoundingClientRect().left
-                const y = event.clientY - this.canvas.getBoundingClientRect().top
+                const x =
+                    (event.clientX - this.canvas.getBoundingClientRect().left) *
+                    (this.canvas.width / this.canvas.clientWidth)
+                const y =
+                    (event.clientY - this.canvas.getBoundingClientRect().top) *
+                    (this.canvas.height / this.canvas.clientHeight)
                 this.dangerZone.push({ x, y })
                 this.drawPoint(x, y)
                 this.isConfirmed = false
@@ -92,17 +110,46 @@ export default {
         clearCanvas() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
         },
-        saveCoordinates() {
-            const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
-                type: 'application/json',
+        roundCoordinates() {
+            this.dangerZone = this.dangerZone.map((point) => {
+                return {
+                    x: Math.round(point.x),
+                    y: Math.round(point.y),
+                }
             })
-            const jsonUrl = URL.createObjectURL(jsonBlob)
-            const a = document.createElement('a')
-            a.href = jsonUrl
-            a.download = 'coordinates.json'
-            a.click()
-            URL.revokeObjectURL(jsonUrl)
         },
+        saveCoordinates() {
+            if (!this.isConfirmed) {
+                alert('Vui lòng xác nhận tọa độ trước khi lưu.')
+                return
+            }
+            this.roundCoordinates()
+
+            // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
+            //     type: 'application/json',
+            // })
+            // const jsonUrl = URL.createObjectURL(jsonBlob)
+            // const a = document.createElement('a')
+            // a.href = jsonUrl
+            // a.download = 'coordinates.json'
+            // a.click()
+            // URL.revokeObjectURL(jsonUrl)
+            // console.log(JSON.stringify(this.dangerZone))
+
+            axios
+                .patch(`http://localhost:3011/api/cameras/1`, {
+                    coordinates: JSON.stringify(this.dangerZone),
+                })
+                .then(() => {
+                    console.log('Tọa độ đã được cập nhật thành công.')
+                    alert('Tọa độ đã được lưu.')
+                })
+                .catch((error) => {
+                    console.error('Lỗi khi cập nhật tọa độ:', error)
+                    alert('Có lỗi xảy ra khi cập nhật tọa độ.')
+                })
+        },
+
         resetDrawing() {
             this.isDrawing = false
             this.dangerZone = []
@@ -128,24 +175,18 @@ export default {
 <style lang="scss" scoped>
 .draw-container {
     display: flex;
-    align-items: center;
-    widows: 100%;
+    flex-direction: column;
+    width: 100%;
     height: 100%;
+    overflow: hidden; /* Ẩn phần ngoài khung hình */
     canvas {
         background-image: url('../../assets/img/test-draw.png');
         background-repeat: no-repeat;
-        background-position: center;
-        background-size: 100% 100%;
-        width: 100%;
-        height: 100%;
-    }
-    .button-container {
-        display: flex;
-        flex-direction: column;
-        margin-left: 30px; /* Tạo khoảng cách từ canvas */
-        button {
-            margin-top: 20px; /* Tạo khoảng cách giữa các nút */
-        }
+        background-size: contain;
+        max-width: 100%; /* Không vượt quá kích thước ban đầu */
+        max-height: 100%; /* Không vượt quá kích thước ban đầu */
+        width: 80%;
+        height: 80%;
     }
 }
 </style>
