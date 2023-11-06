@@ -3,13 +3,17 @@
         <div class="container-vehicle__page table-primary">
             <table-view
                 ref="tableview"
+                class="container-vehicle__page__table"
                 :list-header="listHeader"
                 :request-url="'/vehicles'"
                 :list-data="listData"
                 :search-value-props="searchValue"
-                class="container-vehicle__page__table"
+                :is-have-content="isHaveContent"
+                :meta="meta"
                 @click-button="showPopup"
                 @on-search="onSearchInput"
+                @go-to-next-page="goToNextPage"
+                @go-to-prev-page="goToPrevPage"
             >
                 <template #tbody>
                     <div
@@ -247,16 +251,32 @@ export default {
             isShowDeleteVerifiedPopup: false,
             searchValue: '',
             timeOutId: null,
+            meta: [],
+            isHaveContent: false,
         }
     },
     computed: {
         pageSearch() {
             return this.$route.query.search
         },
+        pageParam() {
+            return this.$route.query.page
+        },
     },
     watch: {
         pageParam: async function () {
             this.refreshData()
+        },
+        listData: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    this.isHaveContent = true
+                } else {
+                    this.isHaveContent = false
+                }
+            },
         },
     },
     created() {
@@ -266,7 +286,7 @@ export default {
     },
     methods: {
         refreshData() {
-            if (this.searchValue !== '') {
+            if (this.searchValue) {
                 this.Search()
             } else {
                 this.fetchData()
@@ -274,8 +294,9 @@ export default {
         },
         async fetchData() {
             try {
-                const res = await getAllVehicles()
+                const res = await getAllVehicles('', this.pageParam)
                 this.listData = res.data.data
+                this.meta = res.data.meta
             } catch (error) {
                 console.error(error)
             }
@@ -374,8 +395,9 @@ export default {
                     // eslint-disable-next-line no-unused-vars
                     url += `&search=${searchValue}`
                 }
-                const res = await getAllVehicles(this.searchValue)
+                const res = await getAllVehicles(this.searchValue, this.currentPage)
                 this.listData = res.data.data
+                this.meta = res.data.meta
                 // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
                 const query = {}
                 if (selectedOption) {
@@ -428,6 +450,22 @@ export default {
         },
         hiddenDeleteVerifiedPopup() {
             this.isShowDeleteVerifiedPopup = false
+        },
+        goToIndexPage() {
+            const query = {}
+            query.page = this.currentPage
+            if (this.searchValue) {
+                query.search = this.searchValue
+            }
+            this.$router.push({
+                query: query,
+            })
+        },
+        goToNextPage() {
+            this.goToIndexPage(this.currentPage++)
+        },
+        goToPrevPage() {
+            this.goToIndexPage(this.currentPage--)
         },
     },
 }
