@@ -21,12 +21,13 @@
                     >
                         <span class="container-violation__page__table__row__violationId">{{ index + 1 }}</span>
                         <span class="container-violation__page__table__row__type">{{ item.type }}</span>
-                        <span class="container-violation__page__table__row__deadline">{{ item.deadline }}</span>
+                        <span class="container-violation__page__table__row__deadline">{{
+                            formatDateTime(item.deadline)
+                        }}</span>
                         <span class="container-violation__page__table__row__status">{{ item.status }}</span>
                         <span class="container-violation__page__table__row__vehicleId">{{ item.vehicleID }}</span>
-                        <span class="container-violation__page__table__row__time">{{ item.time }}</span>
+                        <span class="container-violation__page__table__row__time">{{ formatDateTime(item.time) }}</span>
                         <span class="container-violation__page__table__row__cameraId">{{ item.cameraID }}</span>
-                        <span class="container-violation__page__table__row__imageUrl">{{ item.imageUrl }}</span>
                         <div class="container-violation__page__table__row__action">
                             <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
                             <img
@@ -76,7 +77,13 @@
                         </div>
                         <div class="label-input">
                             <span>Image URL:</span>
-                            <input v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit" />
+                            <input v-if="isEdit" v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit" />
+                            <img
+                                v-else
+                                :src="currentViolation.imageUrl"
+                                :alt="currentViolation.type"
+                                :disabled="!isEdit"
+                            />
                         </div>
                     </div>
                 </template>
@@ -169,7 +176,7 @@ export default {
                 },
                 {
                     title: 'Hạn xử lý',
-                    width: 10,
+                    width: 20,
                 },
                 {
                     title: 'Trạng thái',
@@ -181,15 +188,11 @@ export default {
                 },
                 {
                     title: 'Thời gian vi phạm',
-                    width: 10,
+                    width: 20,
                 },
                 {
                     title: 'Mã máy ảnh',
-                    width: 5,
-                },
-                {
-                    title: 'Hình ảnh vi phạm',
-                    width: 25,
+                    width: 10,
                 },
                 {
                     title: 'Thao tác',
@@ -203,12 +206,33 @@ export default {
             title: 'View Detail',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
+            searchValue: '',
+            timeOutId: null,
         }
     },
+    computed: {
+        pageSearch() {
+            return this.$route.query.search
+        },
+    },
+    watch: {
+        pageParam: async function () {
+            this.refreshData()
+        },
+    },
     mounted() {
-        this.fetchData()
+        // this.fetchData()
+        this.searchValue = this.pageSearch
+        this.refreshData()
     },
     methods: {
+        refreshData() {
+            if (this.searchValue !== '') {
+                this.Search()
+            } else {
+                this.fetchData()
+            }
+        },
         async fetchData() {
             try {
                 const res = await getAllViolations()
@@ -257,12 +281,12 @@ export default {
                 if (res.data.status === 'success') {
                     this.isShowDetail = false
                     this.isEdit = false
+                    this.fetchData()
                     this.$notify({
                         type: 'success',
                         title: 'Update Violation',
                         text: 'Update violation successfully!',
                     })
-                    this.fetchData()
                 }
             } catch (error) {
                 console.error(error)
@@ -295,6 +319,32 @@ export default {
                 })
             }
         },
+        async Search() {
+            try {
+                // const { searchValue } = this
+                // let url = `/assets&pageSize=10`
+                // if (searchValue) {
+                //     url += `&searchQuery=${searchValue}`
+                // }
+                const res = await getAllViolations(this.searchValue)
+                this.listData = res.data.data
+                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
+                const query = {}
+                if (this.searchValue) {
+                    query.search = this.searchValue
+                }
+                this.$router.push({ path: `/violations`, query })
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        onSearchInput(searchValue) {
+            this.searchValue = searchValue
+            clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
+            this.timeoutId = setTimeout(() => {
+                this.Search()
+            }, 500) // tạo mới setTimeout() với thời gian chờ là 500ms
+        },
         showUpdate(id) {
             this.isEdit = true
             this.isShowDetail = true
@@ -318,6 +368,17 @@ export default {
         },
         hiddenDeleteVerifiedPopup() {
             this.isShowDeleteVerifiedPopup = false
+        },
+        formatDateTime(timestamp) {
+            // Chuyển timestamp thành đối tượng Date
+            const date = new Date(timestamp)
+
+            // Định dạng ngày/tháng/năm và giờ:phút:giây
+            const formattedDate = `${date.getDate()}/${
+                date.getMonth() + 1
+            }/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+
+            return formattedDate
         },
     },
 }
@@ -353,21 +414,20 @@ export default {
                     align-content: center;
                     overflow: hidden;
                 }
-                &__cameraId,
                 &__violationId,
                 &__vehicleId {
                     width: 5%;
                 }
                 &__time,
                 &__deadline {
-                    width: 10%;
+                    width: 20%;
                 }
                 &__type,
                 &__status {
                     width: 15%;
                 }
-                &__imageUrl {
-                    width: 25%;
+                &__cameraId {
+                    width: 10%;
                 }
                 &__action {
                     width: 10%;
@@ -392,6 +452,7 @@ export default {
             &__content {
                 display: flex;
                 flex-direction: column;
+                margin-bottom: 100px;
                 input {
                     margin-bottom: 8px;
                 }

@@ -2,26 +2,6 @@
     <div class="">
         <div class="w-[280px]"></div>
         <div class="w-[280px] h-[100vh] bg-white fixed top-0 left-0 z-[50]">
-            <div class="flex justify-between">
-                <img
-                    class="w-[180px] object-contain mt-5 ml-4"
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/2560px-Amazon_Web_Services_Logo.svg.png"
-                    alt=""
-                />
-                <div
-                    class="mt-5 cursor-pointer w-10 h-10 flex justify-center items-center hover:bg-slate-100 rounded-full"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-                        <path
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-width="1.5"
-                            d="M4 7h3m13 0h-9m9 10h-3M4 17h9m-9-5h16"
-                        />
-                    </svg>
-                </div>
-            </div>
             <div class="mt-[10px] py-5 px-5 flex flex-col gap-2">
                 <p>HOME</p>
                 <router-link
@@ -32,10 +12,6 @@
                     <img src="@/assets/icons/home-icon.svg" alt="" />
                     Trang chủ
                 </router-link>
-                <div class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3">
-                    <img src="@/assets/icons/note-icon.svg" alt="" />
-                    Thông tin đã gửi
-                </div>
                 <router-link
                     class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                     :class="{ 'bg-[#5d87ff] text-white hover:bg-[#5d87ff]': isDropdownOpen }"

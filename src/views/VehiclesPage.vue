@@ -93,7 +93,13 @@
                         </div>
                         <div class="label-input">
                             <span>Image URL:</span>
-                            <input v-model="currentVehicle.imageUrl" type="text" :disabled="!isEdit" />
+                            <input v-if="isEdit" v-model="currentVehicle.imageUrl" type="text" :disabled="!isEdit" />
+                            <img
+                                v-else
+                                :src="currentVehicle.imageUrl"
+                                :alt="currentVehicle.vehicleName"
+                                :disabled="!isEdit"
+                            />
                         </div>
                     </div>
                 </template>
@@ -235,15 +241,37 @@ export default {
             currentVehicle: {},
             isEdit: false,
             isShowDetail: false,
+            currentPage: 1,
             title: 'View Detail',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
+            searchValue: '',
+            timeOutId: null,
         }
     },
-    mounted() {
-        this.fetchData()
+    computed: {
+        pageSearch() {
+            return this.$route.query.search
+        },
+    },
+    watch: {
+        pageParam: async function () {
+            this.refreshData()
+        },
+    },
+    created() {
+        // this.fetchData()
+        this.searchValue = this.pageSearch
+        this.refreshData()
     },
     methods: {
+        refreshData() {
+            if (this.searchValue !== '') {
+                this.Search()
+            } else {
+                this.fetchData()
+            }
+        },
         async fetchData() {
             try {
                 const res = await getAllVehicles()
@@ -291,12 +319,12 @@ export default {
                 if (res.data.status === 'success') {
                     this.isShowDetail = false
                     this.isEdit = false
+                    this.fetchData()
                     this.$notify({
                         type: 'success',
                         title: 'Update Vehicle',
                         text: 'Update vehicle successfully!',
                     })
-                    this.fetchData()
                 }
             } catch (error) {
                 console.error(error)
@@ -330,6 +358,52 @@ export default {
                     duration: 1000,
                 })
             }
+        },
+        async Search() {
+            this.currentPage = this.pageParam
+            try {
+                const { currentPage, selectedOption, searchValue, ownerID } = this
+                let url = `/vehicles?pageNumber=${currentPage}&pageSize=10`
+                if (selectedOption) {
+                    url += `&ownerID=${selectedOption.ownerID}`
+                }
+                if (selectedOption === '' && ownerID) {
+                    url += `&ownerID=${ownerID}`
+                }
+                if (searchValue) {
+                    // eslint-disable-next-line no-unused-vars
+                    url += `&search=${searchValue}`
+                }
+                const res = await getAllVehicles(this.searchValue)
+                this.listData = res.data.data
+                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
+                const query = {}
+                if (selectedOption) {
+                    query.ownerID = selectedOption.ownerID
+                }
+                if (selectedOption === '') {
+                    query.ownerID = ownerID
+                }
+                if (this.searchValue) {
+                    query.search = this.searchValue
+                }
+                this.$router.push({ path: `/vehicles`, query })
+            } catch (error) {
+                console.error(error)
+                this.$notify({
+                    type: 'error',
+                    title: 'Search Vehicle',
+                    text: 'Search vehicle failed!',
+                    duration: 1000,
+                })
+            }
+        },
+        onSearchInput(searchValue) {
+            this.searchValue = searchValue
+            clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
+            this.timeoutId = setTimeout(() => {
+                this.Search()
+            }, 700) // tạo mới setTimeout() với thời gian chờ là 700ms
         },
         showUpdate(id) {
             this.isEdit = true
@@ -422,6 +496,7 @@ export default {
             &__content {
                 display: flex;
                 flex-direction: column;
+                margin-bottom: 100px;
                 input {
                     margin-bottom: 10px;
                 }
