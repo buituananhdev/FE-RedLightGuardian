@@ -8,8 +8,12 @@
                 :request-url="'/test'"
                 :list-data="listData"
                 :search-value-props="searchValue"
+                :is-have-content="isHaveContent"
+                :meta="meta"
                 @click-button="showPopup"
                 @on-search="onSearchInput"
+                @go-to-next-page="goToNextPage"
+                @go-to-prev-page="goToPrevPage"
             >
                 <template #tbody>
                     <div
@@ -88,35 +92,51 @@ export default {
             isShowPopup: false,
             searchValue: '',
             timeOutId: null,
+            meta: [],
+            currentPage: 1,
+            isHaveContent: false,
         }
     },
     computed: {
+        pageParam() {
+            return this.$route.query.page
+        },
         pageSearch() {
             return this.$route.query.search
         },
     },
     watch: {
         pageParam: async function () {
-            this.refreshData()
+            await this.refreshData()
+        },
+        listData: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    this.isHaveContent = true
+                } else {
+                    this.isHaveContent = false
+                }
+            },
         },
     },
     created() {
-        // this.fetchData()
-        console.log('this.pageSearch', this.pageSearch)
         this.searchValue = this.pageSearch
         this.refreshData()
     },
     methods: {
-        refreshData() {
-            if (this.searchValue !== '') {
-                this.Search()
+        async refreshData() {
+            if (this.searchValue) {
+                await this.Search()
             } else {
-                this.fetchData()
+                await this.fetchData()
             }
         },
         async fetchData() {
             try {
-                const res = await getAllUsers()
+                const res = await getAllUsers('', this.pageParam)
+                this.meta = res.data.meta
                 this.listData = res.data.data
             } catch (error) {
                 console.error(error)
@@ -196,14 +216,9 @@ export default {
         },
         async Search() {
             try {
-                // const { searchValue } = this
-                // let url = `/assets&pageSize=10`
-                // if (searchValue) {
-                //     url += `&searchQuery=${searchValue}`
-                // }
-                const res = await getAllUsers(this.searchValue)
+                const res = await getAllUsers(this.searchValue, this.meta.currentPage)
+                this.meta = res.data.meta
                 this.listData = res.data.data
-                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
                 const query = {}
                 if (this.searchValue) {
                     query.search = this.searchValue
@@ -215,10 +230,27 @@ export default {
         },
         onSearchInput(searchValue) {
             this.searchValue = searchValue
-            clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
+            clearTimeout(this.timeoutId)
             this.timeoutId = setTimeout(() => {
                 this.Search()
-            }, 700) // tạo mới setTimeout() với thời gian chờ là 700ms
+            }, 700)
+        },
+        goToIndexPage() {
+            const query = {}
+            query.page = this.currentPage
+            if (this.searchValue) {
+                query.search = this.searchValue
+            }
+            console.log('curr', this.currentPage)
+            this.$router.push({
+                query: query,
+            })
+        },
+        goToNextPage() {
+            this.goToIndexPage(this.currentPage++)
+        },
+        goToPrevPage() {
+            this.goToIndexPage(this.currentPage--)
         },
     },
 }
