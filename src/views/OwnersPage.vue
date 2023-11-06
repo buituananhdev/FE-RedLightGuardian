@@ -6,13 +6,17 @@
         <div class="container-owner__page table-primary">
             <table-view
                 ref="tableview"
+                class="container-owner__page__table"
                 :list-header="listHeader"
                 :request-url="'/test'"
                 :list-data="listData"
                 :search-value-props="searchValue"
-                class="container-owner__page__table"
+                :is-have-content="isHaveContent"
+                :meta="meta"
                 @click-button="showPopup"
                 @on-search="onSearchInput"
+                @go-to-next-page="goToNextPage"
+                @go-to-prev-page="goToPrevPage"
             >
                 <template #tbody>
                     <div
@@ -65,10 +69,10 @@
                         <div class="label-input">
                             <span>Address:</span>
                             <input
+                                id="address"
                                 v-model="currentOwner.address"
                                 type="text"
                                 name=""
-                                id="address"
                                 :disabled="!isEdit"
                             />
                         </div>
@@ -150,35 +154,52 @@ export default {
             isShowPopup: false,
             searchValue: '',
             timeOutId: null,
+            meta: [],
+            currentPage: 1,
+            isHaveContent: false,
         }
     },
     computed: {
         pageSearch() {
             return this.$route.query.search
         },
+        pageParam() {
+            return this.$route.query.page
+        },
     },
     watch: {
         pageParam: async function () {
-            this.refreshData()
+            await this.refreshData()
+        },
+        listData: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    this.isHaveContent = true
+                } else {
+                    this.isHaveContent = false
+                }
+            },
         },
     },
-    mounted() {
-        // this.fetchData()
+    created() {
         this.searchValue = this.pageSearch
         this.refreshData()
     },
     methods: {
-        refreshData() {
-            if (this.searchValue !== '') {
-                this.Search()
+        async refreshData() {
+            if (this.searchValue) {
+                await this.Search()
             } else {
-                this.fetchData()
+                await this.fetchData()
             }
         },
         async fetchData() {
             try {
-                const res = await getAllOwners()
+                const res = await getAllOwners('', this.pageParam)
                 this.listData = res.data.data
+                this.meta = res.data.meta
             } catch (error) {
                 console.error(error)
             }
@@ -276,14 +297,9 @@ export default {
         },
         async Search() {
             try {
-                // const { searchValue } = this
-                // let url = `/assets&pageSize=10`
-                // if (searchValue) {
-                //     url += `&searchQuery=${searchValue}`
-                // }
-                const res = await getAllOwners(this.searchValue)
+                const res = await getAllOwners(this.searchValue, this.pageParam)
                 this.listData = res.data.data
-                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
+                this.meta = res.data.meta
                 const query = {}
                 if (this.searchValue) {
                     query.search = this.searchValue
@@ -299,10 +315,26 @@ export default {
         },
         onSearchInput(searchValue) {
             this.searchValue = searchValue
-            clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
+            clearTimeout(this.timeoutId)
             this.timeoutId = setTimeout(() => {
                 this.Search()
-            }, 700) // tạo mới setTimeout() với thời gian chờ là 700ms
+            }, 700)
+        },
+        goToIndexPage() {
+            const query = {}
+            query.page = this.currentPage
+            if (this.searchValue) {
+                query.search = this.searchValue
+            }
+            this.$router.push({
+                query: query,
+            })
+        },
+        goToNextPage() {
+            this.goToIndexPage(this.currentPage++)
+        },
+        goToPrevPage() {
+            this.goToIndexPage(this.currentPage--)
         },
     },
 }

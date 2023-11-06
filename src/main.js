@@ -11,15 +11,19 @@ import FullModal from '@/components/modals/FullModal.vue'
 import TableView from '@/components/commons/TableView.vue'
 import PanelView from '@/components/commons/PanelView.vue'
 import PopupView from '@/components/commons/PopupView.vue'
+import SelectBox from '@/components/commons/SelectBox.vue'
+import PanigateVue from '@/components/commons/paginate/PanigateVue.vue'
 import authLayout from '@/layouts/authLayout.vue'
 import emptyLayout from '@/layouts/emptyLayout.vue'
 import ButtonVue from '@/components/Atoms/ButtonVue.vue'
+// import vClickOutside from 'v-click-outside'
 
 const initApp = async () => {
     authMiddleware()
     await initAuthStore()
     const app = createApp(App)
     app.use(router)
+    // app.use(vClickOutside)
     app.component('full-modal', FullModal)
     app.component('modal-alert', ModalAlert)
     app.component('table-view', TableView)
@@ -28,6 +32,8 @@ const initApp = async () => {
     app.component('auth-layout', authLayout)
     app.component('empty-layout', emptyLayout)
     app.component('button-vue', ButtonVue)
+    app.component('select-box', SelectBox)
+    app.component('panigate-vue', PanigateVue)
 
     app.use(Notifications)
     app.mount('#app')

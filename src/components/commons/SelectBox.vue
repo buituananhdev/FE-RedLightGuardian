@@ -1,9 +1,5 @@
 <script>
-import EmptyArea from '~/components/EmptyArea.vue'
 export default {
-    components: {
-        EmptyArea,
-    },
     props: {
         type_select_box: {
             type: String,
@@ -15,11 +11,19 @@ export default {
             type: String,
             default: 'Select',
         },
-        selected: {
+        selectedProps: {
             type: Object,
+            default() {
+                return {
+                    status: '',
+                }
+            },
         },
         options: {
             type: Array,
+            default() {
+                return []
+            },
         },
         isSelect: {
             type: Boolean,
@@ -29,18 +33,27 @@ export default {
             type: Boolean,
             default: false,
         },
-        searchObj: {
+        searchObjProps: {
             type: Object,
-            default: {
-                isSearch: false,
-                dataSearch: '',
+            default() {
+                return {
+                    isSearch: false,
+                    dataSearch: '',
+                }
             },
         },
     },
+    emits: ['Search', 'ChangeConversation', 'ChangeOption'],
     data() {
         return {
             isShowSelectBox: false,
+            selected: this.selectedProps,
+            searchObj: this.searchObjProps,
         }
+    },
+    mounted() {
+        this.selected = this.selectedProps
+        this.searchObj = this.searchObjProps
     },
     methods: {
         Search() {
@@ -107,7 +120,7 @@ export default {
 </script>
 
 <template>
-    <div :class="[type_select_box]" v-click-outside="CloseSelectBox">
+    <div @blur="CloseSelectBox" :class="[type_select_box]">
         <div
             :class="[
                 `${type_select_box}-select-box`,
@@ -133,19 +146,23 @@ export default {
             <img
                 v-if="isSelect"
                 :class="{ isShow: isShowSelectBox }"
-                :src="type_select_box == 'status-color' ? '/icons/arrow-down-light.svg' : '/icons/arrow-down.svg'"
+                :src="
+                    type_select_box == 'status-color'
+                        ? '@/assets/icons/arrow-down-light.svg'
+                        : '@/assets/icons/arrow-down.svg'
+                "
             />
         </div>
-        <div class="error" v-if="isRequired">
-            <img src="~/assets/icons/icon-dangerous.svg" alt="" />
+        <div v-if="isRequired" class="error">
+            <img src="@/assets/icons/dangerous-icon.svg" alt="" />
             <span>{{ $language('error', 'required') }}</span>
         </div>
-        <div :class="`${type_select_box}_options`" v-if="isShowSelectBox && isSelect" class="overflow-y">
-            <div class="primary-inp-search" v-if="searchObj.isSearch">
-                <img src="~/assets/icons/icon-search.svg" class="icon-search" alt="Icon search" />
-                <input type="text" placeholder="Search..." v-model="searchObj.dataSearch" @input="Search" />
+        <div v-if="isShowSelectBox && isSelect" :class="`${type_select_box}_options`" class="overflow-y">
+            <div v-if="searchObj.isSearch" class="primary-inp-search">
+                <img src="@/assets/icons/search-icon.svg" class="icon-search" alt="Icon search" />
+                <input v-model="searchObj.dataSearch" type="text" placeholder="Search..." @input="Search" />
             </div>
-            <div :class="`${type_select_box}_options_container`" v-if="options.length > 0">
+            <div v-if="options.length > 0" :class="`${type_select_box}_options_container`">
                 <div
                     v-for="(option, index) in options"
                     :key="index"
@@ -157,9 +174,6 @@ export default {
                 >
                     <span class="content">{{ checkLabel(option, false) }}</span>
                 </div>
-            </div>
-            <div v-else class="empty">
-                <EmptyArea :image-size="120"></EmptyArea>
             </div>
         </div>
     </div>

@@ -1,9 +1,14 @@
 <template>
     <div class="tableview" :class="{ 'half-width': true }">
         <div class="tableview__header">
-            <div class="tableview__header__search">
-                <img src="@/assets/icons/glass-icon.svg" alt="" />
-                <input v-model="searchValue" type="text" @input="onSearchInput" />
+            <div class="tableview__header__filter-container">
+                <div class="tableview__header__filter-container__search">
+                    <img src="@/assets/icons/glass-icon.svg" alt="" />
+                    <input v-model="searchValue" type="text" @input="onSearchInput" />
+                </div>
+                <div class="tableview__header__filter-container__filter">
+                    <select-box type_select_box="status-white" :label="'name'" :placeholder="'Chọn gì đó'" />
+                </div>
             </div>
             <button-vue
                 :type-btn="'secondary'"
@@ -33,6 +38,12 @@
             </div>
             <div class="tableview__container__body overflow-y" v-if="listData.length">
                 <slot name="tbody"></slot>
+                <panigate-vue
+                    :meta="meta"
+                    :is-have-content="isHaveContent"
+                    @go-to-prev-page="prevPage"
+                    @go-to-next-page="nextPage"
+                />
             </div>
             <div v-else class="tableview__empty">
                 <span>Không có dữ liệu</span>
@@ -65,29 +76,48 @@ export default {
             type: String,
             default: '',
         },
+        valueProps: {
+            type: String,
+            default: '',
+        },
+        options: {
+            type: Array,
+            default() {
+                return []
+            },
+        },
+        isHaveContent: {
+            type: Boolean,
+            default: false,
+        },
+        meta: {
+            type: Object,
+        },
     },
-    emits: ['click'],
+    emits: ['click', 'open-popup', 'on-search', 'go-to-prev-page', 'go-to-next-page', 'click-button'],
     data() {
         return {
             currentPage: 1,
             searchValue: this.searchValueProps,
+            value: this.valueProps,
         }
     },
     computed: {
         listHeaderFiltered() {
             return this.listHeader
         },
-        totalPageCount() {
-            return Math.ceil(this.listData.length / this.itemsPerPage)
-        },
-        paginatedListData() {
-            const startIndex = (this.currentPage - 1) * this.itemsPerPage
-            const endIndex = startIndex + this.itemsPerPage
-            return this.listData.slice(startIndex, endIndex)
-        },
+        // totalPageCount() {
+        //     return Math.ceil(this.listData.length / this.itemsPerPage)
+        // },
+        // paginatedListData() {
+        //     const startIndex = (this.currentPage - 1) * this.itemsPerPage
+        //     const endIndex = startIndex + this.itemsPerPage
+        //     return this.listData.slice(startIndex, endIndex)
+        // },
     },
     mounted() {
         this.searchValue = this.searchValueProps
+        this.value = this.valueProps
     },
     methods: {
         columnStyle(item) {
@@ -102,14 +132,16 @@ export default {
             this.currentPage = pageNumber
         },
         nextPage() {
-            if (this.currentPage < this.totalPageCount) {
-                this.currentPage++
-            }
+            // if (this.currentPage < this.totalPageCount) {
+            //     this.currentPage++
+            // }
+            this.$emit('go-to-next-page')
         },
         prevPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--
-            }
+            // if (this.currentPage > 1) {
+            //     this.currentPage--
+            // }
+            this.$emit('go-to-prev-page')
         },
         openPopup() {
             this.$emit('open-popup')
@@ -140,36 +172,47 @@ export default {
         align-items: center;
         padding-top: 20px;
         background-color: #ffff;
-        &__search {
-            position: relative;
-            width: 40%;
-            height: 100%;
-            img {
-                position: absolute;
-                left: 16px;
-                top: 12px;
-            }
-            input {
-                display: flex;
-                padding: 10px 16px;
-                padding-left: 36px;
-                align-items: center;
-                gap: 4px;
-                align-self: stretch;
-                width: 100%;
+        &__filter-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 80%;
+            &__search {
+                position: relative;
+                width: 40%;
                 height: 100%;
-                border: 1px solid $neutral-400;
-                background: $neutral-0;
-                border-radius: 8px;
-                @include text-style(12px, 18px, 400, $text-light-secondary-1, 0px);
-                &::placeholder {
-                    @include text-style(12, 18, 400, $text-light-icon-disabled, 0);
+                img {
+                    position: absolute;
+                    left: 16px;
+                    top: 12px;
                 }
-                &:focus {
-                    border-color: $primary-500;
-                    outline-width: 0;
+                input {
+                    display: flex;
+                    padding: 10px 16px;
+                    padding-left: 36px;
+                    align-items: center;
+                    gap: 4px;
+                    align-self: stretch;
+                    width: 100%;
+                    height: 100%;
+                    border: 1px solid $neutral-400;
+                    background: $neutral-0;
+                    border-radius: 8px;
+                    @include text-style(12px, 18px, 400, $text-light-secondary-1, 0px);
+                    &::placeholder {
+                        @include text-style(12, 18, 400, $text-light-icon-disabled, 0);
+                    }
+                    &:focus {
+                        border-color: $primary-500;
+                        outline-width: 0;
+                    }
                 }
             }
+            // &__filter {
+            //     width: 30%;
+            //     height: 40px;
+            //     border: 1px solid black;
+            // }
         }
         &__button {
             padding: 6px 25px;
@@ -244,7 +287,6 @@ export default {
                     display: flex;
                     padding: 12px 24px;
                     text-align: center;
-                    font-family: Noto Sans;
                     span {
                         width: 100%;
                         @include text-style(17px, 150%, 600, $text-light-icon-secondary-2, normal);
