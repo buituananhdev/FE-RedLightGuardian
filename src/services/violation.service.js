@@ -16,8 +16,8 @@ export const deleteViolation = async (id) => {
     return await axiosApiInstance.delete(`/violations/${id}`)
 }
 
-export const getAllViolations = async (key_word = '', page = 1, pageSize = 10) => {
-    return await axiosApiInstance.get(`/violations?key_word=${key_word}&page=${page}&pageSize=${pageSize}`)
+export const getAllViolations = async (status = '', page = 1, pageSize = 10) => {
+    return await axiosApiInstance.get(`/violations?status=${status}&page=${page}&pageSize=${pageSize}`)
 }
 
 export const getSingleViolation = async (id) => {

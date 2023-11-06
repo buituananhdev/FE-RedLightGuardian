@@ -6,6 +6,7 @@ export default {
             required: true,
         },
     },
+    emits: ['changePage'],
     methods: {
         toPage(val) {
             this.$emit('changePage', val)

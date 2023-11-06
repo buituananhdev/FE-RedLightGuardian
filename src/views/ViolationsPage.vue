@@ -3,13 +3,17 @@
         <div class="container-violation__page table-primary">
             <table-view
                 ref="tableview"
+                class="container-violation__page__table"
                 :list-header="listHeader"
                 :request-url="'/violations'"
                 :list-data="listData"
                 :search-value-props="searchValue"
-                class="container-violation__page__table"
+                :is-have-content="isHaveContent"
+                :meta="meta"
                 @click-button="showPopup"
                 @on-search="onSearchInput"
+                @go-to-next-page="goToNextPage"
+                @go-to-prev-page="goToPrevPage"
             >
                 <template #tbody>
                     <div
@@ -206,11 +210,16 @@ export default {
             title: 'View Detail',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
+            meta: [],
+            currentPage: 1,
+            isHaveContent: false,
             searchValue: '',
-            timeOutId: null,
         }
     },
     computed: {
+        pageParam() {
+            return this.$route.query.page
+        },
         pageSearch() {
             return this.$route.query.search
         },
@@ -219,24 +228,36 @@ export default {
         pageParam: async function () {
             this.refreshData()
         },
+        listData: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    this.isHaveContent = true
+                } else {
+                    this.isHaveContent = false
+                }
+            },
+        },
     },
     mounted() {
-        // this.fetchData()
         this.searchValue = this.pageSearch
         this.refreshData()
     },
     methods: {
         refreshData() {
-            if (this.searchValue !== '') {
+            if (this.searchValue) {
                 this.Search()
             } else {
                 this.fetchData()
             }
         },
         async fetchData() {
+            console.log(this.pageParam)
             try {
-                const res = await getAllViolations()
+                const res = await getAllViolations('', this.pageParam)
                 this.listData = res.data.data
+                this.meta = res.data.meta
             } catch (error) {
                 console.error(error)
             }
@@ -319,32 +340,6 @@ export default {
                 })
             }
         },
-        async Search() {
-            try {
-                // const { searchValue } = this
-                // let url = `/assets&pageSize=10`
-                // if (searchValue) {
-                //     url += `&searchQuery=${searchValue}`
-                // }
-                const res = await getAllViolations(this.searchValue)
-                this.listData = res.data.data
-                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
-                const query = {}
-                if (this.searchValue) {
-                    query.search = this.searchValue
-                }
-                this.$router.push({ path: `/violations`, query })
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        onSearchInput(searchValue) {
-            this.searchValue = searchValue
-            clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
-            this.timeoutId = setTimeout(() => {
-                this.Search()
-            }, 500) // tạo mới setTimeout() với thời gian chờ là 500ms
-        },
         showUpdate(id) {
             this.isEdit = true
             this.isShowDetail = true
@@ -379,6 +374,43 @@ export default {
             }/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 
             return formattedDate
+        },
+        async Search() {
+            try {
+                const res = await getAllViolations(this.searchValue, this.p)
+                this.listData = res.data.data
+                this.meta = res.data.meta
+                const query = {}
+                if (this.searchValue) {
+                    query.search = this.searchValue
+                }
+                this.$router.push({ path: `/violations`, query })
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        onSearchInput(searchValue) {
+            this.searchValue = searchValue
+            clearTimeout(this.timeoutId)
+            this.timeoutId = setTimeout(() => {
+                this.Search()
+            }, 700)
+        },
+        goToIndexPage() {
+            const query = {}
+            query.page = this.currentPage
+            if (this.searchValue) {
+                query.search = this.searchValue
+            }
+            this.$router.push({
+                query: query,
+            })
+        },
+        goToNextPage() {
+            this.goToIndexPage(this.currentPage++)
+        },
+        goToPrevPage() {
+            this.goToIndexPage(this.currentPage--)
         },
     },
 }

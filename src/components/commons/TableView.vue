@@ -4,9 +4,11 @@
             <div class="tableview__header__filter-container">
                 <div class="tableview__header__filter-container__search">
                     <img src="@/assets/icons/glass-icon.svg" alt="" />
-                    <input v-model="searchValue" type="text" placeholder="Tìm kiếm..." @input="onSearchInput" />
+                    <input v-model="searchValue" type="text" @input="onSearchInput" />
                 </div>
-                <div class="tableview__header__filter-container__filter"></div>
+                <div class="tableview__header__filter-container__filter">
+                    <select-box type_select_box="status-white" :label="'name'" :placeholder="'Chọn gì đó'" />
+                </div>
             </div>
             <button-vue
                 :type-btn="'secondary'"
@@ -36,6 +38,12 @@
             </div>
             <div class="tableview__container__body overflow-y" v-if="listData.length">
                 <slot name="tbody"></slot>
+                <panigate-vue
+                    :meta="meta"
+                    :is-have-content="isHaveContent"
+                    @go-to-prev-page="prevPage"
+                    @go-to-next-page="nextPage"
+                />
             </div>
             <div v-else class="tableview__empty">
                 <span>Không có dữ liệu</span>
@@ -68,30 +76,48 @@ export default {
             type: String,
             default: '',
         },
+        valueProps: {
+            type: String,
+            default: '',
+        },
+        options: {
+            type: Array,
+            default() {
+                return []
+            },
+        },
+        isHaveContent: {
+            type: Boolean,
+            default: false,
+        },
+        meta: {
+            type: Object,
+        },
     },
-    emits: ['click'],
+    emits: ['click', 'open-popup', 'on-search', 'go-to-prev-page', 'go-to-next-page', 'click-button'],
     data() {
         return {
             currentPage: 1,
             searchValue: this.searchValueProps,
-            selectedOption: this.selectedOptionProps,
+            value: this.valueProps,
         }
     },
     computed: {
         listHeaderFiltered() {
             return this.listHeader
         },
-        totalPageCount() {
-            return Math.ceil(this.listData.length / this.itemsPerPage)
-        },
-        paginatedListData() {
-            const startIndex = (this.currentPage - 1) * this.itemsPerPage
-            const endIndex = startIndex + this.itemsPerPage
-            return this.listData.slice(startIndex, endIndex)
-        },
+        // totalPageCount() {
+        //     return Math.ceil(this.listData.length / this.itemsPerPage)
+        // },
+        // paginatedListData() {
+        //     const startIndex = (this.currentPage - 1) * this.itemsPerPage
+        //     const endIndex = startIndex + this.itemsPerPage
+        //     return this.listData.slice(startIndex, endIndex)
+        // },
     },
     mounted() {
         this.searchValue = this.searchValueProps
+        this.value = this.valueProps
     },
     methods: {
         columnStyle(item) {
@@ -106,14 +132,16 @@ export default {
             this.currentPage = pageNumber
         },
         nextPage() {
-            if (this.currentPage < this.totalPageCount) {
-                this.currentPage++
-            }
+            // if (this.currentPage < this.totalPageCount) {
+            //     this.currentPage++
+            // }
+            this.$emit('go-to-next-page')
         },
         prevPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--
-            }
+            // if (this.currentPage > 1) {
+            //     this.currentPage--
+            // }
+            this.$emit('go-to-prev-page')
         },
         openPopup() {
             this.$emit('open-popup')
@@ -180,11 +208,11 @@ export default {
                     }
                 }
             }
-            &__filter {
-                width: 30%;
-                height: 40px;
-                border: 1px solid black;
-            }
+            // &__filter {
+            //     width: 30%;
+            //     height: 40px;
+            //     border: 1px solid black;
+            // }
         }
         &__button {
             padding: 6px 25px;
