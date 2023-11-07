@@ -2,9 +2,11 @@
 export default {
     props: {
         type_select_box: {
+            // loai select box css
             type: String,
         },
         label: {
+            // dung de goi ham
             type: String,
         },
         placeholder: {
@@ -12,6 +14,7 @@ export default {
             default: 'Select',
         },
         selectedProps: {
+            // bien truyen gia tri
             type: Object,
             default() {
                 return {
@@ -20,66 +23,49 @@ export default {
             },
         },
         options: {
+            // mang option
             type: Array,
             default() {
                 return []
             },
         },
         isSelect: {
+            // có cho chọn hay không
             type: Boolean,
             default: true,
         },
         isRequired: {
+            // validation
             type: Boolean,
             default: false,
         },
-        searchObjProps: {
-            type: Object,
-            default() {
-                return {
-                    isSearch: false,
-                    dataSearch: '',
-                }
-            },
-        },
     },
-    emits: ['Search', 'ChangeConversation', 'ChangeOption'],
     data() {
         return {
             isShowSelectBox: false,
             selected: this.selectedProps,
-            searchObj: this.searchObjProps,
         }
     },
-    mounted() {
-        this.selected = this.selectedProps
-        this.searchObj = this.searchObjProps
+    watch: {
+        selectedProps() {
+            this.selected = this.selectedProps
+            console.log('ok', this.selectedProps)
+        }
     },
     methods: {
-        Search() {
-            this.$emit('Search', this.searchObj.dataSearch)
-        },
         ChangeOption(option) {
             try {
                 switch (this.label) {
                     case 'name':
                         if (option.name != this.selected.name) {
-                            this.$emit('ChangeConversation', option)
+                            this.$emit('ChangeValueSelectBox', option)
                         }
                         break
                     case 'status':
                         if (option != this.selected.status) {
-                            this.$emit('ChangeOption', this.selected, option.status)
+                            this.$emit('ChangeStatus', this.selected, option.status)
                             if (this.type_select_box == 'status-white') {
                                 this.selected.status = option.status
-                            }
-                        }
-                        break
-                    case 'number':
-                        if (option != this.selected.number) {
-                            this.$emit('ChangeOption', this.selected.number, option.number)
-                            if (this.type_select_box == 'status-white') {
-                                this.selected.number = option.number
                             }
                         }
                         break
@@ -108,8 +94,6 @@ export default {
                     return ischeckActive ? option.name === this.selected.name : option.name
                 case 'status':
                     return ischeckActive ? option.status === this.selected.status : option.status
-                case 'number':
-                    return ischeckActive ? option.number === this.selected.number : option.number
                 default:
                     console.error('Select box error')
                     break
@@ -137,32 +121,21 @@ export default {
             <span v-if="label === 'status' && selected.status" :class="`${type_select_box}-select-box_selected`">{{
                 selected.status
             }}</span>
-            <span v-if="label === 'number' && selected.number" :class="`${type_select_box}-select-box_selected`">{{
-                selected.number
-            }}</span>
             <span v-if="JSON.stringify(selected) === JSON.stringify({ placeholder: placeholder })" class="placeholder">
                 {{ placeholder }}
             </span>
             <img
                 v-if="isSelect"
                 :class="{ isShow: isShowSelectBox }"
-                :src="
-                    type_select_box == 'status-color'
-                        ? '@/assets/icons/arrow-down-light.svg'
-                        : '@/assets/icons/arrow-down.svg'
-                "
+                :src="type_select_box == 'status-color' ? 'icons/arrow-down-light.svg' : 'icons/arrow-down.svg'"
             />
         </div>
-        <div v-if="isRequired" class="error">
+        <div v-if="isRequired && !selected.name" class="error">
             <img src="../../assets/icons/dangerous-icon.svg" alt="" />
-            <span>{{ $language('error', 'required') }}</span>
+            <span>Trường này là bắt buộc</span>
         </div>
-        <div v-if="isShowSelectBox && isSelect" :class="`${type_select_box}_options`" class="overflow-y">
-            <div v-if="searchObj.isSearch" class="primary-inp-search">
-                <img src="../../assets/icons/glass-icon.svg" class="icon-search" alt="Icon search" />
-                <input v-model="searchObj.dataSearch" type="text" placeholder="Search..." @input="Search" />
-            </div>
-            <div v-if="options.length > 0" :class="`${type_select_box}_options_container`">
+        <div :class="`${type_select_box}_options`" v-if="isShowSelectBox && isSelect" class="overflow-y">
+            <div :class="`${type_select_box}_options_container`" v-if="options.length > 0">
                 <div
                     v-for="(option, index) in options"
                     :key="index"
@@ -235,7 +208,13 @@ export default {
             gap: 10px;
             align-self: stretch;
             .content {
-                @include text-style(12px, 18px, 400, $text-light-icon-secondary-2, 0);
+                @include text-style(
+                    12px,
+                    18px,
+                    400,
+                    $text-light-icon-secondary-2,
+                    0
+                );
             }
             &:hover {
                 cursor: pointer;
@@ -342,76 +321,6 @@ export default {
             align-self: stretch;
             .content {
                 @include text-style(12px, 18px, 400, $text-light-icon-secondary-2, 0);
-            }
-            &:hover {
-                cursor: pointer;
-                background: $text-light-icon-hover-item;
-                border-radius: 8px;
-            }
-        }
-
-        &_selected {
-            .content {
-                @include text-color-gradient();
-            }
-        }
-    }
-}
-.status-white-long {
-    width: 100%;
-    max-width: 100%;
-    cursor: pointer;
-    &-select-box {
-        height: 100%;
-        border-radius: 8px;
-        border: 1px solid $neutral-400;
-        background: $neutral-0;
-        display: flex;
-        padding: 12px;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        &_selected {
-            @include text-style(14px, 150%, 400, $text-light-secondary-1, 0px);
-            @include truncate(1);
-        }
-        img {
-            cursor: pointer;
-            position: absolute;
-            right: 12px;
-        }
-        .isShow {
-            transition: all 0.2s;
-            transform: rotate(180deg);
-        }
-    }
-
-    &_options {
-        position: absolute;
-        z-index: 2;
-        top: 100%;
-        display: flex;
-        width: 100%;
-        max-width: 100%;
-        padding: 12px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2px;
-        border-radius: 8px;
-        background: $neutral-0;
-        box-shadow: 0px 16px 72px 0px rgba(71, 79, 98, 0.07);
-        &_container {
-            width: 100%;
-            height: 100%;
-        }
-        .options-content {
-            display: flex;
-            padding: 12px;
-            align-items: center;
-            gap: 10px;
-            align-self: stretch;
-            .content {
-                @include text-style(14px, 150%, 400, $text-light-secondary-1, 0px);
             }
             &:hover {
                 cursor: pointer;
