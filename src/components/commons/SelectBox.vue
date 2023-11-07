@@ -154,12 +154,12 @@ export default {
             />
         </div>
         <div v-if="isRequired" class="error">
-            <img src="@/assets/icons/dangerous-icon.svg" alt="" />
+            <img src="../../assets/icons/dangerous-icon.svg" alt="" />
             <span>{{ $language('error', 'required') }}</span>
         </div>
         <div v-if="isShowSelectBox && isSelect" :class="`${type_select_box}_options`" class="overflow-y">
             <div v-if="searchObj.isSearch" class="primary-inp-search">
-                <img src="@/assets/icons/search-icon.svg" class="icon-search" alt="Icon search" />
+                <img src="../../assets/icons/glass-icon.svg" class="icon-search" alt="Icon search" />
                 <input v-model="searchObj.dataSearch" type="text" placeholder="Search..." @input="Search" />
             </div>
             <div v-if="options.length > 0" :class="`${type_select_box}_options_container`">
