@@ -1,57 +1,58 @@
 <template>
     <div class="page-main">
-        <table-view :listHeader="listHeader" :requestUrl="'/test'" ref="tableview" :listData="listData">
-            <template v-slot:tbody>
-                <div class="row" v-for="item in listData" :key="item.id">
-                    <span>{{ item.id }}</span>
-                    <span>{{ item.Status }}</span>
-                    <span>{{ item.Construction }}</span>
-                    <span>{{ item.Created }}</span>
-                </div>
-            </template>
-        </table-view>
+        <div class="abc">
+            <h1>aaaaaaaaaaaa</h1>
+            <SelectBox
+                :type_select_box="'status-color'"
+                :label="'status'"
+                :selectedProps="currentSelected"
+                :options="options"
+                @ChangeValueSelectBox="filterDemo"
+                @ChangeStatus="statusDemo"
+            ></SelectBox>
+            {{ 'value is:' + currentSelected.status }}
+        </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+import SelectBox from '@/components/commons/SelectBox.vue'
 export default {
+    components: {
+        SelectBox,
+    },
     data() {
         return {
-            listHeader: [
+            currentSelected: { status: 'TODO', placeholder: 'Select' },
+            options: [
                 {
-                    title: 'Id',
-                    width: 25,
+                    status: 'TODO',
                 },
                 {
-                    title: 'Construction',
-                    width: 25,
+                    status: 'DOING',
                 },
                 {
-                    title: 'Status',
-                    width: 25,
-                },
-                {
-                    title: 'Created At',
-                    width: 25,
+                    status: 'COMPLETE',
                 },
             ],
-            listData: [],
         }
     },
-    mounted() {
-        this.fetchData()
-    },
+    mounted() {},
     methods: {
-        async fetchData() {
-            axios
-                .get('https://65218eeca4199548356d5dd6.mockapi.io/api/test')
-                .then((res) => {
-                    this.listData = res.data
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
+        filterDemo(option) {
+            this.currentSelected = option
+        },
+        statusDemo(selected, option) {
+            const oldStatus = selected.status
+            selected.status = option
+            this.onChangeStatus(oldStatus, selected)
+        },
+        onChangeStatus(oldStatus, selected) {
+            if (!selected.status) {
+                return
+            }
+            const result = alert("Ban co muon thay doi tu " + oldStatus + " sang " + selected.status);
+            this.currentSelected = selected;
         },
     },
 }
@@ -60,6 +61,14 @@ export default {
 .page-main {
     width: 100%;
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .abc {
+        width: 200px;
+        height: 400px;
+        position: relative;
+    }
     .row {
         display: flex;
         span {
