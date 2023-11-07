@@ -34,11 +34,11 @@
                         <span class="container-violation__page__table__row__cameraId">{{ item.cameraID }}</span>
                         <div class="container-violation__page__table__row__action">
                             <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img
+                            <!-- <img
                                 src="@/assets/icons/delete-icon.svg"
                                 alt="delete"
                                 @click.stop="showDeleteVerifiedPopup()"
-                            />
+                            /> -->
                         </div>
                     </div>
                 </template>

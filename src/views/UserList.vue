@@ -20,7 +20,8 @@
                         v-for="(item, index) in listData"
                         :key="item.id"
                         class="container-user__page__table__row"
-                        :class="!(index % 2) ? 'bold' : ' unbold'"
+                        :class="!(index % 2) ? 'bold' : ''"
+                        @click="getSingleUser(item.id)"
                     >
                         <span class="container-user__page__table__row__id">{{ index + 1 }}</span>
                         <span class="container-user__page__table__row__username">
@@ -30,11 +31,39 @@
                             {{ item.email }}
                         </span>
                         <div class="container-user__page__table__row__action">
-                            <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteUser(item.id)" />
+                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
+                            <img
+                                src="@/assets/icons/delete-icon.svg"
+                                alt="delete"
+                                @click.stop="showDeleteVerifiedPopup()"
+                            />
                         </div>
                     </div>
                 </template>
             </table-view>
+            <panel-view
+                v-if="isShowDetail"
+                :title="title"
+                :is-edit="isEdit"
+                class="container-user__page__panel"
+                @close-panel="closePanelView"
+                @update-object="updateUser"
+                @allow-update="isEdit = true"
+                @cancel="isEdit = false"
+            >
+                <template #pbody>
+                    <div class="container-user__page__panel__content">
+                        <div class="label-input">
+                            <span>Tên người dùng:</span>
+                            <input v-model="currentUser.username" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Email:</span>
+                            <input v-model="currentUser.email" type="email" :disabled="!isEdit" />
+                        </div>
+                    </div>
+                </template>
+            </panel-view>
             <full-modal v-if="isShowPopup">
                 <popup-view
                     title="Create Người dùng"
@@ -58,12 +87,26 @@
                     </template>
                 </popup-view>
             </full-modal>
+            <full-modal v-if="isShowDeleteVerifiedPopup">
+                <popup-view
+                    title="Xác nhận xóa người dùng"
+                    class="container-user__page__popup"
+                    @on-cancel="hiddenDeleteVerifiedPopup"
+                    @on-ok="deleteUser()"
+                >
+                    <template #popupbody>
+                        <div class="container-user__page__popup__content">
+                            <span>Bạn xác nhận sẽ xóa người dùng này?</span>
+                        </div>
+                    </template>
+                </popup-view>
+            </full-modal>
         </div>
     </div>
 </template>
 
 <script>
-import { deleteUser, getAllUsers, updateUser, addUser } from '@/services/user.service'
+import { deleteUser, getAllUsers, updateUser, addUser, getSingleUser } from '@/services/user.service'
 export default {
     data() {
         return {
@@ -89,12 +132,14 @@ export default {
             currentUser: {},
             isEdit: false,
             title: 'View Detail',
+            isShowDetail: false,
             isShowPopup: false,
             searchValue: '',
             timeOutId: null,
             meta: [],
             currentPage: 1,
             isHaveContent: false,
+            isShowDeleteVerifiedPopup: false,
         }
     },
     computed: {
@@ -142,10 +187,22 @@ export default {
                 console.error(error)
             }
         },
-        async deleteUser(id) {
+        async getSingleUser(id) {
+            try {
+                const res = await getSingleUser(id)
+                this.currentUser = res.data.data
+                localStorage.setItem('idUser', this.currentUser.id)
+                this.isShowDetail = true
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async deleteUser() {
+            const id = localStorage.getItem('idUser')
             try {
                 const res = await deleteUser(id)
                 if (res.data.status === 'success') {
+                    this.isShowDeleteVerifiedPopup = false
                     this.listData = this.listData.filter((user) => user.id !== id)
                     this.$notify({
                         type: 'success',
@@ -154,6 +211,7 @@ export default {
                     })
                 }
             } catch (error) {
+                this.isShowDeleteVerifiedPopup = false
                 this.$notify({
                     type: 'error',
                     title: 'Xóa Người dùng',
@@ -183,6 +241,11 @@ export default {
                     duration: 1000,
                 })
             }
+        },
+        showUpdate(id) {
+            this.isEdit = true
+            this.isShowDetail = true
+            this.getSingleUser(id)
         },
         showPopup() {
             this.currentUser = {}
@@ -252,6 +315,16 @@ export default {
         goToPrevPage() {
             this.goToIndexPage(this.currentPage--)
         },
+        closePanelView() {
+            this.isShowDetail = false
+            this.isEdit = false
+        },
+        showDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = true
+        },
+        hiddenDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = false
+        },
     },
 }
 </script>
@@ -272,6 +345,7 @@ export default {
                 width: 100%;
                 gap: 20px;
                 background: var(--neutral-100, #fafcfe);
+                cursor: pointer;
                 &.bold {
                     background: var(--neutral-300, #f4f7fe);
                 }
@@ -299,6 +373,7 @@ export default {
                     img {
                         height: 20px;
                         width: 25px;
+                        cursor: pointer;
                     }
                 }
             }

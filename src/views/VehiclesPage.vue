@@ -315,6 +315,7 @@ export default {
                     })
                 }
             } catch (error) {
+                this.isShowDeleteVerifiedPopup = false
                 this.$notify({
                     type: 'error',
                     title: 'Delete Vehicle',

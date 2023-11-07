@@ -11,6 +11,7 @@
                 </div>
             </div>
             <button-vue
+                v-if="!isViolation"
                 :type-btn="'secondary'"
                 :width="'100px'"
                 class="tableview__header__button"
@@ -51,6 +52,12 @@
         </div>
     </div>
 </template>
+<script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const isViolation = computed(() => route.name === 'violations')
+</script>
 
 <script>
 export default {
