@@ -35,7 +35,11 @@
                         <span class="container-owner__page__table__row__email">{{ item.email }}</span>
                         <div class="container-owner__page__table__row__action">
                             <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img src="@/assets/icons/delete-icon.svg" alt="delete" @click="deleteOwner(item.id)" />
+                            <img
+                                src="@/assets/icons/delete-icon.svg"
+                                alt="delete"
+                                @click.stop="showDeleteVerifiedPopup()"
+                            />
                         </div>
                     </div>
                 </template>
@@ -110,6 +114,20 @@
                     </template>
                 </popup-view>
             </full-modal>
+            <full-modal v-if="isShowDeleteVerifiedPopup">
+                <popup-view
+                    title="Xác nhận xóa chủ sở hữu xe"
+                    class="container-owner__page__popup"
+                    @on-cancel="hiddenDeleteVerifiedPopup"
+                    @on-ok="deleteOwner()"
+                >
+                    <template #popupbody>
+                        <div class="container-owner__page__popup__content">
+                            <span>Bạn xác nhận sẽ xóa chủ sở hữu xe này?</span>
+                        </div>
+                    </template>
+                </popup-view>
+            </full-modal>
         </div>
     </div>
 </template>
@@ -152,6 +170,7 @@ export default {
             isShowDetail: false,
             title: 'View Detail',
             isShowPopup: false,
+            isShowDeleteVerifiedPopup: false,
             searchValue: '',
             timeOutId: null,
             meta: [],
@@ -204,11 +223,12 @@ export default {
                 console.error(error)
             }
         },
-        async deleteOwner(id) {
-            this.isShowDetail = false
+        async deleteOwner() {
+            const id = localStorage.getItem('idOwner')
             try {
                 const res = await deleteOwner(id)
                 if (res.data.status === 'success') {
+                    this.isShowDeleteVerifiedPopup = false
                     this.listData = this.listData.filter((owner) => owner.id !== id)
                     this.$notify({
                         type: 'success',
@@ -217,6 +237,7 @@ export default {
                     })
                 }
             } catch (error) {
+                this.isShowDeleteVerifiedPopup = false
                 this.$notify({
                     type: 'error',
                     title: 'Delete Owner',
@@ -336,6 +357,12 @@ export default {
         goToPrevPage() {
             this.goToIndexPage(this.currentPage--)
         },
+        showDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = true
+        },
+        hiddenDeleteVerifiedPopup() {
+            this.isShowDeleteVerifiedPopup = false
+        },
     },
 }
 </script>
@@ -354,6 +381,7 @@ export default {
                 display: flex;
                 width: 100%;
                 gap: 20px;
+                cursor: pointer;
                 background: var(--neutral-100, #fafcfe);
                 &.bold {
                     background: var(--neutral-300, #f4f7fe);
@@ -382,6 +410,7 @@ export default {
                     img {
                         height: 20px;
                         width: 20px;
+                        cursor: pointer;
                     }
                 }
             }
