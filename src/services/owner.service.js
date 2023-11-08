@@ -15,7 +15,7 @@ export const deleteOwner = async (id) => {
     return await axiosApiInstance.delete(`/owners/${id}`)
 }
 
-export const getAllOwners = async (key_word = '', page = 1, pageSize = 10) => {
+export const getAllOwners = async (page = 1, pageSize = 10, key_word = '') => {
     return await axiosApiInstance.get(`/owners?key_word=${key_word}&page=${page}&pageSize=${pageSize}`)
 }
 

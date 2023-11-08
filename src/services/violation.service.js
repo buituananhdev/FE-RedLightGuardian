@@ -16,8 +16,17 @@ export const deleteViolation = async (id) => {
     return await axiosApiInstance.delete(`/violations/${id}`)
 }
 
-export const getAllViolations = async (status = '', page = 1, pageSize = 10) => {
-    return await axiosApiInstance.get(`/violations?status=${status}&page=${page}&pageSize=${pageSize}`)
+export const getAllViolations = async (
+    page = 1,
+    pageSize = 10,
+    status = '',
+    type = '',
+    startDate = '',
+    endDate = ''
+) => {
+    return await axiosApiInstance.get(
+        `/violations?page=${page}&pageSize=${pageSize}&status=${status}&type=${type}&startDate=${startDate}&endDate=${endDate}`
+    )
 }
 
 export const getSingleViolation = async (id) => {

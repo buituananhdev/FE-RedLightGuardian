@@ -4,9 +4,11 @@ import App from './App.vue'
 import './assets/css/tailwind.css'
 import './assets/css/global.scss'
 import './assets/css/font.css'
+import '@vuepic/vue-datepicker/dist/main.css'
 import Notifications from '@kyvg/vue3-notification'
 import { initAuthStore } from '@/stores/auth.store'
 import { authMiddleware } from '@/router/router.middleware'
+import VueDatePicker from '@vuepic/vue-datepicker'
 import ModalAlert from '@/components/modals/ModalAlert.vue'
 import FullModal from '@/components/modals/FullModal.vue'
 import TableView from '@/components/commons/TableView.vue'
@@ -35,6 +37,7 @@ const initApp = async () => {
     app.component('button-vue', ButtonVue)
     app.component('select-box', SelectBox)
     app.component('panigate-vue', PanigateVue)
+    app.component('vue-date-picker', VueDatePicker)
 
     app.use(Notifications)
     app.mount('#app')
