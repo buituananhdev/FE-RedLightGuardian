@@ -58,7 +58,7 @@ export default {
             if (!selected.status) {
                 return
             }
-            const result = alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
+            alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
             this.currentSelected = selected
         },
         test() {

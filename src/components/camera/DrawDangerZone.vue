@@ -1,19 +1,19 @@
 <template>
     <div class="draw-container">
-        <canvas
-            ref="canvas"
-            width="1280"
-            height="720"
-            style="border: 1px solid black"
-            @mousedown="startDrawing"
-            @mouseup="stopDrawing"
-        >
-        </canvas>
-        <div class="button-container">
-            <button @click="saveCoordinates">Lưu Tọa Độ vào JSON</button>
-            <button @click="tryLoadCoordinates">Tải Tọa Độ từ JSON</button>
-            <button @click="resetDrawing">Xóa Hình</button>
-            <button @click="confirmDrawing">Xác Nhận</button>
+        <canvas ref="canvas" width="1280" height="720" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
+        <div class="draw-container__button-list">
+            <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="saveCoordinates"
+                >Lưu Hình</button-vue
+            >
+            <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="tryLoadCoordinates"
+                >Tải Tọa độ</button-vue
+            >
+            <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="resetDrawing"
+                >Xóa Hình</button-vue
+            >
+            <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="confirmDrawing"
+                >Xác Nhận</button-vue
+            >
         </div>
     </div>
 </template>
@@ -125,29 +125,29 @@ export default {
             }
             this.roundCoordinates()
 
-            // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
-            //     type: 'application/json',
-            // })
-            // const jsonUrl = URL.createObjectURL(jsonBlob)
-            // const a = document.createElement('a')
-            // a.href = jsonUrl
-            // a.download = 'coordinates.json'
-            // a.click()
-            // URL.revokeObjectURL(jsonUrl)
-            // console.log(JSON.stringify(this.dangerZone))
+            const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
+                type: 'application/json',
+            })
+            const jsonUrl = URL.createObjectURL(jsonBlob)
+            const a = document.createElement('a')
+            a.href = jsonUrl
+            a.download = 'coordinates.json'
+            a.click()
+            URL.revokeObjectURL(jsonUrl)
+            console.log(JSON.stringify(this.dangerZone))
 
-            axios
-                .patch(`http://localhost:3011/api/cameras/1`, {
-                    coordinates: JSON.stringify(this.dangerZone),
-                })
-                .then(() => {
-                    console.log('Tọa độ đã được cập nhật thành công.')
-                    alert('Tọa độ đã được lưu.')
-                })
-                .catch((error) => {
-                    console.error('Lỗi khi cập nhật tọa độ:', error)
-                    alert('Có lỗi xảy ra khi cập nhật tọa độ.')
-                })
+            // axios
+            //     .get(`http://localhost:3011/api/cameras/1`, {
+            //         coordinates: JSON.stringify(this.dangerZone),
+            //     })
+            //     .then(() => {
+            //         console.log('Tọa độ đã được cập nhật thành công.')
+            //         alert('Tọa độ đã được lưu.')
+            //     })
+            //     .catch((error) => {
+            //         console.error('Lỗi khi cập nhật tọa độ:', error)
+            //         alert('Có lỗi xảy ra khi cập nhật tọa độ.')
+            //     })
         },
 
         resetDrawing() {
@@ -175,7 +175,6 @@ export default {
 <style lang="scss" scoped>
 .draw-container {
     display: flex;
-    flex-direction: column;
     width: 100%;
     height: 100%;
     overflow: hidden; /* Ẩn phần ngoài khung hình */
@@ -183,10 +182,25 @@ export default {
         background-image: url('../../assets/img/test-draw.png');
         background-repeat: no-repeat;
         background-size: contain;
-        max-width: 100%; /* Không vượt quá kích thước ban đầu */
-        max-height: 100%; /* Không vượt quá kích thước ban đầu */
-        width: 80%;
-        height: 80%;
+        border: 1px solid black;
+        width: 90%;
+        height: 90%;
+    }
+    &__button-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        &__button {
+            margin-left: 6px;
+            padding: 7px 20px !important;
+            background: $gradient-default;
+            @include text-style(14px, 150%, 600, $slate-50, 0);
+            &:hover {
+                background: $gradient-hover;
+            }
+        }
     }
 }
 </style>

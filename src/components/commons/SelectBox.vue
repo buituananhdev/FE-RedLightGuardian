@@ -58,6 +58,8 @@ export default {
                     case 'name':
                         if (option.name != this.selected.name) {
                             this.$emit('ChangeValueSelectBox', option)
+                        } else {
+                            this.selected = null
                         }
                         break
                     case 'status':
@@ -258,7 +260,8 @@ export default {
         border-radius: 8px;
         border: 1px solid $neutral-400;
         display: flex;
-        padding: 5px 8px 5px 12px;
+        padding: 9px 8px 9px 12px;
+
         justify-content: space-between;
         align-items: center;
         position: relative;
@@ -303,6 +306,11 @@ export default {
         gap: 12px;
         background: $neutral-0;
         box-shadow: 0px 16px 72px 0px rgba(71, 79, 98, 0.07);
+        overflow: auto;
+        @include custom-scrollbar();
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
         &_container {
             width: 100%;
             height: 100%;

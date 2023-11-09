@@ -64,6 +64,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const isViolation = computed(() => route.name === 'violations')
+// const isVehicle = computed(() => route.name === 'vehicles')
 </script>
 
 <script>
@@ -94,10 +95,6 @@ export default {
             type: String,
             default: '',
         },
-        isHidden: {
-            type: Boolean,
-            default: false,
-        },
         isHaveContent: {
             type: Boolean,
             default: false,
@@ -105,6 +102,11 @@ export default {
         meta: {
             type: Object,
         },
+        isHidden: {
+            type: Boolean,
+            default: false,
+        },
+
         label: {
             type: String,
             default: '',
@@ -131,10 +133,15 @@ export default {
         //     return this.listData.slice(startIndex, endIndex)
         // },
     },
-    mounted() {
-        this.searchValue = this.searchValueProps
-        this.value = this.valueProps
-    },
+    // mounted() {
+    //     this.searchValue = this.searchValueProps
+    //     this.value = this.valueProps
+    // },
+    // watch: {
+    //     currentSelectedProps() {
+    //         this.currentSelected = this.currentSelectedProps
+    //     },
+    // },
     methods: {
         columnStyle(item) {
             if (this.isSplitScreen) {
@@ -206,11 +213,6 @@ export default {
                     top: 12px;
                 }
             }
-            // &__filter {
-            //     width: 30%;
-            //     height: 40px;
-            //     border: 1px solid black;
-            // }
         }
         &__button {
             padding: 6px 25px;
