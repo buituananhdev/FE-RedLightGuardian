@@ -21,10 +21,10 @@
                             v-model="currentSelected"
                             :type_select_box="'status-white'"
                             :label="'name'"
+                            :placeholder="'Select owner'"
                             :selected-props="currentSelected"
                             :options="listOwners"
                             @change-value-select-box="FilterBox"
-                            @UnChangeValueSelectBox="UnFilter"
                         >
                         </select-box>
                     </div>
@@ -266,7 +266,7 @@ export default {
             timeOutId: null,
             meta: [],
             isHaveContent: false,
-            currentSelected: { name: 'Tất cả' },
+            currentSelected: { name: '' },
             previousSelected: {},
             lastQuery: {},
         }
@@ -507,11 +507,7 @@ export default {
         FilterBox(option) {
             this.currentSelected = option
             console.log('filterbox', this.currentSelected)
-            this.Search()
-        },
-        UnFilter(option) {
-            this.currentSelected = option
-            this.Search()
+            this.Search();
         },
     },
 }
