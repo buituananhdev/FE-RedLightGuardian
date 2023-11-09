@@ -59,7 +59,8 @@ export default {
                         if (option.name != this.selected.name) {
                             this.$emit('ChangeValueSelectBox', option)
                         } else {
-                            this.selected = null
+                            this.ResetSelectBox();
+                            this.$emit('ChangeValueSelectBox', {})
                         }
                         break
                     case 'status':
@@ -78,6 +79,9 @@ export default {
             } catch (ex) {
                 console.log(ex)
             }
+        },
+        ResetSelectBox() {
+            this.label === 'name' ? this.selected.name = "" : this.selected.status = "";
         },
         CloseSelectBox() {
             this.isShowSelectBox = false
@@ -122,7 +126,7 @@ export default {
             <span v-if="label === 'status' && selected.status" :class="`${type_select_box}-select-box_selected`">{{
                 selected.status
             }}</span>
-            <span v-if="JSON.stringify(selected) === JSON.stringify({ placeholder: placeholder })" class="placeholder">
+            <span v-if="!selected?.status && !selected?.name" class="placeholder">
                 {{ placeholder }}
             </span>
             <img
