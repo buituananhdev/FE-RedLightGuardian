@@ -59,7 +59,7 @@ export default {
                         if (option.name != this.selected.name) {
                             this.$emit('ChangeValueSelectBox', option)
                         } else {
-                            this.ResetSelectBox();
+                            this.ResetSelectBox()
                             this.$emit('ChangeValueSelectBox', {})
                         }
                         break
@@ -81,7 +81,7 @@ export default {
             }
         },
         ResetSelectBox() {
-            this.label === 'name' ? this.selected.name = "" : this.selected.status = "";
+            this.label === 'name' ? (this.selected.name = '') : (this.selected.status = '')
         },
         CloseSelectBox() {
             this.isShowSelectBox = false

@@ -450,6 +450,7 @@ export default {
             return formattedDate
         },
         async Search() {
+            this.currentPage = this.pageParam
             try {
                 const res = await getAllViolations(
                     this.pageParam,

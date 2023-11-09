@@ -507,7 +507,7 @@ export default {
         FilterBox(option) {
             this.currentSelected = option
             console.log('filterbox', this.currentSelected)
-            this.Search();
+            this.Search()
         },
     },
 }
@@ -526,7 +526,7 @@ export default {
                 position: relative;
                 display: flex;
                 gap: 10px;
-                width: 120px;
+                width: 140px;
             }
             &__row {
                 padding: 0 16px;
