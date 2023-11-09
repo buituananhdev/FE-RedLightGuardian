@@ -12,6 +12,9 @@
                         @input="onSearchInput"
                     />
                 </div>
+                <!-- <div class="tableview__header__filter-container__filter">
+                    <select-box type_select_box="status-white" :label="'name'" :placeholder="'Chọn gì đó'" />
+                </div> -->
                 <slot name="fbody"></slot>
             </div>
             <button-vue
@@ -103,6 +106,7 @@ export default {
             type: Boolean,
             default: false,
         },
+
         label: {
             type: String,
             default: '',
@@ -166,7 +170,6 @@ export default {
             this.$emit('open-popup')
         },
         onSearchInput() {
-            console.log('this', this.searchValueProps)
             if (this.label === 'violations') {
                 return
             } else {

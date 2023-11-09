@@ -7,7 +7,7 @@
                 :list-header="listHeader"
                 :request-url="'/violations'"
                 :list-data="listData"
-                :search-value-props="searchValue"
+                :label="'violations'"
                 :is-have-content="isHaveContent"
                 :meta="meta"
                 @click-button="showPopup"
@@ -15,6 +15,36 @@
                 @go-to-next-page="goToNextPage"
                 @go-to-prev-page="goToPrevPage"
             >
+                <template #fbody>
+                    <div class="container-violation__page__table__filter">
+                        <select-box
+                            :type_select_box="'status-white'"
+                            :label="'name'"
+                            :selected-props="status"
+                            :options="optionsStatus"
+                            @ChangeValueSelectBox="changeStatus"
+                        />
+                        <select-box
+                            :type_select_box="'status-white'"
+                            :label="'name'"
+                            :selected-props="type"
+                            :options="optionsType"
+                            @ChangeValueSelectBox="changeType"
+                        />
+                        <vue-date-picker
+                            v-model="startDate"
+                            :format="format"
+                            placeholder="Start Date"
+                            @update:model-value="Search"
+                        ></vue-date-picker>
+                        <vue-date-picker
+                            v-model="endDate"
+                            placeholder="End Date"
+                            :format="format"
+                            @update:model-value="Search"
+                        ></vue-date-picker>
+                    </div>
+                </template>
                 <template #tbody>
                     <div
                         v-for="(item, index) in listData"
@@ -163,10 +193,7 @@ import {
     updateViolation,
     addViolation,
 } from '@/services/violation.service'
-// import ModalReason from '@/components/modals/ModalReason.vue'
-// import ModalAlert from '@/components/modals/ModalAlert.vue'
 export default {
-    // components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [
@@ -213,15 +240,54 @@ export default {
             meta: [],
             currentPage: 1,
             isHaveContent: false,
-            searchValue: '',
+            startDate: '',
+            endDate: '',
+            status: {},
+            type: {},
+            optionsStatus: [
+                {
+                    key: 'paid fine',
+                    name: 'Đã nộp',
+                },
+                {
+                    key: 'unpaid fine',
+                    name: 'Chưa nộp',
+                },
+                {
+                    key: 'overdue',
+                    name: 'Quá hạn',
+                },
+                // {
+                //     name: 'Hủy bỏ',
+                // },
+            ],
+            optionsType: [
+                {
+                    key: 'Run a red light',
+                    name: 'Vượt đèn đỏ',
+                },
+                {
+                    key: 'No helmet',
+                    name: 'Không MBH',
+                },
+            ],
         }
     },
     computed: {
         pageParam() {
             return this.$route.query.page
         },
-        pageSearch() {
-            return this.$route.query.search
+        statusParam() {
+            return this.$route.query.status
+        },
+        typeParam() {
+            return this.$route.query.type
+        },
+        startDateParam() {
+            return this.$route.query.startDate
+        },
+        endDateParam() {
+            return this.$route.query.endDate
         },
     },
     watch: {
@@ -241,21 +307,29 @@ export default {
         },
     },
     mounted() {
-        this.searchValue = this.pageSearch
+        this.startDate = this.startDateParam
+        this.endDate = this.endDateParam
+        if (this.statusParam) {
+            // this.status.key = this.statusParam
+            this.status = this.findName(this.optionsStatus, this.statusParam)
+        }
+        if (this.typeParam) {
+            // this.type.key = this.typeParam
+            this.type = this.findName(this.optionsType, this.typeParam)
+        }
         this.refreshData()
     },
     methods: {
         refreshData() {
-            if (this.searchValue) {
+            if (this.startDate || this.endDate || this.status || this.type) {
                 this.Search()
             } else {
                 this.fetchData()
             }
         },
         async fetchData() {
-            console.log(this.pageParam)
             try {
-                const res = await getAllViolations('', this.pageParam)
+                const res = await getAllViolations(this.pageParam)
                 this.listData = res.data.data
                 this.meta = res.data.meta
             } catch (error) {
@@ -377,30 +451,49 @@ export default {
         },
         async Search() {
             try {
-                const res = await getAllViolations(this.searchValue, this.p)
+                const res = await getAllViolations(
+                    this.pageParam,
+                    10,
+                    this.status.key,
+                    this.type.key,
+                    this.startDate,
+                    this.endDate
+                )
                 this.listData = res.data.data
                 this.meta = res.data.meta
                 const query = {}
-                if (this.searchValue) {
-                    query.search = this.searchValue
+                query.page = this.currentPage
+                if (this.startDate) {
+                    query.startDate = this.startDate
+                }
+                if (this.endDate) {
+                    query.endDate = this.endDate
+                }
+                if (this.type) {
+                    query.type = this.type.key
+                }
+                if (this.status) {
+                    query.status = this.status.key
                 }
                 this.$router.push({ path: `/violations`, query })
             } catch (error) {
                 console.error(error)
             }
         },
-        onSearchInput(searchValue) {
-            this.searchValue = searchValue
-            clearTimeout(this.timeoutId)
-            this.timeoutId = setTimeout(() => {
-                this.Search()
-            }, 700)
-        },
         goToIndexPage() {
             const query = {}
             query.page = this.currentPage
-            if (this.searchValue) {
-                query.search = this.searchValue
+            if (this.startDate) {
+                query.startDate = this.startDate
+            }
+            if (this.endDate) {
+                query.endDate = this.endDate
+            }
+            if (this.type) {
+                query.type = this.type
+            }
+            if (this.status) {
+                query.status = this.status.name
             }
             this.$router.push({
                 query: query,
@@ -411,6 +504,24 @@ export default {
         },
         goToPrevPage() {
             this.goToIndexPage(this.currentPage--)
+        },
+        format(date) {
+            const day = date.getDate()
+            const month = date.getMonth() + 1
+            const year = date.getFullYear()
+            return `${year}-${month}-${day}`
+        },
+        changeStatus(option) {
+            this.status = option
+            this.Search()
+        },
+        changeType(option) {
+            this.type = option
+            this.Search()
+        },
+        findName(option, key) {
+            console.log('key', key)
+            return option.find((item) => item.key === key)
         },
     },
 }
@@ -424,6 +535,11 @@ export default {
         height: 100vh;
         display: flex;
         &__table {
+            &__filter {
+                position: relative;
+                display: flex;
+                gap: 10px;
+            }
             &__row {
                 padding: 0 16px;
                 padding-right: 20px;

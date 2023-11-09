@@ -49,7 +49,6 @@ export default {
     watch: {
         selectedProps() {
             this.selected = this.selectedProps
-            console.log('ok', this.selectedProps)
         },
     },
     methods: {
@@ -106,7 +105,7 @@ export default {
 </script>
 
 <template>
-    <div @blur="CloseSelectBox" :class="[type_select_box]">
+    <div :class="[type_select_box]" @blur="CloseSelectBox">
         <div
             :class="[
                 `${type_select_box}-select-box`,
@@ -136,8 +135,8 @@ export default {
             <img src="../../assets/icons/dangerous-icon.svg" alt="" />
             <span>Trường này là bắt buộc</span>
         </div>
-        <div :class="`${type_select_box}_options`" v-if="isShowSelectBox && isSelect" class="overflow-y">
-            <div :class="`${type_select_box}_options_container`" v-if="options.length > 0">
+        <div v-if="isShowSelectBox && isSelect" :class="`${type_select_box}_options`" class="overflow-y">
+            <div v-if="options.length > 0" :class="`${type_select_box}_options_container`">
                 <div
                     v-for="(option, index) in options"
                     :key="index"
@@ -262,6 +261,7 @@ export default {
         border: 1px solid $neutral-400;
         display: flex;
         padding: 9px 8px 9px 12px;
+
         justify-content: space-between;
         align-items: center;
         position: relative;
@@ -293,6 +293,7 @@ export default {
         position: absolute;
         z-index: 2;
         top: 42px;
+        left: 0;
         display: flex;
         width: 100%;
         max-width: 100%;
