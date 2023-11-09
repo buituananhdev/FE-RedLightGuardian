@@ -10,6 +10,8 @@
                 @ChangeValueSelectBox="filterDemo"
                 @ChangeStatus="statusDemo"
             ></SelectBox>
+            <VueDatePicker v-model="date" @update:model-value="test"></VueDatePicker>
+
             {{ 'value is:' + currentSelected.status }}
         </div>
     </div>
@@ -17,9 +19,13 @@
 
 <script>
 import SelectBox from '@/components/commons/SelectBox.vue'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
+
 export default {
     components: {
         SelectBox,
+        VueDatePicker,
     },
     data() {
         return {
@@ -35,6 +41,7 @@ export default {
                     status: 'COMPLETE',
                 },
             ],
+            date: null,
         }
     },
     mounted() {},
@@ -51,8 +58,11 @@ export default {
             if (!selected.status) {
                 return
             }
-            const result = alert("Ban co muon thay doi tu " + oldStatus + " sang " + selected.status);
-            this.currentSelected = selected;
+            alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
+            this.currentSelected = selected
+        },
+        test() {
+            alert('hihiii')
         },
     },
 }

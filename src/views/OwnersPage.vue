@@ -1,14 +1,10 @@
 <template>
     <div class="container-owner">
-        <!-- <button class="container-owner__page" @click="showPopup">
-            <img src="@/assets/icons/close-icon.svg" alt="" >
-        </button> -->
         <div class="container-owner__page table-primary">
             <table-view
                 ref="tableview"
                 class="container-owner__page__table"
                 :list-header="listHeader"
-                :request-url="'/test'"
                 :list-data="listData"
                 :search-value-props="searchValue"
                 :is-have-content="isHaveContent"
@@ -216,7 +212,7 @@ export default {
         },
         async fetchData() {
             try {
-                const res = await getAllOwners('', this.pageParam)
+                const res = await getAllOwners(this.pageParam)
                 this.listData = res.data.data
                 this.meta = res.data.meta
             } catch (error) {
@@ -318,7 +314,7 @@ export default {
         },
         async Search() {
             try {
-                const res = await getAllOwners(this.searchValue, this.pageParam)
+                const res = await getAllOwners(this.pageParam, this.searchValue)
                 this.listData = res.data.data
                 this.meta = res.data.meta
                 const query = {}

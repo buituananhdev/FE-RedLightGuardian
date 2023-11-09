@@ -2,13 +2,20 @@
     <div class="tableview" :class="{ 'half-width': true }">
         <div class="tableview__header">
             <div class="tableview__header__filter-container">
-                <div class="tableview__header__filter-container__search">
+                <div v-if="label !== 'violations'" class="tableview__header__filter-container__search">
                     <img src="@/assets/icons/glass-icon.svg" alt="" />
-                    <input v-model="searchValue" type="text" @input="onSearchInput" />
+                    <input
+                        v-model="searchValue"
+                        class="input_search"
+                        type="text"
+                        placeholder="Search"
+                        @input="onSearchInput"
+                    />
                 </div>
-                <div class="tableview__header__filter-container__filter">
+                <!-- <div class="tableview__header__filter-container__filter">
                     <select-box type_select_box="status-white" :label="'name'" :placeholder="'Chọn gì đó'" />
-                </div>
+                </div> -->
+                <slot name="fbody"></slot>
             </div>
             <button-vue
                 v-if="!isViolation"
@@ -57,6 +64,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const isViolation = computed(() => route.name === 'violations')
+// const isVehicle = computed(() => route.name === 'vehicles')
 </script>
 
 <script>
@@ -87,18 +95,21 @@ export default {
             type: String,
             default: '',
         },
-        options: {
-            type: Array,
-            default() {
-                return []
-            },
-        },
         isHaveContent: {
             type: Boolean,
             default: false,
         },
         meta: {
             type: Object,
+        },
+        isHidden: {
+            type: Boolean,
+            default: false,
+        },
+
+        label: {
+            type: String,
+            default: '',
         },
     },
     emits: ['click', 'open-popup', 'on-search', 'go-to-prev-page', 'go-to-next-page', 'click-button'],
@@ -122,10 +133,15 @@ export default {
         //     return this.listData.slice(startIndex, endIndex)
         // },
     },
-    mounted() {
-        this.searchValue = this.searchValueProps
-        this.value = this.valueProps
-    },
+    // mounted() {
+    //     this.searchValue = this.searchValueProps
+    //     this.value = this.valueProps
+    // },
+    // watch: {
+    //     currentSelectedProps() {
+    //         this.currentSelected = this.currentSelectedProps
+    //     },
+    // },
     methods: {
         columnStyle(item) {
             if (this.isSplitScreen) {
@@ -154,8 +170,11 @@ export default {
             this.$emit('open-popup')
         },
         onSearchInput() {
-            console.log('this', this.searchValueProps)
-            this.$emit('on-search', this.searchValue)
+            if (this.label === 'violations') {
+                return
+            } else {
+                return this.$emit('on-search', this.searchValue)
+            }
         },
     },
 }
@@ -186,40 +205,14 @@ export default {
             width: 80%;
             &__search {
                 position: relative;
-                width: 40%;
+                width: 30%;
                 height: 100%;
                 img {
                     position: absolute;
                     left: 16px;
                     top: 12px;
                 }
-                input {
-                    display: flex;
-                    padding: 10px 16px;
-                    padding-left: 36px;
-                    align-items: center;
-                    gap: 4px;
-                    align-self: stretch;
-                    width: 100%;
-                    height: 100%;
-                    border: 1px solid $neutral-400;
-                    background: $neutral-0;
-                    border-radius: 8px;
-                    @include text-style(12px, 18px, 400, $text-light-secondary-1, 0px);
-                    &::placeholder {
-                        @include text-style(12, 18, 400, $text-light-icon-disabled, 0);
-                    }
-                    &:focus {
-                        border-color: $primary-500;
-                        outline-width: 0;
-                    }
-                }
             }
-            // &__filter {
-            //     width: 30%;
-            //     height: 40px;
-            //     border: 1px solid black;
-            // }
         }
         &__button {
             padding: 6px 25px;
@@ -296,7 +289,7 @@ export default {
                     text-align: center;
                     span {
                         width: 100%;
-                        @include text-style(17px, 150%, 600, $text-light-icon-secondary-2, normal);
+                        @include text-style(14px, 150%, 600, $text-light-icon-secondary-2, normal);
                         @include truncate(1);
                     }
                 }
