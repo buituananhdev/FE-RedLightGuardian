@@ -10,6 +10,7 @@
     "@heroicons/vue": "^2.0.18",
     "@kyvg/vue3-notification": "^3.0.2",
     "@vue-hero-icons/outline": "^1.7.2",
+    "@vuepic/vue-datepicker": "^7.2.2",
     "apexcharts": "^3.37.1",
     "axios": "^1.5.0",
     "element-plus": "^2.3.14",

@@ -5,7 +5,6 @@
                 ref="tableview"
                 class="container-user__page__table"
                 :list-header="listHeader"
-                :request-url="'/test'"
                 :list-data="listData"
                 :search-value-props="searchValue"
                 :is-have-content="isHaveContent"
@@ -180,7 +179,7 @@ export default {
         },
         async fetchData() {
             try {
-                const res = await getAllUsers('', this.pageParam)
+                const res = await getAllUsers(this.pageParam)
                 this.meta = res.data.meta
                 this.listData = res.data.data
             } catch (error) {
@@ -279,7 +278,7 @@ export default {
         },
         async Search() {
             try {
-                const res = await getAllUsers(this.searchValue, this.meta.currentPage)
+                const res = await getAllUsers(this.meta.currentPage, this.searchValue)
                 this.meta = res.data.meta
                 this.listData = res.data.data
                 const query = {}
