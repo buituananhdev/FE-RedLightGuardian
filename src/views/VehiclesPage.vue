@@ -15,6 +15,20 @@
                 @go-to-next-page="goToNextPage"
                 @go-to-prev-page="goToPrevPage"
             >
+                <template #fbody>
+                    <div class="container-vehicle__page__table__filter">
+                        <select-box
+                            v-model="currentSelected"
+                            :type_select_box="'status-white'"
+                            :label="'name'"
+                            :selected-props="currentSelected"
+                            :options="listOwners"
+                            @change-value-select-box="FilterBox"
+                            @UnChangeValueSelectBox="UnFilter"
+                        >
+                        </select-box>
+                    </div>
+                </template>
                 <template #tbody>
                     <div
                         v-for="(item, index) in listData"
@@ -185,10 +199,8 @@
 
 <script>
 import { getAllVehicles, deleteVehicle, getSingleVehicle, updateVehicle, addVehicle } from '@/services/vehicle.service'
-// import ModalReason from '@/components/modals/ModalReason.vue'
-// import ModalAlert from '@/components/modals/ModalAlert.vue'
+import { getAllOwners } from '@/services/owner.service'
 export default {
-    // components: { ModalReason, ModalAlert },
     data() {
         return {
             listHeader: [
@@ -242,6 +254,7 @@ export default {
                 },
             ],
             listData: [],
+            listOwners: [],
             currentVehicle: {},
             isEdit: false,
             isShowDetail: false,
@@ -253,6 +266,9 @@ export default {
             timeOutId: null,
             meta: [],
             isHaveContent: false,
+            currentSelected: { name: 'Tất cả' },
+            previousSelected: {},
+            lastQuery: {},
         }
     },
     computed: {
@@ -261,6 +277,9 @@ export default {
         },
         pageParam() {
             return this.$route.query.page
+        },
+        pageOwner() {
+            return this.$route.query.ownerID
         },
     },
     watch: {
@@ -279,14 +298,19 @@ export default {
             },
         },
     },
+    mounted() {
+        this.searchValue = this.pageSearch
+        this.ownerID = this.pageOwner
+        this.refreshData()
+        this.fetchListOwner()
+    },
     created() {
-        // this.fetchData()
         this.searchValue = this.pageSearch
         this.refreshData()
     },
     methods: {
         refreshData() {
-            if (this.searchValue) {
+            if (this.searchValue !== undefined || this.currentSelected !== undefined) {
                 this.Search()
             } else {
                 this.fetchData()
@@ -294,7 +318,7 @@ export default {
         },
         async fetchData() {
             try {
-                const res = await getAllVehicles('', this.pageParam)
+                const res = await getAllVehicles(this.pageParam)
                 this.listData = res.data.data
                 this.meta = res.data.meta
             } catch (error) {
@@ -384,33 +408,28 @@ export default {
         async Search() {
             this.currentPage = this.pageParam
             try {
-                const { currentPage, selectedOption, searchValue, ownerID } = this
-                let url = `/vehicles?pageNumber=${currentPage}&pageSize=10`
-                if (selectedOption) {
-                    url += `&ownerID=${selectedOption.ownerID}`
-                }
-                if (selectedOption === '' && ownerID) {
-                    url += `&ownerID=${ownerID}`
-                }
-                if (searchValue) {
-                    // eslint-disable-next-line no-unused-vars
-                    url += `&search=${searchValue}`
-                }
-                const res = await getAllVehicles(this.searchValue, this.currentPage)
+                const { currentPage, currentSelected, searchValue } = this
+                const res = await getAllVehicles(searchValue, currentSelected.id, currentPage, 10)
                 this.listData = res.data.data
                 this.meta = res.data.meta
-                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
+
+                // Lưu trạng thái của currentSelected và searchValue vào URL của trang web
                 const query = {}
-                if (selectedOption) {
-                    query.ownerID = selectedOption.ownerID
+                query.page = this.currentPage
+                if (currentSelected) {
+                    query.ownerID = currentSelected.id
+                    // console.log(222222222222)
                 }
-                if (selectedOption === '') {
-                    query.ownerID = ownerID
+                if (searchValue) {
+                    query.search = searchValue
                 }
-                if (this.searchValue) {
-                    query.search = this.searchValue
-                }
-                this.$router.push({ path: `/vehicles`, query })
+                this.$router.push({
+                    path: `/vehicles?`,
+                    query,
+                })
+
+                // Cập nhật previousSelected dựa trên currentSelected
+                // this.previousSelected = { id: currentSelected.id }
             } catch (error) {
                 console.error(error)
                 this.$notify({
@@ -421,8 +440,25 @@ export default {
                 })
             }
         },
+        async fetchListOwner() {
+            try {
+                const res = await getAllOwners()
+                this.listOwners = res.data.data
+                console.log('owner', this.listOwners)
+            } catch (error) {
+                console.log(error)
+                this.notiAction = 'Tải'
+                this.notiObject = 'dữ liệu'
+                this.notiType = 'thất bại'
+                this.showNotification = true
+                setTimeout(() => {
+                    this.showNotification = false
+                }, 3000)
+            }
+        },
         onSearchInput(searchValue) {
             this.searchValue = searchValue
+            console.log('onsearch', searchValue)
             clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
             this.timeoutId = setTimeout(() => {
                 this.Search()
@@ -468,6 +504,15 @@ export default {
         goToPrevPage() {
             this.goToIndexPage(this.currentPage--)
         },
+        FilterBox(option) {
+            this.currentSelected = option
+            console.log('filterbox', this.currentSelected)
+            this.Search()
+        },
+        UnFilter(option) {
+            this.currentSelected = option
+            this.Search()
+        },
     },
 }
 </script>
@@ -481,6 +526,12 @@ export default {
         height: 100vh;
         display: flex;
         &__table {
+            &__filter {
+                position: relative;
+                display: flex;
+                gap: 10px;
+                width: 120px;
+            }
             &__row {
                 padding: 0 16px;
                 padding-right: 20px;

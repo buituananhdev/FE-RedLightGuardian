@@ -19,8 +19,10 @@ export const deleteVehicle = async (id) => {
     return await axiosApiInstance.delete(`/vehicles/${id}`)
 }
 
-export const getAllVehicles = async (key_word = '', page = 1, pageSize = 10) => {
-    return await axiosApiInstance.get(`/vehicles?key_word=${key_word}&page=${page}&pageSize=${pageSize}`)
+export const getAllVehicles = async (key_word = '', ownerID = '', page = 1, pageSize = 10) => {
+    return await axiosApiInstance.get(
+        `/vehicles?key_word=${key_word}&ownerID=${ownerID}&page=${page}&pageSize=${pageSize}`
+    )
 }
 
 export const getSingleVehicle = async (id) => {
