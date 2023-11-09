@@ -1,6 +1,5 @@
 <template>
     <div class="draw-container">
-        <canvas ref="canvas" width="1280" height="720" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
         <div class="draw-container__button-list">
             <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="saveCoordinates"
                 >Lưu Hình</button-vue
@@ -15,6 +14,7 @@
                 >Xác Nhận</button-vue
             >
         </div>
+        <canvas ref="canvas" width="1280" height="720" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
     </div>
 </template>
 
@@ -175,10 +175,15 @@ export default {
 <style lang="scss" scoped>
 .draw-container {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: space-between;
     width: 100%;
     height: 100%;
     overflow: hidden; /* Ẩn phần ngoài khung hình */
     canvas {
+        justify-self: center;
+        align-self: center;
         background-image: url('../../assets/img/test-draw.png');
         background-repeat: no-repeat;
         background-size: contain;
@@ -188,7 +193,7 @@ export default {
     }
     &__button-list {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
         gap: 30px;
