@@ -37,7 +37,7 @@
                 <router-link
                     class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                     :class="{ 'bg-[#5d87ff] text-white hover:bg-[#5d87ff] hover:text-black': isDropdownOpen }"
-                    to="/users"
+                    to=""
                     @click="toggleDropdown"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
