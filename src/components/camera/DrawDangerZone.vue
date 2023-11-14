@@ -14,12 +14,13 @@
                 >Xác Nhận</button-vue
             >
         </div>
-        <canvas ref="canvas" width="1280" height="720" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
+        <canvas ref="canvas" width="1080" height="600" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { updateCoordinatesCamera } from '@/services/camera.service'
 export default {
     data() {
         return {
@@ -60,6 +61,30 @@ export default {
                     console.error('Lỗi khi tải dữ liệu từ API:', error)
                     alert('Có lỗi xảy ra khi tải dữ liệu từ API.')
                 })
+        },
+        async updateCoordinatesCamera() {
+            const id = 1
+            this.dangerZone = this.convertToCoordinates(this.dangerZone)
+            console.log(this.dangerZone)
+            try {
+                const res = await updateCoordinatesCamera(id, this.dangerZone)
+                if (res.data.status === 'success') {
+                    this.tryLoadCoordinates()
+                    this.$notify({
+                        type: 'success',
+                        title: 'Update Violation',
+                        text: 'Update violation successfully!',
+                    })
+                }
+            } catch (error) {
+                console.error(error)
+                this.$notify({
+                    type: 'error',
+                    title: 'Update Violation',
+                    text: 'Update violation failed!',
+                    duration: 1000,
+                })
+            }
         },
         startDrawing(event) {
             if (this.dangerZone.length < 4 && !this.isDrawing) {
@@ -124,21 +149,22 @@ export default {
                 return
             }
             this.roundCoordinates()
+            // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
+            //     type: 'application/json',
+            // })
+            // const jsonUrl = URL.createObjectURL(jsonBlob)
+            // const a = document.createElement('a')
+            // a.href = jsonUrl
+            // a.download = 'coordinates.json'
+            // a.click()
+            // URL.revokeObjectURL(jsonUrl)
+            // console.log(JSON.stringify(this.dangerZone))
 
-            const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
-                type: 'application/json',
-            })
-            const jsonUrl = URL.createObjectURL(jsonBlob)
-            const a = document.createElement('a')
-            a.href = jsonUrl
-            a.download = 'coordinates.json'
-            a.click()
-            URL.revokeObjectURL(jsonUrl)
-            console.log(JSON.stringify(this.dangerZone))
+            this.updateCoordinatesCamera()
 
             // axios
-            //     .get(`http://localhost:3011/api/cameras/1`, {
-            //         coordinates: JSON.stringify(this.dangerZone),
+            //     .patch(`http://localhost:3011/api/cameras/1`, {
+            //         coordinates: this.convertToCoordinates(this.dangerZone),
             //     })
             //     .then(() => {
             //         console.log('Tọa độ đã được cập nhật thành công.')
@@ -169,6 +195,23 @@ export default {
                 this.isConfirmed = true
             }
         },
+        convertToCoordinates(points) {
+            var xValues = points.map(function (point) {
+                return point.x
+            })
+
+            var yValues = points.map(function (point) {
+                return point.y
+            })
+
+            var xmin = Math.min.apply(null, xValues)
+            var ymin = Math.min.apply(null, yValues)
+            var xmax = Math.max.apply(null, xValues)
+            var ymax = Math.max.apply(null, yValues)
+
+            var coordinates = [xmin, ymin, xmax, ymax]
+            return JSON.stringify(coordinates)
+        },
     },
 }
 </script>
@@ -176,20 +219,15 @@ export default {
 .draw-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: space-between;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* Ẩn phần ngoài khung hình */
+    height: 100vh;
+    // overflow: hidden; /* Ẩn phần ngoài khung hình */
     canvas {
         justify-self: center;
         align-self: center;
         background-image: url('../../assets/img/test-draw.png');
         background-repeat: no-repeat;
-        background-size: contain;
+        background-size: cover;
         border: 1px solid black;
-        width: 90%;
-        height: 90%;
     }
     &__button-list {
         display: flex;
@@ -199,6 +237,7 @@ export default {
         gap: 30px;
         &__button {
             margin-left: 6px;
+            margin: 10px 0;
             padding: 7px 20px !important;
             background: $gradient-default;
             @include text-style(14px, 150%, 600, $slate-50, 0);

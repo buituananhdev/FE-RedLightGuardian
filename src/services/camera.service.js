@@ -27,8 +27,8 @@ export const getCameraById = async (id) => {
     return await axiosApiInstance.get(`/cameras/${id}`)
 }
 
-export const updateCamera = async (id, newCamera) => {
-    return await axiosApiInstance.put(`/cameras/${id}`, newCamera)
+export const updateCoordinatesCamera = async (id, newCoordinates) => {
+    return await axiosApiInstance.patch(`/cameras/${id}`, newCoordinates)
 }
 
 export const addCamera = async (newCamera) => {
