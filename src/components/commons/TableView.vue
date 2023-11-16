@@ -46,16 +46,18 @@
             </div>
             <div class="tableview__container__body overflow-y" v-if="listData.length">
                 <slot name="tbody"></slot>
-                <panigate-vue
-                    :meta="meta"
-                    :is-have-content="isHaveContent"
-                    @go-to-prev-page="prevPage"
-                    @go-to-next-page="nextPage"
-                />
             </div>
             <div v-else class="tableview__empty">
                 <span>Không có dữ liệu</span>
             </div>
+        </div>
+        <div class="tableview__pagination">
+            <panigate-vue
+                :meta="meta"
+                :is-have-content="isHaveContent"
+                @go-to-prev-page="prevPage"
+                @go-to-next-page="nextPage"
+            />
         </div>
     </div>
 </template>
@@ -64,7 +66,6 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const isViolation = computed(() => route.name === 'violations')
-// const isVehicle = computed(() => route.name === 'vehicles')
 </script>
 
 <script>
@@ -124,24 +125,7 @@ export default {
         listHeaderFiltered() {
             return this.listHeader
         },
-        // totalPageCount() {
-        //     return Math.ceil(this.listData.length / this.itemsPerPage)
-        // },
-        // paginatedListData() {
-        //     const startIndex = (this.currentPage - 1) * this.itemsPerPage
-        //     const endIndex = startIndex + this.itemsPerPage
-        //     return this.listData.slice(startIndex, endIndex)
-        // },
     },
-    // mounted() {
-    //     this.searchValue = this.searchValueProps
-    //     this.value = this.valueProps
-    // },
-    // watch: {
-    //     currentSelectedProps() {
-    //         this.currentSelected = this.currentSelectedProps
-    //     },
-    // },
     methods: {
         columnStyle(item) {
             if (this.isSplitScreen) {
@@ -150,20 +134,13 @@ export default {
                 return item.width
             }
         },
-        // Các phương thức xử lý trang ở đây
         goToPage(pageNumber) {
             this.currentPage = pageNumber
         },
         nextPage() {
-            // if (this.currentPage < this.totalPageCount) {
-            //     this.currentPage++
-            // }
             this.$emit('go-to-next-page')
         },
         prevPage() {
-            // if (this.currentPage > 1) {
-            //     this.currentPage--
-            // }
             this.$emit('go-to-prev-page')
         },
         openPopup() {
@@ -225,18 +202,10 @@ export default {
         }
     }
     &__pagination {
-        display: flex;
-        padding: 20px 0px;
-        padding-top: 24px;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 24px;
-        // margin-top: 21px;
-        border-radius: 8px;
-        background: $neutral-0;
+        position: fixed;
+        bottom: 40px;
         width: 100%;
-        box-shadow: 0px 16px 72px 0px rgba(71, 79, 98, 0.07);
+        right: 40px;
     }
     &__empty {
         width: 100%;
@@ -254,13 +223,10 @@ export default {
         display: block;
         width: 100%;
         position: relative;
-        height: calc(100% - 74px);
+        // height: calc(100% - 74px);
         overflow: hidden;
         &__head {
-            // display: block;
             width: 100%;
-            // position: sticky;
-            // top: 0;
             background-color: #ffff;
             display: flex;
             flex-direction: column;

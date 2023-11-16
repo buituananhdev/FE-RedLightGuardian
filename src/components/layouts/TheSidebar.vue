@@ -1,7 +1,7 @@
 <template>
     <div class="">
-        <div class="w-[280px]"></div>
-        <div class="w-[280px] h-[100vh] bg-white fixed top-0 left-0 z-[50]">
+        <div class="w-[240px]"></div>
+        <div class="w-[240px] h-[100vh] bg-white fixed top-0 left-0 z-[50]">
             <div class="mt-[10px] py-5 px-5 flex flex-col gap-2">
                 <p>HOME</p>
                 <router-link

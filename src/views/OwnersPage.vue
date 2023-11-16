@@ -22,20 +22,30 @@
                         :class="!(index % 2) ? 'bold' : ''"
                         @click="getSingleOwner(item.id)"
                     >
-                        <span class="container-owner__page__table__row__id">{{ index + 1 }}</span>
-                        <span class="container-owner__page__table__row__idCitizen">{{
-                            item.citizen_identification
-                        }}</span>
-                        <span class="container-owner__page__table__row__username">{{ item.name }}</span>
-                        <span class="container-owner__page__table__row__address">{{ item.address }}</span>
-                        <span class="container-owner__page__table__row__email">{{ item.email }}</span>
-                        <div class="container-owner__page__table__row__action">
-                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img
-                                src="@/assets/icons/delete-icon.svg"
-                                alt="delete"
-                                @click.stop="showDeleteVerifiedPopup()"
-                            />
+                        <div class="container-owner__page__table__row__cell id">
+                            <span>{{ index + 1 }}</span>
+                        </div>
+                        <div class="container-owner__page__table__row__cell idCitizen">
+                            <span>{{ item.citizen_identification }}</span>
+                        </div>
+                        <div class="container-owner__page__table__row__cell username">
+                            <span>{{ item.name }}</span>
+                        </div>
+                        <div class="container-owner__page__table__row__cell address">
+                            <span>{{ item.address }}</span>
+                        </div>
+                        <div class="container-owner__page__table__row__cell email">
+                            <span>{{ item.email }}</span>
+                        </div>
+                        <div class="container-owner__page__table__row__cell action">
+                            <div class="container-owner__page__table__row__cell action__icon">
+                                <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
+                                <img
+                                    src="@/assets/icons/delete-icon.svg"
+                                    alt="delete"
+                                    @click.stop="showDeleteVerifiedPopup(item.id)"
+                                />
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -220,7 +230,7 @@ export default {
             }
         },
         async deleteOwner() {
-            const id = localStorage.getItem('idOwner')
+            const id = localStorage.getItem('idDelete')
             try {
                 const res = await deleteOwner(id)
                 if (res.data.status === 'success') {
@@ -353,7 +363,8 @@ export default {
         goToPrevPage() {
             this.goToIndexPage(this.currentPage--)
         },
-        showDeleteVerifiedPopup() {
+        showDeleteVerifiedPopup(id) {
+            localStorage.setItem('idDelete', id)
             this.isShowDeleteVerifiedPopup = true
         },
         hiddenDeleteVerifiedPopup() {
@@ -382,31 +393,40 @@ export default {
                 &.bold {
                     background: var(--neutral-300, #f4f7fe);
                 }
-                span {
-                    padding: 16px 24px;
+                &__cell {
+                    position: relative;
+                    padding: 7.5px 24px;
+                    text-align: center;
                     display: flex;
-                    justify-content: center;
-                    align-content: center;
-                }
-                &__email,
-                &__idCitizen,
-                &__id {
-                    width: 15%;
-                }
-                &__username,
-                &__address {
-                    width: 20%;
-                }
-                &__action {
-                    width: 15%;
-                    display: flex;
-                    justify-content: center;
                     align-items: center;
-                    gap: 20px;
-                    img {
-                        height: 20px;
-                        width: 20px;
-                        cursor: pointer;
+                    span {
+                        width: 100%;
+                        @include truncate(1);
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
+                    }
+                    &.email,
+                    &.idCitizen,
+                    &.id {
+                        width: 15%;
+                    }
+                    &.username,
+                    &.address {
+                        width: 20%;
+                    }
+                    &.action {
+                        width: 15%;
+                        &__icon {
+                            width: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 20px;
+                            img {
+                                height: 20px;
+                                width: 20px;
+                                cursor: pointer;
+                            }
+                        }
                     }
                 }
             }

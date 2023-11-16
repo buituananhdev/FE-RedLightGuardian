@@ -15,8 +15,12 @@ export const deleteOwner = async (id) => {
     return await axiosApiInstance.delete(`/owners/${id}`)
 }
 
-export const getAllOwners = async (page = 1, pageSize = 10, key_word = '') => {
-    return await axiosApiInstance.get(`/owners?key_word=${key_word}&page=${page}&pageSize=${pageSize}`)
+export const getAllOwners = async (page = 1, pageSize = 8, key_word = '') => {
+    let url = `/owners?page=${page}&pageSize=${pageSize}`
+    if (key_word) {
+        url += `&key_word=${key_word}`
+    }
+    return await axiosApiInstance.get(url)
 }
 
 export const getSingleOwner = async (id) => {

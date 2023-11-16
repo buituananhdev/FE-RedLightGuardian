@@ -282,7 +282,7 @@ export default {
                     background: $neutral-300;
                 }
                 span {
-                    padding: 16px 20px;
+                    padding: 15px 24px;
                     display: flex;
                     justify-content: center;
                     align-content: center;

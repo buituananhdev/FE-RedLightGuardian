@@ -22,20 +22,28 @@
                         :class="!(index % 2) ? 'bold' : ''"
                         @click="getSingleUser(item.id)"
                     >
-                        <span class="container-user__page__table__row__id">{{ index + 1 }}</span>
-                        <span class="container-user__page__table__row__username">
-                            {{ item.username }}
-                        </span>
-                        <span class="container-user__page__table__row__email">
-                            {{ item.email }}
-                        </span>
-                        <div class="container-user__page__table__row__action">
-                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img
-                                src="@/assets/icons/delete-icon.svg"
-                                alt="delete"
-                                @click.stop="showDeleteVerifiedPopup()"
-                            />
+                        <div class="container-user__page__table__row__cell id">
+                            <span>{{ index + 1 }}</span>
+                        </div>
+                        <div class="container-user__page__table__row__cell username">
+                            <span>
+                                {{ item.username }}
+                            </span>
+                        </div>
+                        <div class="container-user__page__table__row__cell email">
+                            <span>
+                                {{ item.email }}
+                            </span>
+                        </div>
+                        <div class="container-user__page__table__row__cell action">
+                            <div class="container-user__page__table__row__cell action__icon">
+                                <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
+                                <img
+                                    src="@/assets/icons/delete-icon.svg"
+                                    alt="delete"
+                                    @click.stop="showDeleteVerifiedPopup(item.id)"
+                                />
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -60,6 +68,7 @@
                             <span>Email:</span>
                             <input v-model="currentUser.email" type="email" :disabled="!isEdit" />
                         </div>
+                        <button class="btn button--primary" @click="showPopupChangePassword">Đổi mật khẩu</button>
                     </div>
                 </template>
             </panel-view>
@@ -91,11 +100,37 @@
                     title="Xác nhận xóa người dùng"
                     class="container-user__page__popup"
                     @on-cancel="hiddenDeleteVerifiedPopup"
-                    @on-ok="deleteUser()"
+                    @on-ok="deleteUser"
                 >
                     <template #popupbody>
                         <div class="container-user__page__popup__content">
                             <span>Bạn xác nhận sẽ xóa người dùng này?</span>
+                        </div>
+                    </template>
+                </popup-view>
+            </full-modal>
+            <full-modal v-if="isChangePassword">
+                <popup-view
+                    title="Thay đổi mật khẩu"
+                    class="container-user__page__popup"
+                    @on-cancel="isChangePassword = false"
+                    @on-ok="changePassword"
+                >
+                    <template #popupbody>
+                        <div class="container-user__page__popup__content">
+                            <div class="label-input">
+                                <span>Mật khẩu cũ:</span>
+                                <input v-model="password.old" type="password" />
+                            </div>
+                            <div class="label-input">
+                                <span>Mật khẩu mới:</span>
+                                <input v-model="currentUser.new" type="password" />
+                            </div>
+                            <div class="label-input">
+                                <span>Xác nhận mật khẩu:</span>
+                                <input v-model="currentUser.confirm" type="password" />
+                            </div>
+                            <button class="btn button--primary">Đổi mật khẩu</button>
                         </div>
                     </template>
                 </popup-view>
@@ -139,6 +174,8 @@ export default {
             currentPage: 1,
             isHaveContent: false,
             isShowDeleteVerifiedPopup: false,
+            isChangePassword: false,
+            password: {},
         }
     },
     computed: {
@@ -179,6 +216,7 @@ export default {
         },
         async fetchData() {
             try {
+                console.log('pasge', this.pageParam)
                 const res = await getAllUsers(this.pageParam)
                 this.meta = res.data.meta
                 this.listData = res.data.data
@@ -197,7 +235,7 @@ export default {
             }
         },
         async deleteUser() {
-            const id = localStorage.getItem('idUser')
+            const id = localStorage.getItem('idDelete')
             try {
                 const res = await deleteUser(id)
                 if (res.data.status === 'success') {
@@ -227,16 +265,16 @@ export default {
                     this.isEdit = false
                     this.$notify({
                         type: 'success',
-                        title: 'Update Người dùng',
-                        text: 'Update người dùng thành công!',
+                        title: 'Cập nhật Người dùng',
+                        text: 'Cập nhật người dùng thành công!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Update Người dùng',
-                    text: 'Update người dùng thất bại!',
+                    title: 'Cập nhật Người dùng',
+                    text: 'Cập nhật người dùng thất bại!',
                     duration: 1000,
                 })
             }
@@ -261,8 +299,8 @@ export default {
                     this.isShowPopup = false
                     this.$notify({
                         type: 'success',
-                        title: 'Add Người dùng',
-                        text: 'Add người dùng thành công!',
+                        title: 'Thêm Người dùng',
+                        text: 'Thêm người dùng thành công!',
                     })
                     this.listData.push(res.data.data)
                 }
@@ -270,8 +308,8 @@ export default {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Add Người dùng',
-                    text: 'Add người dùng thất bại!',
+                    title: 'Thêm Người dùng',
+                    text: 'Thêm người dùng thất bại!',
                     duration: 1000,
                 })
             }
@@ -318,11 +356,24 @@ export default {
             this.isShowDetail = false
             this.isEdit = false
         },
-        showDeleteVerifiedPopup() {
+        showDeleteVerifiedPopup(id) {
+            localStorage.setItem('idDelete', id)
             this.isShowDeleteVerifiedPopup = true
         },
         hiddenDeleteVerifiedPopup() {
             this.isShowDeleteVerifiedPopup = false
+        },
+        showPopupChangePassword() {
+            this.isChangePassword = true
+            this.isShowDetail = false
+        },
+        async changePassword() {
+            try {
+                console.log('tam thoi chua co api')
+                this.isChangePassword = false
+            } catch (error) {
+                console.error(error)
+            }
         },
     },
 }
@@ -348,31 +399,40 @@ export default {
                 &.bold {
                     background: var(--neutral-300, #f4f7fe);
                 }
-                span {
-                    padding: 16px 24px;
+                &__cell {
+                    position: relative;
+                    padding: 7.5px 24px;
+                    text-align: center;
                     display: flex;
-                    justify-content: center;
                     align-items: center;
-                }
-                &__id {
-                    width: 15%;
-                }
-                &__username {
-                    width: 35%;
-                }
-                &__email {
-                    width: 30%;
-                }
-                &__action {
-                    width: 20%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 10px;
-                    img {
-                        height: 20px;
-                        width: 25px;
-                        cursor: pointer;
+                    span {
+                        width: 100%;
+                        @include truncate(1);
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
+                    }
+                    &.id {
+                        width: 15%;
+                    }
+                    &.username {
+                        width: 35%;
+                    }
+                    &.email {
+                        width: 30%;
+                    }
+                    &.action {
+                        width: 20%;
+                        &__icon {
+                            width: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 10px;
+                            img {
+                                height: 20px;
+                                width: 25px;
+                                cursor: pointer;
+                            }
+                        }
                     }
                 }
             }
@@ -387,6 +447,26 @@ export default {
                 span {
                     padding: 7px 0;
                 }
+                .btn {
+                    display: flex;
+                    width: 320px;
+                    height: 36px;
+                    padding: 6px 10px;
+                    margin-top: 15px;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 4px;
+                    border-radius: 8px;
+                    font-size: 12px;
+                    &.button--primary {
+                        background: $gradient-default;
+                        text-align: center;
+                        @include text-style(14px, 150%, 600, $neutral-100, 0);
+                        &:hover {
+                            background: $gradient-hover;
+                        }
+                    }
+                }
             }
         }
         &__popup {
@@ -395,6 +475,9 @@ export default {
             left: 50%; /* Đặt vị trí left ở giữa trang */
             transform: translate(-50%, -50%);
             z-index: 3;
+            &__content {
+                width: 100%;
+            }
         }
     }
 }
