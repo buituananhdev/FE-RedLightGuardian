@@ -34,7 +34,7 @@
                             <img
                                 src="@/assets/icons/delete-icon.svg"
                                 alt="delete"
-                                @click.stop="showDeleteVerifiedPopup()"
+                                @click.stop="showDeleteVerifiedPopup(item.id)"
                             />
                         </div>
                     </div>
@@ -220,7 +220,7 @@ export default {
             }
         },
         async deleteOwner() {
-            const id = localStorage.getItem('idOwner')
+            const id = localStorage.getItem('idDelete')
             try {
                 const res = await deleteOwner(id)
                 if (res.data.status === 'success') {
@@ -353,7 +353,8 @@ export default {
         goToPrevPage() {
             this.goToIndexPage(this.currentPage--)
         },
-        showDeleteVerifiedPopup() {
+        showDeleteVerifiedPopup(id) {
+            localStorage.setItem('idDelete', id)
             this.isShowDeleteVerifiedPopup = true
         },
         hiddenDeleteVerifiedPopup() {

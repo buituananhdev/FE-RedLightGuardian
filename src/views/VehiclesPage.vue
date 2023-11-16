@@ -55,7 +55,7 @@
                             <img
                                 src="@/assets/icons/delete-icon.svg"
                                 alt="delete"
-                                @click.stop="showDeleteVerifiedPopup()"
+                                @click.stop="showDeleteVerifiedPopup(item.id)"
                             />
                         </div>
                     </div>
@@ -224,30 +224,6 @@ export default {
                     title: 'Loại xe',
                     width: 20,
                 },
-                // {
-                //     title: 'Engine Capacity',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Color',
-                //     width: 5,
-                // },
-                // {
-                //     title: 'Frame Number',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Engine Number',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Brand',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Image URL',
-                //     width: 17,
-                // },
                 {
                     title: 'Thao tác',
                     width: 20,
@@ -326,7 +302,7 @@ export default {
             }
         },
         async deleteVehicle() {
-            const id = localStorage.getItem('idVehicle')
+            const id = localStorage.getItem('idDelete')
             try {
                 const res = await deleteVehicle(id)
                 if (res.data.status === 'success') {
@@ -482,7 +458,8 @@ export default {
             this.isShowPopup = false
             this.isEdit = false
         },
-        showDeleteVerifiedPopup() {
+        showDeleteVerifiedPopup(id) {
+            localStorage.setItem('idDelete', id)
             this.isShowDeleteVerifiedPopup = true
         },
         hiddenDeleteVerifiedPopup() {
