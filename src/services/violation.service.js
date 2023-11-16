@@ -24,9 +24,20 @@ export const getAllViolations = async (
     page = 1,
     pageSize = 8
 ) => {
-    return await axiosApiInstance.get(
-        `/violations?page=${page}&pageSize=${pageSize}&status=${status}&type=${type}&startDate=${startDate}&endDate=${endDate}`
-    )
+    let url = `/violations?page=${page}&pageSize=${pageSize}`
+    if (startDate) {
+        url += `&startDate=${startDate}`
+    }
+    if (status) {
+        url += `&status=${status}`
+    }
+    if (type) {
+        url += `&type=${type}`
+    }
+    if (endDate) {
+        url += `&endDate=${endDate}`
+    }
+    return await axiosApiInstance.get(url)
 }
 
 export const getSingleViolation = async (id) => {

@@ -202,21 +202,6 @@ export default {
         }
     }
     &__pagination {
-        // display: flex;
-        // position: fixed;
-        // bottom: 40px;
-        // right: ;
-        // padding: 20px 0px;
-        // padding-top: 24px;
-        // flex-direction: column;
-        // justify-content: center;
-        // align-items: center;
-        // gap: 24px;
-        // // margin-top: 21px;
-        // border-radius: 8px;
-        // background: $neutral-0;
-        // width: 100%;
-        // box-shadow: 0px 16px 72px 0px rgba(71, 79, 98, 0.07);
         position: fixed;
         bottom: 40px;
         width: 100%;
@@ -241,10 +226,7 @@ export default {
         // height: calc(100% - 74px);
         overflow: hidden;
         &__head {
-            // display: block;
             width: 100%;
-            // position: sticky;
-            // top: 0;
             background-color: #ffff;
             display: flex;
             flex-direction: column;

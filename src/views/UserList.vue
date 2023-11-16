@@ -22,20 +22,28 @@
                         :class="!(index % 2) ? 'bold' : ''"
                         @click="getSingleUser(item.id)"
                     >
-                        <span class="container-user__page__table__row__id">{{ index + 1 }}</span>
-                        <span class="container-user__page__table__row__username">
-                            {{ item.username }}
-                        </span>
-                        <span class="container-user__page__table__row__email">
-                            {{ item.email }}
-                        </span>
-                        <div class="container-user__page__table__row__action">
-                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img
-                                src="@/assets/icons/delete-icon.svg"
-                                alt="delete"
-                                @click.stop="showDeleteVerifiedPopup(item.id)"
-                            />
+                        <div class="container-user__page__table__row__cell id">
+                            <span>{{ index + 1 }}</span>
+                        </div>
+                        <div class="container-user__page__table__row__cell username">
+                            <span>
+                                {{ item.username }}
+                            </span>
+                        </div>
+                        <div class="container-user__page__table__row__cell email">
+                            <span>
+                                {{ item.email }}
+                            </span>
+                        </div>
+                        <div class="container-user__page__table__row__cell action">
+                            <div class="container-user__page__table__row__cell action__icon">
+                                <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
+                                <img
+                                    src="@/assets/icons/delete-icon.svg"
+                                    alt="delete"
+                                    @click.stop="showDeleteVerifiedPopup(item.id)"
+                                />
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -391,31 +399,40 @@ export default {
                 &.bold {
                     background: var(--neutral-300, #f4f7fe);
                 }
-                span {
-                    padding: 15px 24px;
+                &__cell {
+                    position: relative;
+                    padding: 7.5px 24px;
+                    text-align: center;
                     display: flex;
-                    justify-content: center;
                     align-items: center;
-                }
-                &__id {
-                    width: 15%;
-                }
-                &__username {
-                    width: 35%;
-                }
-                &__email {
-                    width: 30%;
-                }
-                &__action {
-                    width: 20%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 10px;
-                    img {
-                        height: 20px;
-                        width: 25px;
-                        cursor: pointer;
+                    span {
+                        width: 100%;
+                        @include truncate(1);
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
+                    }
+                    &.id {
+                        width: 15%;
+                    }
+                    &.username {
+                        width: 35%;
+                    }
+                    &.email {
+                        width: 30%;
+                    }
+                    &.action {
+                        width: 20%;
+                        &__icon {
+                            width: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 10px;
+                            img {
+                                height: 20px;
+                                width: 25px;
+                                cursor: pointer;
+                            }
+                        }
                     }
                 }
             }

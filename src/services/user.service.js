@@ -23,7 +23,11 @@ export const deleteUser = async (id) => {
     return await axiosApiInstance.delete(`/users/${id}`)
 }
 export const getAllUsers = async (page = 1, pageSize = 8, key_word = '') => {
-    return await axiosApiInstance.get(`/users?key_word=${key_word}&page=${page}&pageSize=${pageSize}`)
+    let url = `/users?page=${page}&pageSize=${pageSize}`
+    if (key_word) {
+        url += `&key_word=${key_word}`
+    }
+    return await axiosApiInstance.get(url)
 }
 export const updateUser = async (id, newUser) => {
     return await axiosApiInstance.put(`/users/${id}`, newUser)

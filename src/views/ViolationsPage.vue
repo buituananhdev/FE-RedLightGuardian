@@ -53,22 +53,29 @@
                         :class="!(index % 2) ? 'bold' : ''"
                         @click="getSingleViolation(item.id)"
                     >
-                        <span class="container-violation__page__table__row__violationId">{{ index + 1 }}</span>
-                        <span class="container-violation__page__table__row__type">{{ item.type }}</span>
-                        <span class="container-violation__page__table__row__deadline">{{
-                            formatDateTime(item.deadline)
-                        }}</span>
-                        <span class="container-violation__page__table__row__status">{{ item.status }}</span>
-                        <span class="container-violation__page__table__row__vehicleId">{{ item.vehicleID }}</span>
-                        <span class="container-violation__page__table__row__time">{{ formatDateTime(item.time) }}</span>
-                        <span class="container-violation__page__table__row__cameraId">{{ item.cameraID }}</span>
-                        <div class="container-violation__page__table__row__action">
+                        <div class="container-violation__page__table__row__cell id">
+                            <span>{{ index + 1 }}</span>
+                        </div>
+                        <div class="container-violation__page__table__row__cell type">
+                            <span>{{ item.type }}</span>
+                        </div>
+                        <div class="container-violation__page__table__row__cell deadline">
+                            <span>{{ item.deadline }}</span>
+                        </div>
+                        <div class="container-violation__page__table__row__cell status">
+                            <span>{{ item.status }}</span>
+                        </div>
+                        <div class="container-violation__page__table__row__cell vehicleId">
+                            <span>{{ item.vehicleID }}</span>
+                        </div>
+                        <div class="container-violation__page__table__row__cell time">
+                            <span>{{ item.time }}</span>
+                        </div>
+                        <div class="container-violation__page__table__row__cell cameraId">
+                            <span>{{ item.cameraID }}</span>
+                        </div>
+                        <div class="container-violation__page__table__row__cell action">
                             <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <!-- <img
-                                src="@/assets/icons/delete-icon.svg"
-                                alt="delete"
-                                @click.stop="showDeleteVerifiedPopup()"
-                            /> -->
                         </div>
                     </div>
                 </template>
@@ -556,38 +563,39 @@ export default {
                 &.bold {
                     background: $neutral-300;
                 }
-                span {
-                    padding: 16px 20px;
+                &__cell {
+                    position: relative;
+                    padding: 15px 24px;
+                    text-align: center;
                     display: flex;
-                    justify-content: center;
-                    align-content: center;
-                    overflow: hidden;
-                }
-                &__violationId,
-                &__vehicleId {
-                    width: 5%;
-                }
-                &__time,
-                &__deadline {
-                    width: 20%;
-                }
-                &__type,
-                &__status {
-                    width: 15%;
-                }
-                &__cameraId {
-                    width: 10%;
-                }
-                &__action {
-                    width: 10%;
-                    display: flex;
-                    justify-content: center;
                     align-items: center;
-                    gap: 20px;
-                    img {
-                        height: 20px;
-                        width: 20px;
-                        cursor: pointer;
+                    span {
+                        width: 100%;
+                        @include truncate(1);
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
+                    }
+                    &.id,
+                    &.vehicleId {
+                        width: 5%;
+                    }
+                    &.time,
+                    &.deadline {
+                        width: 20%;
+                    }
+                    &.type,
+                    &.status {
+                        width: 15%;
+                    }
+                    &.cameraId {
+                        width: 10%;
+                    }
+                    &.action {
+                        width: 10%;
+                        img {
+                            height: 20px;
+                            width: 20px;
+                            cursor: pointer;
+                        }
                     }
                 }
             }
