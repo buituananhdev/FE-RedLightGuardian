@@ -409,7 +409,7 @@ export default {
             this.currentPage = this.pageParam
             try {
                 const { currentPage, currentSelected, searchValue } = this
-                const res = await getAllVehicles(searchValue, currentSelected.id, currentPage, 10)
+                const res = await getAllVehicles(searchValue, currentSelected.id, currentPage)
                 this.listData = res.data.data
                 this.meta = res.data.meta
 

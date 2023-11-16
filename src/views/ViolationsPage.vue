@@ -329,6 +329,7 @@ export default {
         },
         async fetchData() {
             try {
+                console.log('page', this.pageParam)
                 const res = await getAllViolations(this.pageParam)
                 this.listData = res.data.data
                 this.meta = res.data.meta
@@ -453,12 +454,11 @@ export default {
             this.currentPage = this.pageParam
             try {
                 const res = await getAllViolations(
-                    this.pageParam,
-                    10,
                     this.status.key,
                     this.type.key,
                     this.startDate,
-                    this.endDate
+                    this.endDate,
+                    this.pageParam
                 )
                 this.listData = res.data.data
                 this.meta = res.data.meta

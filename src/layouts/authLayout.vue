@@ -5,7 +5,7 @@
 
             <div class="mb-auto flex">
                 <the-sidebar />
-                <div class="w-full mt-[72px] rounded-3xl">
+                <div class="w-full mt-[60px] rounded-3xl">
                     <slot></slot>
                 </div>
             </div>

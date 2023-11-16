@@ -17,12 +17,12 @@ export const deleteViolation = async (id) => {
 }
 
 export const getAllViolations = async (
-    page = 1,
-    pageSize = 10,
     status = '',
     type = '',
     startDate = '',
-    endDate = ''
+    endDate = '',
+    page = 1,
+    pageSize = 8
 ) => {
     return await axiosApiInstance.get(
         `/violations?page=${page}&pageSize=${pageSize}&status=${status}&type=${type}&startDate=${startDate}&endDate=${endDate}`

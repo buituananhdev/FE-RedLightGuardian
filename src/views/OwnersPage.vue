@@ -383,7 +383,7 @@ export default {
                     background: var(--neutral-300, #f4f7fe);
                 }
                 span {
-                    padding: 16px 24px;
+                    padding: 15px 24px;
                     display: flex;
                     justify-content: center;
                     align-content: center;

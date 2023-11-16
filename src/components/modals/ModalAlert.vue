@@ -138,7 +138,7 @@ export default {
         .btn {
             display: flex;
             height: 46px;
-            padding: 16px 24px;
+            padding: 15px 24px;
             justify-content: center;
             align-items: center;
             gap: 4px;
