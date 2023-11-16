@@ -1,18 +1,25 @@
 <template>
     <div class="fixed top-0 left-0 h-[72px] w-full bg-white z-50 flex justify-between items-center px-5">
         <div></div>
-        <div v-if="authStore.isLoggedIn" class="flex items-center gap-5 relative">
+        <div v-if="authStore.isLoggedIn" class="logout-container">
             <img
-                class="cursor-pointer w-[40px] h-[40px] rounded-full object-cover"
+                class="logout-container__avatar"
                 src="https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-Facebook-cute-cho-con-gai.jpg?ssl=1"
                 alt=""
                 @click="togglePopup"
             />
-            <div
-                class="popup bg-white border border-gray-300 shadow-md absolute right-0 top-14 rounded-md w-[100px]"
-                :class="{ block: isPopupVisible, hidden: !isPopupVisible }"
-            >
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100" @click="logout">Log Out</a>
+            <div class="logout-container__dropdown" :class="{ hidden: !isPopupVisible }">
+                <div class="logout-container__dropdown__info">
+                    <img
+                        src="https://i0.wp.com/thatnhucuocsong.com.vn/wp-content/uploads/2023/02/Hinh-anh-avatar-Facebook-cute-cho-con-gai.jpg?ssl=1"
+                        alt=""
+                    />
+                    <span>Admin</span>
+                </div>
+                <hr />
+                <div class="logout-container__dropdown__logout">
+                    <a href="#" @click="logout">Logout</a>
+                </div>
             </div>
         </div>
     </div>
@@ -40,3 +47,46 @@ const logout = () => {
     window.location.href = '/login'
 }
 </script>
+<style lang="scss" scoped>
+.logout-container {
+    display: flex;
+    gap: 5px;
+    padding-right: 6px;
+    &__avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+    }
+    &__dropdown {
+        position: absolute;
+        top: 72px;
+        right: 16px;
+        width: 200px;
+        background-color: $neutral-100;
+        border-radius: 4px;
+        border: 1px solid $gray-400;
+        &__info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin: 12px;
+            }
+        }
+        &__logout {
+            padding: 12px;
+            cursor: pointer;
+            &:hover {
+                background-color: $gray-300;
+            }
+        }
+    }
+}
+</style>

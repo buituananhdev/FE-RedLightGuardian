@@ -14,7 +14,7 @@
                 >Xác Nhận</button-vue
             >
         </div>
-        <canvas ref="canvas" width="1080" height="600" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
+        <canvas ref="canvas" width="1280" height="720" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
     </div>
 </template>
 
@@ -228,6 +228,8 @@ export default {
         background-repeat: no-repeat;
         background-size: cover;
         border: 1px solid black;
+        width: 80%;
+        height: 80%;
     }
     &__button-list {
         display: flex;
