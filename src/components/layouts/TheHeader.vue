@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed top-0 left-0 h-[72px] w-full bg-white z-50 flex justify-between items-center px-5">
+    <div class="fixed top-0 left-0 h-[60px] w-full bg-white z-50 flex justify-between items-center px-5">
         <div></div>
         <div v-if="authStore.isLoggedIn" class="logout-container">
             <img

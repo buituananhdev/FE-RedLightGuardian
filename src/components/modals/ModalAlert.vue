@@ -139,6 +139,7 @@ export default {
             display: flex;
             height: 46px;
             padding: 16px 24px;
+            @include truncate(1);
             justify-content: center;
             align-items: center;
             gap: 4px;

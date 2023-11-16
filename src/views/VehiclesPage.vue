@@ -37,26 +37,30 @@
                         :class="!(index % 2) ? 'bold' : ''"
                         @click="getSingleVehicle(item.id)"
                     >
-                        <span class="container-vehicle__page__table__row__id">{{ index + 1 }}</span>
-                        <span class="container-vehicle__page__table__row__name">{{ item.vehicleName }}</span>
-                        <span class="container-vehicle__page__table__row__license">{{ item.licensePlate }}</span>
-                        <span class="container-vehicle__page__table__row__ownerId">{{ item.ownerID }}</span>
-                        <span class="container-vehicle__page__table__row__type">{{ item.vehicleType }}</span>
-                        <!-- <span class="container-vehicle__page__table__row__engineCapacity">{{
-                            item.engineCapacity
-                        }}</span>
-                        <span class="container-vehicle__page__table__row__color">{{ item.color }}</span>
-                        <span class="container-vehicle__page__table__row__frameNumber">{{ item.frameNumber }}</span>
-                        <span class="container-vehicle__page__table__row__engineNumber">{{ item.engineNumber }}</span>
-                        <span class="container-vehicle__page__table__row__brand">{{ item.brand }}</span>
-                        <span class="container-vehicle__page__table__row__imageUrl">{{ item.imageUrl }}</span> -->
-                        <div class="container-vehicle__page__table__row__action">
-                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                            <img
-                                src="@/assets/icons/delete-icon.svg"
-                                alt="delete"
-                                @click.stop="showDeleteVerifiedPopup()"
-                            />
+                        <div class="container-vehicle__page__table__row__cell id">
+                            <span>{{ index + 1 }}</span>
+                        </div>
+                        <div class="container-vehicle__page__table__row__cell name">
+                            <span>{{ item.vehicleName }}</span>
+                        </div>
+                        <div class="container-vehicle__page__table__row__cell license">
+                            <span>{{ item.licensePlate }}</span>
+                        </div>
+                        <div class="container-vehicle__page__table__row__cell ownerId">
+                            <span>{{ item.ownerID }}</span>
+                        </div>
+                        <div class="container-vehicle__page__table__row__cell type">
+                            <span>{{ item.vehicleType }}</span>
+                        </div>
+                        <div class="container-vehicle__page__table__row__cell action">
+                            <div class="container-vehicle__page__table__row__cell action__icon">
+                                <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
+                                <img
+                                    src="@/assets/icons/delete-icon.svg"
+                                    alt="delete"
+                                    @click.stop="showDeleteVerifiedPopup(item.id)"
+                                />
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -224,30 +228,6 @@ export default {
                     title: 'Loại xe',
                     width: 20,
                 },
-                // {
-                //     title: 'Engine Capacity',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Color',
-                //     width: 5,
-                // },
-                // {
-                //     title: 'Frame Number',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Engine Number',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Brand',
-                //     width: 9,
-                // },
-                // {
-                //     title: 'Image URL',
-                //     width: 17,
-                // },
                 {
                     title: 'Thao tác',
                     width: 20,
@@ -326,7 +306,7 @@ export default {
             }
         },
         async deleteVehicle() {
-            const id = localStorage.getItem('idVehicle')
+            const id = localStorage.getItem('idDelete')
             try {
                 const res = await deleteVehicle(id)
                 if (res.data.status === 'success') {
@@ -409,7 +389,7 @@ export default {
             this.currentPage = this.pageParam
             try {
                 const { currentPage, currentSelected, searchValue } = this
-                const res = await getAllVehicles(searchValue, currentSelected.id, currentPage, 10)
+                const res = await getAllVehicles(searchValue, currentSelected.id, currentPage)
                 this.listData = res.data.data
                 this.meta = res.data.meta
 
@@ -482,7 +462,8 @@ export default {
             this.isShowPopup = false
             this.isEdit = false
         },
-        showDeleteVerifiedPopup() {
+        showDeleteVerifiedPopup(id) {
+            localStorage.setItem('idDelete', id)
             this.isShowDeleteVerifiedPopup = true
         },
         hiddenDeleteVerifiedPopup() {
@@ -542,11 +523,44 @@ export default {
                 &.bold {
                     background: $neutral-300;
                 }
-                span {
-                    padding: 16px 20px;
+                &__cell {
+                    position: relative;
+                    padding: 7.5px 24px;
+                    text-align: center;
                     display: flex;
-                    justify-content: center;
-                    align-content: center;
+                    align-items: center;
+                    span {
+                        width: 100%;
+                        @include truncate(1);
+                        @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
+                    }
+                    &.email,
+                    &.idCitizen,
+                    &.id,
+                    &.ownerId {
+                        width: 10%;
+                    }
+                    &.type,
+                    &.license,
+                    &.name {
+                        width: 20%;
+                    }
+
+                    &.action {
+                        width: 20%;
+                        &__icon {
+                            width: 100%;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 10px;
+                            img {
+                                height: 20px;
+                                width: 20px;
+                                cursor: pointer;
+                            }
+                        }
+                    }
                 }
                 &__id,
                 &__ownerId {
