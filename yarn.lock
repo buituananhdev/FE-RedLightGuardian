@@ -1788,6 +1788,11 @@ v-click-outside@^3.2.0:
   resolved "https://registry.yarnpkg.com/v-click-outside/-/v-click-outside-3.2.0.tgz#850ac3f52d66d84b9f7e8002a1bcadcafec5534e"
   integrity sha512-QD0bDy38SHJXQBjgnllmkI/rbdiwmq9RC+/+pvrFjYJKTn8dtp7Penf9q1lLBta280fYG2q53mgLhQ+3l3z74w==
 
+vee-validate@3:
+  version "3.4.15"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-3.4.15.tgz#d1b2fe2120d28bd833efadce15d73b482f6f7bcb"
+  integrity sha512-qEtvq9X2N7l5pjBe/6YGrrIBHxJA4KTrb3QrER3qzM7fzkH730m8LyVWMIzM47l//618nlUa7VvTdMFTRKr8tQ==
+
 vite@^4.1.4:
   version "4.1.4"
   resolved "https://registry.npmjs.org/vite/-/vite-4.1.4.tgz"

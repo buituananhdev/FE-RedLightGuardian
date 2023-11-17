@@ -14,6 +14,7 @@
 
             {{ 'value is:' + currentSelected.status }}
         </div>
+        <!-- <input-validation-vue /> -->
     </div>
 </template>
 
