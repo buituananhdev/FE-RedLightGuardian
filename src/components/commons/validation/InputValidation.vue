@@ -97,23 +97,23 @@ export default {
             <img
                 @click="toggleShowPassword()"
                 v-if="($attrs.type == 'password') & isShowPassword"
-                src="~/assets/icons/icon-eye.svg"
+                src="@/assets/icons/eye-icon.svg"
                 alt=""
             />
             <img
                 @click="toggleShowPassword()"
                 v-if="($attrs.type == 'password') & !isShowPassword"
-                src="~/assets/icons/icon-eye-off.svg"
+                src="@/assets/icons/eye-icon.svg"
                 alt=""
             />
-            <img v-if="$attrs.type === 'date'" src="~/assets/icons/icon-calendar.svg" alt="" />
+            <img v-if="$attrs.type === 'date'" src="@/assets/icons/calendar-icon.svg" alt="" />
         </div>
         <span v-if="!isValid" class="input-validation__error">
-            <img src="~/assets/icons/icon-dangerous.svg" alt="" />
+            <img src="@/assets/icons/dagerous-icon.svg" alt="" />
             <span>{{ invalidContent }}</span>
         </span>
         <span v-else-if="(errors[0] && isFocused) || noResetValidate" class="input-validation__error">
-            <img v-if="errors[0]" src="~/assets/icons/icon-dangerous.svg" alt="" />
+            <img v-if="errors[0]" src="@/assets/icons/dagerous-icon.svg" alt="" />
             <span>
                 {{ errors[0] }}
             </span>

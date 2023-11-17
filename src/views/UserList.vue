@@ -1,5 +1,6 @@
 <template>
     <div class="container-user">
+        <input-validation-vue />
         <div class="container-user__page table-primary">
             <table-view
                 ref="tableview"
@@ -341,7 +342,6 @@ export default {
             if (this.searchValue) {
                 query.search = this.searchValue
             }
-            console.log('curr', this.currentPage)
             this.$router.push({
                 query: query,
             })

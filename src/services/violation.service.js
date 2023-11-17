@@ -17,11 +17,11 @@ export const deleteViolation = async (id) => {
 }
 
 export const getAllViolations = async (
+    page = 1,
     status = '',
     type = '',
     startDate = '',
     endDate = '',
-    page = 1,
     pageSize = 8
 ) => {
     let url = `/violations?page=${page}&pageSize=${pageSize}`

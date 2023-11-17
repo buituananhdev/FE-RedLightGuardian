@@ -278,19 +278,15 @@ export default {
             },
         },
     },
-    mounted() {
-        this.searchValue = this.pageSearch
-        this.ownerID = this.pageOwner
-        this.refreshData()
-        this.fetchListOwner()
-    },
     created() {
         this.searchValue = this.pageSearch
+        this.ownerID = this.pageOwner
+        this.fetchListOwner()
         this.refreshData()
     },
     methods: {
         refreshData() {
-            if (this.searchValue !== undefined || this.currentSelected !== undefined) {
+            if (this.searchValue || this.currentSelected.name) {
                 this.Search()
             } else {
                 this.fetchData()
@@ -386,30 +382,22 @@ export default {
             }
         },
         async Search() {
-            this.currentPage = this.pageParam
             try {
-                const { currentPage, currentSelected, searchValue } = this
-                const res = await getAllVehicles(searchValue, currentSelected.id, currentPage)
+                const res = await getAllVehicles(this.pageParam, this.searchValue, this.currentSelected.id)
                 this.listData = res.data.data
                 this.meta = res.data.meta
-
-                // Lưu trạng thái của currentSelected và searchValue vào URL của trang web
                 const query = {}
                 query.page = this.currentPage
-                if (currentSelected) {
-                    query.ownerID = currentSelected.id
-                    // console.log(222222222222)
+                if (this.currentSelected) {
+                    query.ownerID = this.currentSelected.id
                 }
-                if (searchValue) {
-                    query.search = searchValue
+                if (this.searchValue) {
+                    query.search = this.searchValue
                 }
                 this.$router.push({
-                    path: `/vehicles?`,
+                    path: `/vehicles`,
                     query,
                 })
-
-                // Cập nhật previousSelected dựa trên currentSelected
-                // this.previousSelected = { id: currentSelected.id }
             } catch (error) {
                 console.error(error)
                 this.$notify({
@@ -422,9 +410,8 @@ export default {
         },
         async fetchListOwner() {
             try {
-                const res = await getAllOwners()
+                const res = await getAllOwners(1, '', 1000)
                 this.listOwners = res.data.data
-                console.log('owner', this.listOwners)
             } catch (error) {
                 console.log(error)
                 this.notiAction = 'Tải'
@@ -439,8 +426,8 @@ export default {
         onSearchInput(searchValue) {
             this.searchValue = searchValue
             console.log('onsearch', searchValue)
-            clearTimeout(this.timeoutId) // xóa bỏ setTimeout() trước đó (nếu có)
-            this.timeoutId = setTimeout(() => {
+            clearTimeout(this.timeOutId) // xóa bỏ setTimeout() trước đó (nếu có)
+            this.timeOutId = setTimeout(() => {
                 this.Search()
             }, 700) // tạo mới setTimeout() với thời gian chờ là 700ms
         },
@@ -480,6 +467,7 @@ export default {
             })
         },
         goToNextPage() {
+            console.log('current page', this.currentPage)
             this.goToIndexPage(this.currentPage++)
         },
         goToPrevPage() {
