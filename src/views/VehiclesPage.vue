@@ -264,7 +264,7 @@ export default {
     },
     watch: {
         pageParam: async function () {
-            this.refreshData()
+            await this.refreshData()
         },
         listData: {
             deep: true,
@@ -285,11 +285,11 @@ export default {
         this.refreshData()
     },
     methods: {
-        refreshData() {
+        async refreshData() {
             if (this.searchValue || this.currentSelected.name) {
-                this.Search()
+                await this.Search()
             } else {
-                this.fetchData()
+                await this.fetchData()
             }
         },
         async fetchData() {
