@@ -22,7 +22,7 @@ export const changeBalance = async (userID, balance) => {
 export const deleteUser = async (id) => {
     return await axiosApiInstance.delete(`/users/${id}`)
 }
-export const getAllUsers = async (page = 1, pageSize = 8, key_word = '') => {
+export const getAllUsers = async (page = 1, key_word = '', pageSize = 8) => {
     let url = `/users?page=${page}&pageSize=${pageSize}`
     if (key_word) {
         url += `&key_word=${key_word}`

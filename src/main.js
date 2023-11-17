@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+// import Vue from 'vue'
 import router from '@/router'
 import App from './App.vue'
 import './assets/css/tailwind.css'
@@ -16,10 +17,16 @@ import PanelView from '@/components/commons/PanelView.vue'
 import PopupView from '@/components/commons/PopupView.vue'
 import SelectBox from '@/components/commons/SelectBox.vue'
 import PanigateVue from '@/components/commons/paginate/PanigateVue.vue'
+// import InputValidationVue from './components/commons/validation/InputValidation.vue'
 import authLayout from '@/layouts/authLayout.vue'
 import emptyLayout from '@/layouts/emptyLayout.vue'
 import ButtonVue from '@/components/Atoms/ButtonVue.vue'
+// import { ValidationProvider, extend } from 'vee-validate'
 // import vClickOutside from 'v-click-outside'
+// extend('secret', {
+//     validate: (value) => value === 'example',
+//     message: 'This is not the magic word',
+// })
 
 const initApp = async () => {
     authMiddleware()
@@ -37,7 +44,9 @@ const initApp = async () => {
     app.component('button-vue', ButtonVue)
     app.component('select-box', SelectBox)
     app.component('panigate-vue', PanigateVue)
+    // app.component('input-validation-vue', InputValidationVue)
     app.component('vue-date-picker', VueDatePicker)
+    // app.component('ValidationProvider', ValidationProvider)
 
     app.use(Notifications)
     app.mount('#app')

@@ -317,18 +317,16 @@ export default {
         this.startDate = this.startDateParam
         this.endDate = this.endDateParam
         if (this.statusParam) {
-            // this.status.key = this.statusParam
             this.status = this.findName(this.optionsStatus, this.statusParam)
         }
         if (this.typeParam) {
-            // this.type.key = this.typeParam
             this.type = this.findName(this.optionsType, this.typeParam)
         }
         this.refreshData()
     },
     methods: {
         refreshData() {
-            if (this.startDate || this.endDate || this.status || this.type) {
+            if (this.startDate || this.endDate || this.status.name || this.type.name) {
                 this.Search()
             } else {
                 this.fetchData()
@@ -336,7 +334,6 @@ export default {
         },
         async fetchData() {
             try {
-                console.log('page', this.pageParam)
                 const res = await getAllViolations(this.pageParam)
                 this.listData = res.data.data
                 this.meta = res.data.meta
@@ -458,14 +455,13 @@ export default {
             return formattedDate
         },
         async Search() {
-            this.currentPage = this.pageParam
             try {
                 const res = await getAllViolations(
+                    this.pageParam,
                     this.status.key,
                     this.type.key,
                     this.startDate,
-                    this.endDate,
-                    this.pageParam
+                    this.endDate
                 )
                 this.listData = res.data.data
                 this.meta = res.data.meta
@@ -498,7 +494,7 @@ export default {
                 query.endDate = this.endDate
             }
             if (this.type) {
-                query.type = this.type
+                query.type = this.type.name
             }
             if (this.status) {
                 query.status = this.status.name

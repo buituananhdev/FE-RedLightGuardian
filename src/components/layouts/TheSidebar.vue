@@ -34,10 +34,9 @@
                     </svg>
                     Trang chủ
                 </router-link>
-                <router-link
+                <div
                     class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                     :class="{ 'bg-[#5d87ff] text-white hover:bg-[#5d87ff] hover:text-black': isDropdownOpen }"
-                    to=""
                     @click="toggleDropdown"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
@@ -49,7 +48,7 @@
                     Quản lý thông tin
                     <img v-if="!isDropdownOpen" src="@/assets/icons/arrow-bottom-icon.svg" alt="" class="ml-4" />
                     <img v-if="isDropdownOpen" src="@/assets/icons/arrow-top-icon.svg" alt="" class="ml-4" />
-                </router-link>
+                </div>
                 <!-- Danh sách các trang -->
                 <div v-if="isDropdownOpen">
                     <router-link
@@ -153,8 +152,9 @@
         </div>
     </div>
 </template>
+
 <script setup>
-import { computed, onBeforeMount } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { authStore } from '@/stores/auth.store'
 import { useRoute } from 'vue-router'
 const route = useRoute()
@@ -165,14 +165,19 @@ const isVehicle = computed(() => route.name === 'vehicles')
 const isViolation = computed(() => route.name === 'violations')
 // const isCamera = computed(() => route.name === 'cameras')
 const isDraw = computed(() => route.name === 'drawzone')
+const isDropdownOpen = ref(false)
+
+const toggleDropdown = () => {
+    isDropdownOpen.value = !isDropdownOpen.value
+}
 
 const user = computed(() => authStore.value.user)
 onBeforeMount(() => {
-    console.log(user.value, route)
+    console.log('sider router', user.value, route)
 })
 </script>
 
-<script>
+<!-- <script>
 export default {
     data() {
         return {
@@ -186,7 +191,8 @@ export default {
         },
     },
 }
-</script>
+</script> -->
+
 <style>
 :root {
     --gradient-default: linear-gradient(135deg, #868cff 0%, #4318ff 100%);
