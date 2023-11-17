@@ -264,7 +264,7 @@ export default {
     },
     watch: {
         pageParam: async function () {
-            this.refreshData()
+            await this.refreshData()
         },
         listData: {
             deep: true,
@@ -289,11 +289,11 @@ export default {
         this.refreshData()
     },
     methods: {
-        refreshData() {
+        async refreshData() {
             if (this.searchValue !== undefined || this.currentSelected !== undefined) {
-                this.Search()
+                await this.Search()
             } else {
-                this.fetchData()
+                await this.fetchData()
             }
         },
         async fetchData() {
@@ -389,13 +389,13 @@ export default {
             this.currentPage = this.pageParam
             try {
                 const { currentPage, currentSelected, searchValue } = this
-                const res = await getAllVehicles(searchValue, currentSelected.id, currentPage)
+                const res = await getAllVehicles(searchValue, currentSelected.id, this.meta.currentPage)
                 this.listData = res.data.data
                 this.meta = res.data.meta
 
                 // Lưu trạng thái của currentSelected và searchValue vào URL của trang web
                 const query = {}
-                query.page = this.currentPage
+                query.page = this.meta.currentPage
                 if (currentSelected) {
                     query.ownerID = currentSelected.id
                     // console.log(222222222222)
@@ -404,7 +404,7 @@ export default {
                     query.search = searchValue
                 }
                 this.$router.push({
-                    path: `/vehicles?`,
+                    path: `/vehicles`,
                     query,
                 })
 

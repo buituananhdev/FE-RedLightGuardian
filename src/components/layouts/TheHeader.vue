@@ -18,7 +18,8 @@
                 </div>
                 <hr />
                 <div class="logout-container__dropdown__logout">
-                    <a href="#" @click="logout">Logout</a>
+                    <img src="@/assets/icons/logout-icon.svg" alt="" />
+                    <a href="" @click="logout">Logout</a>
                 </div>
             </div>
         </div>
@@ -61,11 +62,11 @@ const logout = () => {
     }
     &__dropdown {
         position: absolute;
-        top: 72px;
+        top: 64px;
         right: 16px;
         width: 200px;
         background-color: $neutral-100;
-        border-radius: 4px;
+        border-radius: 8px;
         border: 1px solid $gray-400;
         &__info {
             display: flex;
@@ -81,7 +82,9 @@ const logout = () => {
             }
         }
         &__logout {
+            display: flex;
             padding: 12px;
+            gap: 4px;
             cursor: pointer;
             &:hover {
                 background-color: $gray-300;
