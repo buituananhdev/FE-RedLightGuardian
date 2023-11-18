@@ -52,12 +52,14 @@
             </div>
         </div>
         <div class="tableview__pagination">
-            <panigate-vue
-                :meta="meta"
-                :is-have-content="isHaveContent"
-                @go-to-prev-page="prevPage"
-                @go-to-next-page="nextPage"
-            />
+            <div class="tableview__pagination__content">
+                <panigate-vue
+                    :meta="meta"
+                    :is-have-content="isHaveContent"
+                    @go-to-prev-page="prevPage"
+                    @go-to-next-page="nextPage"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -166,6 +168,7 @@ export default {
     align-items: center;
     align-self: stretch;
     overflow: hidden;
+    position: relative;
     // padding-top: 45px;
     &__header {
         padding: 10px 40px;
@@ -202,10 +205,12 @@ export default {
         }
     }
     &__pagination {
-        position: fixed;
-        bottom: 40px;
+        position: absolute;
+        bottom: 16.5%;
+        z-index: 100;
         width: 100%;
-        right: 40px;
+        right: 10px;
+        background-color: #ffff;
     }
     &__empty {
         width: 100%;

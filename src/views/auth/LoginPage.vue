@@ -91,11 +91,9 @@
                 <a href="/register" class="font-medium text-indigo-600 hover:text-indigo-500">Tạo tài khoản</a>
             </div>
         </div>
-        <!-- <div ref="googleLoginBtn" /> -->
     </div>
 </template>
 <script setup>
-// eslint-disable-next-line no-unused-vars
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { initAuthStore } from '@/stores/auth.store'
@@ -151,7 +149,6 @@ const submit = async () => {
             type: 'error',
             title: 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin đăng nhập',
             text: 'hihiii',
-            // text: error.response.data.message,
         })
         console.log(error)
     }

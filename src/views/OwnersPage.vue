@@ -445,8 +445,8 @@ export default {
         }
         &__popup {
             position: absolute;
-            top: 50%; /* Đặt vị trí top ở giữa trang */
-            left: 50%; /* Đặt vị trí left ở giữa trang */
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             z-index: 3;
         }

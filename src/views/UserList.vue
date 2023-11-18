@@ -77,13 +77,13 @@
                 <popup-view
                     title="Create Người dùng"
                     class="container-user__page__popup"
-                    @onCancel="hiddenPopup"
-                    @onOk="createUser"
+                    @on-cancel="hiddenPopup"
+                    @on-ok="createUser"
                 >
-                    <template v-slot:popupbody>
+                    <template #popupbody>
                         <div class="label-input">
                             <span>Username:</span>
-                            <input type="text" v-model="currentUser.username" name="" id="name" />
+                            <input v-model="currentUser.username" id="name" type="text" name="" />
                         </div>
                         <div class="label-input">
                             <span>Password:</span>
@@ -471,8 +471,8 @@ export default {
         }
         &__popup {
             position: absolute;
-            top: 50%; /* Đặt vị trí top ở giữa trang */
-            left: 50%; /* Đặt vị trí left ở giữa trang */
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
             z-index: 3;
             &__content {
