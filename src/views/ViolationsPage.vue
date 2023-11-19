@@ -11,7 +11,6 @@
                 :is-have-content="isHaveContent"
                 :meta="meta"
                 @click-button="showPopup"
-                @on-search="onSearchInput"
                 @go-to-next-page="goToNextPage"
                 @go-to-prev-page="goToPrevPage"
             >
@@ -206,7 +205,7 @@ export default {
             listHeader: [
                 {
                     title: 'STT',
-                    width: 5,
+                    width: 10,
                 },
                 {
                     title: 'Loại vi phạm',
@@ -218,15 +217,15 @@ export default {
                 },
                 {
                     title: 'Trạng thái',
-                    width: 15,
+                    width: 10,
                 },
                 {
                     title: 'Mã xe',
-                    width: 5,
+                    width: 10,
                 },
                 {
                     title: 'Thời gian vi phạm',
-                    width: 20,
+                    width: 15,
                 },
                 {
                     title: 'Mã máy ảnh',
@@ -570,19 +569,18 @@ export default {
                         @include truncate(1);
                         @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
                     }
-                    &.id,
-                    &.vehicleId {
-                        width: 5%;
-                    }
+
                     &.time,
+                    &.type {
+                        width: 15%;
+                    }
                     &.deadline {
                         width: 20%;
                     }
-                    &.type,
-                    &.status {
-                        width: 15%;
-                    }
-                    &.cameraId {
+                    &.cameraId,
+                    &.status,
+                    &.id,
+                    &.vehicleId {
                         width: 10%;
                     }
                     &.action {

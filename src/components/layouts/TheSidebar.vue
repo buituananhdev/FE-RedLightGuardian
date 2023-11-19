@@ -166,7 +166,6 @@ const goToPage = (link) => {
     router.push(`${link}`)
 }
 </script>
-
 <style>
 :root {
     --gradient-default: linear-gradient(135deg, #868cff 0%, #4318ff 100%);

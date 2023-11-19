@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="container-camera">
         <div class="container-camera__page table-primary">
             <table-view
@@ -348,4 +348,4 @@ export default {
         }
     }
 }
-</style>
+</style> -->

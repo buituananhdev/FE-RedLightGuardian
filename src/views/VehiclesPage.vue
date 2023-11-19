@@ -372,6 +372,8 @@ export default {
                     this.listData.push(res.data.data)
                 }
             } catch (error) {
+                this.isShowPopup = false
+                this.isEdit = false
                 console.error(error)
                 this.$notify({
                     type: 'error',
