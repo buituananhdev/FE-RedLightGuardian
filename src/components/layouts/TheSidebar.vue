@@ -176,23 +176,6 @@ onBeforeMount(() => {
     console.log('sider router', user.value, route)
 })
 </script>
-
-<!-- <script>
-export default {
-    data() {
-        return {
-            isDropdownOpen: false,
-            isUser: false, // Đổi giá trị này tùy theo trạng thái người dùng
-        }
-    },
-    methods: {
-        toggleDropdown() {
-            this.isDropdownOpen = !this.isDropdownOpen
-        },
-    },
-}
-</script> -->
-
 <style>
 :root {
     --gradient-default: linear-gradient(135deg, #868cff 0%, #4318ff 100%);
