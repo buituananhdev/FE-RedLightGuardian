@@ -4,10 +4,10 @@
         <div class="w-[240px] h-[100vh] bg-white fixed top-0 left-0 z-[50]">
             <div class="mt-[10px] py-5 px-5 flex flex-col gap-2">
                 <p>HOME</p>
-                <router-link
-                    to="/"
+                <div
                     class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                     :class="{ 'bg-[#5d87ff] text-white hover:bg-[#5d87ff] hover:text-black': isDashboard }"
+                    @click="goToPage('/')"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
                         <defs>
@@ -33,7 +33,7 @@
                         </g>
                     </svg>
                     Trang chủ
-                </router-link>
+                </div>
                 <div
                     class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                     :class="{ 'bg-[#5d87ff] text-white hover:bg-[#5d87ff] hover:text-black': isDropdownOpen }"
@@ -49,12 +49,11 @@
                     <img v-if="!isDropdownOpen" src="@/assets/icons/arrow-bottom-icon.svg" alt="" class="ml-4" />
                     <img v-if="isDropdownOpen" src="@/assets/icons/arrow-top-icon.svg" alt="" class="ml-4" />
                 </div>
-                <!-- Danh sách các trang -->
                 <div v-if="isDropdownOpen">
-                    <router-link
-                        to="/users"
+                    <div
                         class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                         :class="{ 'text-[#5d87ff]': isUser }"
+                        @click="goToPage('/users')"
                     >
                         <svg
                             width="20"
@@ -70,11 +69,11 @@
                             />
                         </svg>
                         Người dùng
-                    </router-link>
-                    <router-link
-                        to="/owners"
+                    </div>
+                    <div
                         class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                         :class="{ 'text-[#5d87ff]': isOwner }"
+                        @click="goToPage('/owners')"
                     >
                         <svg
                             width="20"
@@ -90,11 +89,11 @@
                             />
                         </svg>
                         Chủ sở hữu
-                    </router-link>
-                    <router-link
-                        to="/vehicles"
+                    </div>
+                    <div
                         class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                         :class="{ 'text-[#5d87ff]': isVehicle }"
+                        @click="goToPage('/vehicles')"
                     >
                         <svg width="20" height="20" viewBox="0 0 0.469 0.469" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -103,11 +102,11 @@
                             />
                         </svg>
                         Phương tiện
-                    </router-link>
-                    <router-link
-                        to="/violations"
+                    </div>
+                    <div
                         class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                         :class="{ 'text-[#5d87ff]': isViolation }"
+                        @click="goToPage('/violations')"
                     >
                         <svg width="20" height="20" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -116,11 +115,11 @@
                             />
                         </svg>
                         Vi phạm
-                    </router-link>
-                    <router-link
-                        to="/drawzone"
+                    </div>
+                    <div
                         class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                         :class="{ 'text-[#5d87ff]': isDraw }"
+                        @click="goToPage('/drawzone')"
                     >
                         <svg width="20" height="20" viewBox="0 0 2.4 2.4" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -133,20 +132,7 @@
                             />
                         </svg>
                         Vẽ
-                    </router-link>
-                    <!-- <router-link
-                        to="/cameras"
-                        class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
-                        :class="{ 'text-[#5d87ff]': isCamera }"
-                    >
-                        <svg width="20" height="20" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                fill="currentColor"
-                                d="M4 .625A3.375 3.375 0 1 0 7.375 4 3.379 3.379 0 0 0 4 .625Zm0 6A2.625 2.625 0 1 1 6.625 4 2.628 2.628 0 0 1 4 6.625Zm1.265-3.36L4.53 4l.735.735a.375.375 0 0 1-.53.53L4 4.53l-.735.735a.375.375 0 0 1-.53-.53L3.47 4l-.735-.735a.375.375 0 0 1 .53-.53L4 3.47l.735-.735a.375.375 0 0 1 .53.53Z"
-                            />
-                        </svg>
-                        Hình ảnh vi phạm
-                    </router-link> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -156,14 +142,14 @@
 <script setup>
 import { computed, onBeforeMount, ref } from 'vue'
 import { authStore } from '@/stores/auth.store'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
 const isDashboard = computed(() => route.name === 'dashboard')
 const isUser = computed(() => route.name === 'users')
 const isOwner = computed(() => route.name === 'owners')
 const isVehicle = computed(() => route.name === 'vehicles')
 const isViolation = computed(() => route.name === 'violations')
-// const isCamera = computed(() => route.name === 'cameras')
 const isDraw = computed(() => route.name === 'drawzone')
 const isDropdownOpen = ref(false)
 
@@ -175,6 +161,10 @@ const user = computed(() => authStore.value.user)
 onBeforeMount(() => {
     console.log('sider router', user.value, route)
 })
+
+const goToPage = (link) => {
+    router.push(`${link}`)
+}
 </script>
 <style>
 :root {
