@@ -67,7 +67,7 @@ export default {
 <style scoped lang="scss">
 .pagination {
     width: 100%;
-    height: 60px;
+    height: 80px;
     padding: 15px 50px;
     display: flex;
     justify-content: flex-end;
