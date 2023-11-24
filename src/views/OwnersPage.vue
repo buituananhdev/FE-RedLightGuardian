@@ -358,10 +358,14 @@ export default {
             })
         },
         goToNextPage() {
-            this.goToIndexPage(this.currentPage++)
+            if (this.currentPage < this.meta.totalPages) {
+                this.goToIndexPage(this.currentPage++)
+            }
         },
         goToPrevPage() {
-            this.goToIndexPage(this.currentPage--)
+            if (this.currentPage > 1) {
+                this.goToIndexPage(this.currentPage--)
+            }
         },
         showDeleteVerifiedPopup(id) {
             localStorage.setItem('idDelete', id)

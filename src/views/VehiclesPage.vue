@@ -466,11 +466,14 @@ export default {
             })
         },
         goToNextPage() {
-            console.log('current page', this.currentPage)
-            this.goToIndexPage(this.currentPage++)
+            if (this.currentPage < this.meta.totalPages) {
+                this.goToIndexPage(this.currentPage++)
+            }
         },
         goToPrevPage() {
-            this.goToIndexPage(this.currentPage--)
+            if (this.currentPage > 1) {
+                this.goToIndexPage(this.currentPage--)
+            }
         },
         FilterBox(option) {
             this.currentSelected = option
