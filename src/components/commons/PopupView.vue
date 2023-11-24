@@ -52,11 +52,11 @@ export default {
         },
         buttonOkContent: {
             type: String,
-            default: 'Ok',
+            default: 'Xác nhận',
         },
         buttonCancelContent: {
             type: String,
-            default: 'Cancel',
+            default: 'Hủy bỏ',
         },
         isShowLogo: {
             type: Boolean,

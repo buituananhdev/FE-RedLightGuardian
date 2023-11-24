@@ -35,8 +35,10 @@
                     Trang chủ
                 </div>
                 <div
-                    class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
-                    :class="{ 'bg-[#5d87ff] text-white hover:bg-[#5d87ff] hover:text-black': isDropdownOpen }"
+                    class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3 manager"
+                    :class="{
+                        'bg-[#5d87ff] hover:text-black text-white hover:bg-[#5d87ff]': isDropdownOpen && !isDashboard,
+                    }"
                     @click="toggleDropdown"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
@@ -47,7 +49,25 @@
                     </svg>
                     Quản lý thông tin
                     <img v-if="!isDropdownOpen" src="@/assets/icons/arrow-bottom-icon.svg" alt="" class="ml-4" />
-                    <img v-if="isDropdownOpen" src="@/assets/icons/arrow-top-icon.svg" alt="" class="ml-4" />
+                    <!-- <img v-if="isDropdownOpen" src="@/assets/icons/arrow-top-icon.svg" alt="" class="ml-4 icon-color" /> -->
+                    <svg
+                        v-if="isDropdownOpen"
+                        height="25px"
+                        width="25px"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 0.938 0.938"
+                        enable-background="new 0 0 50 50"
+                        xml:space="preserve"
+                        transform="matrix(0 -1 -1 0 0 0)"
+                        class="ml-4"
+                    >
+                        <path
+                            fill="currentColor"
+                            d="M0.292 0.766a0.019 0.019 0 0 0 0.027 0l0.281 -0.281a0.019 0.019 0 0 0 0 -0.027l-0.281 -0.281a0.019 0.019 0 1 0 -0.027 0.027l0.268 0.268 -0.268 0.268a0.019 0.019 0 0 0 0 0.027z"
+                        />
+                    </svg>
                 </div>
                 <div v-if="isDropdownOpen">
                     <div

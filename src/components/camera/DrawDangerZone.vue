@@ -149,18 +149,19 @@ export default {
                 return
             }
             this.roundCoordinates()
-            // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
-            //     type: 'application/json',
-            // })
-            // const jsonUrl = URL.createObjectURL(jsonBlob)
-            // const a = document.createElement('a')
-            // a.href = jsonUrl
-            // a.download = 'coordinates.json'
-            // a.click()
-            // URL.revokeObjectURL(jsonUrl)
-            // console.log(JSON.stringify(this.dangerZone))
+            this.convertToCoordinates(this.dangerZone)
+            const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
+                type: 'application/json',
+            })
+            const jsonUrl = URL.createObjectURL(jsonBlob)
+            const a = document.createElement('a')
+            a.href = jsonUrl
+            a.download = 'coordinates.json'
+            a.click()
+            URL.revokeObjectURL(jsonUrl)
+            console.log(JSON.stringify(this.dangerZone))
 
-            this.updateCoordinatesCamera()
+            // this.updateCoordinatesCamera()
 
             // axios
             //     .patch(`http://localhost:3011/api/cameras/1`, {

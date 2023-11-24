@@ -21,7 +21,7 @@
                             v-model="currentSelected"
                             :type_select_box="'status-white'"
                             :label="'name'"
-                            :placeholder="'Select owner'"
+                            :placeholder="'Chọn tên chủ xe'"
                             :selected-props="currentSelected"
                             :options="listOwners"
                             @change-value-select-box="FilterBox"
@@ -47,7 +47,7 @@
                             <span>{{ item.licensePlate }}</span>
                         </div>
                         <div class="container-vehicle__page__table__row__cell ownerId">
-                            <span>{{ item.ownerID }}</span>
+                            <span>{{ listOwners[index].name }}</span>
                         </div>
                         <div class="container-vehicle__page__table__row__cell type">
                             <span>{{ item.vehicleType }}</span>
@@ -78,43 +78,40 @@
                 <template #pbody>
                     <div class="container-vehicle__page__panel__content">
                         <div class="label-input">
-                            <span>Vehicle Name:</span>
+                            <span>Tên phương tiện:</span>
                             <input v-model="currentVehicle.vehicleName" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>License Plate:</span>
+                            <span>Biển số:</span>
                             <input v-model="currentVehicle.licensePlate" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Owner ID:</span>
-                            <input v-model="currentVehicle.ownerID" type="text" :disabled="!isEdit" />
-                        </div>
-                        <div class="label-input">
-                            <span>Vehicle Type:</span>
+                            <span>Loại phương tiện:</span>
                             <input v-model="currentVehicle.vehicleType" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Engine Capacity:</span>
+                            <span>Công suất động cơ:</span>
                             <input v-model="currentVehicle.engineCapacity" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Color:</span>
+                            <span>Màu sắc:</span>
                             <input v-model="currentVehicle.color" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Frame Number:</span>
+                            <span>Số khung:</span>
                             <input v-model="currentVehicle.frameNumber" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Engine Number:</span>
+                            <span>Số động cơ:</span>
                             <input v-model="currentVehicle.engineNumber" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Brand:</span>
+                            <span>Thương hiệu:</span>
                             <input v-model="currentVehicle.brand" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Image URL:</span>
+                            <span v-if="isEdit">Đường dẫn hình ảnh phương tiện:</span>
+                            <span v-if="!isEdit">Hình ảnh phương tiện:</span>
                             <input v-if="isEdit" v-model="currentVehicle.imageUrl" type="text" :disabled="!isEdit" />
                             <img
                                 v-else
@@ -128,7 +125,7 @@
             </panel-view>
             <full-modal v-if="isShowPopup">
                 <popup-view
-                    title="Create Vehicle"
+                    title="Tạo mới phương tiện giao thông"
                     class="container-vehicle__page__popup"
                     @on-cancel="hiddenPopup"
                     @on-ok="createVehicle"
@@ -137,45 +134,45 @@
                         <div class="container-vehicle__page__popup__content">
                             <div class="container-vehicle__page__popup__content__box1">
                                 <div class="label-input">
-                                    <span>Vehicle Name:</span>
+                                    <span>Tên phương tiện:</span>
                                     <input v-model="currentVehicle.vehicleName" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>License Plate:</span>
+                                    <span>Biển số:</span>
                                     <input v-model="currentVehicle.licensePlate" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Owner ID:</span>
+                                    <span>Mã chủ sở hữu:</span>
                                     <input v-model="currentVehicle.ownerID" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Vehicle Type:</span>
+                                    <span>Loại xe:</span>
                                     <input v-model="currentVehicle.vehicleType" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Engine Capacity:</span>
+                                    <span>Công suất động cơ:</span>
                                     <input v-model="currentVehicle.engineCapacity" type="text" :disabled="!isEdit" />
                                 </div>
                             </div>
                             <div>
                                 <div class="label-input">
-                                    <span>Color:</span>
+                                    <span>Màu sắc:</span>
                                     <input v-model="currentVehicle.color" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Frame Number:</span>
+                                    <span>Số khung:</span>
                                     <input v-model="currentVehicle.frameNumber" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Engine Number:</span>
+                                    <span>Số động cơ:</span>
                                     <input v-model="currentVehicle.engineNumber" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Brand:</span>
+                                    <span>Thương hiệu:</span>
                                     <input v-model="currentVehicle.brand" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Image URL:</span>
+                                    <span>Đường dẫn ảnh:</span>
                                     <input v-model="currentVehicle.imageUrl" type="text" :disabled="!isEdit" />
                                 </div>
                             </div>
@@ -218,15 +215,15 @@ export default {
                 },
                 {
                     title: 'Biển số',
-                    width: 20,
+                    width: 15,
                 },
                 {
-                    title: 'Mã số chủ xe',
-                    width: 10,
+                    title: 'Tên chủ xe',
+                    width: 20,
                 },
                 {
                     title: 'Loại xe',
-                    width: 20,
+                    width: 15,
                 },
                 {
                     title: 'Thao tác',
@@ -239,7 +236,7 @@ export default {
             isEdit: false,
             isShowDetail: false,
             currentPage: 1,
-            title: 'View Detail',
+            title: 'Chi tiết',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
             searchValue: '',
@@ -497,7 +494,7 @@ export default {
                 position: relative;
                 display: flex;
                 gap: 10px;
-                width: 140px;
+                width: 160px;
             }
             &__row {
                 padding: 0 16px;
@@ -526,13 +523,13 @@ export default {
                     }
                     &.email,
                     &.idCitizen,
-                    &.id,
-                    &.ownerId {
+                    &.id {
                         width: 10%;
                     }
                     &.type,
                     &.license,
-                    &.name {
+                    &.name,
+                    &.ownerId {
                         width: 20%;
                     }
 
@@ -552,13 +549,15 @@ export default {
                         }
                     }
                 }
-                &__id,
-                &__ownerId {
+                &__id {
                     width: 10%;
                 }
                 &__type,
-                &__license,
-                &__name {
+                &__license {
+                    width: 15%;
+                }
+                &__name,
+                &__ownerId {
                     width: 20%;
                 }
 

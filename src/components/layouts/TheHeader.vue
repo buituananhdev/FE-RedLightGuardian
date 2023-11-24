@@ -19,7 +19,7 @@
                 <hr />
                 <div class="logout-container__dropdown__logout">
                     <img src="@/assets/icons/logout-icon.svg" alt="" />
-                    <a href="" @click="logout">Logout</a>
+                    <a href="" @click="logout">Đăng xuất</a>
                 </div>
             </div>
         </div>
@@ -27,15 +27,13 @@
     <PopupEditUsers v-if="isEditPopupVisible" :user="isEditPopupVisible" @close="exitPopupEdit" />
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { authStore } from '@/stores/auth.store'
 import PopupEditUsers from '../Users/PopupEditUsers.vue'
 const isPopupVisible = ref(false)
 const isEditPopupVisible = ref(false)
 
 const togglePopup = () => {
-    console.log('togglePopup')
-    console.log(isPopupVisible.value)
     isPopupVisible.value = !isPopupVisible.value
 }
 
@@ -47,6 +45,27 @@ const logout = () => {
     localStorage.clear()
     window.location.href = '/login'
 }
+
+// Thêm hàm để xử lý sự kiện click bên ngoài popup
+const handleOutsideClick = (event) => {
+    if (isPopupVisible.value) {
+        const clickedElement = event.target
+        const logoutContainer = document.querySelector('.logout-container')
+        // Kiểm tra xem phần click có nằm trong logout container hay không
+        if (logoutContainer && !logoutContainer.contains(clickedElement)) {
+            isPopupVisible.value = false
+        }
+    }
+}
+
+// Sử dụng sự kiện click trên document để kiểm tra khi click bên ngoài popup
+onMounted(() => {
+    document.addEventListener('click', handleOutsideClick)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleOutsideClick)
+})
 </script>
 <style lang="scss" scoped>
 .logout-container {
@@ -84,7 +103,7 @@ const logout = () => {
         &__logout {
             display: flex;
             padding: 12px;
-            gap: 4px;
+            gap: 6px;
             cursor: pointer;
             &:hover {
                 background-color: $gray-300;

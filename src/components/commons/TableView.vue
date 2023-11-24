@@ -8,7 +8,7 @@
                         v-model="searchValue"
                         class="input_search"
                         type="text"
-                        placeholder="Search"
+                        placeholder="Tìm kiếm"
                         @input="onSearchInput"
                     />
                 </div>
@@ -18,13 +18,13 @@
                 <slot name="fbody"></slot>
             </div>
             <button-vue
-                v-if="!isViolation"
+                v-if="label !== 'violations'"
                 :type-btn="'secondary'"
-                :width="'100px'"
+                :width="'136px'"
                 class="tableview__header__button"
                 @click-button="$emit('click-button')"
             >
-                + Add
+                + Tạo thêm
             </button-vue>
         </div>
         <div class="tableview__container" :class="{ 'blank-pagination': !listData.length }">
@@ -63,12 +63,6 @@
         </div>
     </div>
 </template>
-<script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-const isViolation = computed(() => route.name === 'violations')
-</script>
 
 <script>
 export default {
@@ -197,6 +191,7 @@ export default {
         &__button {
             padding: 6px 25px;
             border-radius: 80px;
+            width: 160px;
             background: $gradient-default;
             @include text-style(14px, 150%, 600, $slate-50, 0);
             &:hover {
