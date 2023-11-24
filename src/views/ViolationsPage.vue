@@ -32,6 +32,7 @@
                         />
                         <vue-date-picker
                             v-model="startDate"
+                            :enable-time-picker="false"
                             :format="format"
                             placeholder="Start Date"
                             @update:model-value="Search"
@@ -39,6 +40,7 @@
                         <vue-date-picker
                             v-model="endDate"
                             placeholder="End Date"
+                            :enable-time-picker="false"
                             :format="format"
                             @update:model-value="Search"
                         ></vue-date-picker>
@@ -459,18 +461,19 @@ export default {
                     this.pageParam,
                     this.status.key,
                     this.type.key,
-                    this.startDate,
-                    this.endDate
+                    this.startDateParam,
+                    this.endDateParam
                 )
                 this.listData = res.data.data
                 this.meta = res.data.meta
                 const query = {}
                 query.page = this.currentPage
                 if (this.startDate) {
-                    query.startDate = this.startDate
+                    query.startDate = this.convertUnitime(this.startDate)
                 }
                 if (this.endDate) {
-                    query.endDate = this.endDate
+                    console.log('endDate', this.endDate)
+                    query.endDate = this.convertUnitime(this.endDate)
                 }
                 if (this.type) {
                     query.type = this.type.key
@@ -503,10 +506,14 @@ export default {
             })
         },
         goToNextPage() {
-            this.goToIndexPage(this.currentPage++)
+            if (this.currentPage < this.meta.totalPages) {
+                this.goToIndexPage(this.currentPage++)
+            }
         },
         goToPrevPage() {
-            this.goToIndexPage(this.currentPage--)
+            if (this.currentPage > 1) {
+                this.goToIndexPage(this.currentPage--)
+            }
         },
         format(date) {
             const day = date.getDate()
@@ -525,6 +532,9 @@ export default {
         findName(option, key) {
             console.log('key', key)
             return option.find((item) => item.key === key)
+        },
+        convertUnitime(date) {
+            return new Date(date).getTime() / 1000
         },
     },
 }
