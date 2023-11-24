@@ -75,18 +75,18 @@
             </panel-view>
             <full-modal v-if="isShowPopup">
                 <popup-view
-                    title="Create Người dùng"
+                    title="Thêm người dùng"
                     class="container-user__page__popup"
                     @on-cancel="hiddenPopup"
                     @on-ok="createUser"
                 >
                     <template #popupbody>
                         <div class="label-input">
-                            <span>Username:</span>
+                            <span>Tên người dùng:</span>
                             <input v-model="currentUser.username" id="name" type="text" name="" />
                         </div>
                         <div class="label-input">
-                            <span>Password:</span>
+                            <span>Mật khẩu:</span>
                             <input type="password" v-model="currentUser.password" name="" id="address" />
                         </div>
                         <div class="label-input">
@@ -166,7 +166,7 @@ export default {
             listData: [],
             currentUser: {},
             isEdit: false,
-            title: 'View Detail',
+            title: 'Chi tiết',
             isShowDetail: false,
             isShowPopup: false,
             searchValue: '',

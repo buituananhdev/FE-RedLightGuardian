@@ -63,7 +63,7 @@
                 <template #pbody>
                     <div class="container-owner__page__panel__content">
                         <div class="label-input">
-                            <span>Citizen id:</span>
+                            <span>Mã số căn cước công dân:</span>
                             <input
                                 id="name"
                                 v-model="currentOwner.citizen_identification"
@@ -73,11 +73,11 @@
                             />
                         </div>
                         <div class="label-input">
-                            <span>Name:</span>
+                            <span>Tên người dùng:</span>
                             <input v-model="currentOwner.name" type="text" id="name" name="" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Address:</span>
+                            <span>Địa chỉ:</span>
                             <input
                                 id="address"
                                 v-model="currentOwner.address"
@@ -95,22 +95,22 @@
             </panel-view>
             <full-modal v-if="isShowPopup">
                 <popup-view
-                    title="Create Owner"
+                    title="Thêm chủ sở hữu"
                     class="container-owner__page__popup"
                     @on-cancel="hiddenPopup"
                     @on-ok="createOwner"
                 >
                     <template #popupbody>
                         <div class="label-input">
-                            <span>CCCD:</span>
+                            <span>Mã số căn cước công dân:</span>
                             <input type="text" v-model="currentOwner.citizen_identification" name="" id="name" />
                         </div>
                         <div class="label-input">
-                            <span>Name:</span>
+                            <span>Tên chủ sở hữu:</span>
                             <input type="text" v-model="currentOwner.name" name="" id="name" />
                         </div>
                         <div class="label-input">
-                            <span>Address:</span>
+                            <span>Địa chỉ:</span>
                             <input id="address" v-model="currentOwner.address" type="text" name="" />
                         </div>
                         <div class="label-input">
@@ -154,7 +154,7 @@ export default {
                     width: 15,
                 },
                 {
-                    title: 'Tên',
+                    title: 'Tên chủ sở hữu',
                     width: 20,
                 },
                 {
@@ -174,7 +174,7 @@ export default {
             currentOwner: {},
             isEdit: false,
             isShowDetail: false,
-            title: 'View Detail',
+            title: 'Chi tiết',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
             searchValue: '',

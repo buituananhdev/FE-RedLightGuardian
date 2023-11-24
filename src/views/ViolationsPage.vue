@@ -21,6 +21,7 @@
                             :label="'name'"
                             :selected-props="status"
                             :options="optionsStatus"
+                            :placeholder="'Chọn trạng thái'"
                             @ChangeValueSelectBox="changeStatus"
                         />
                         <select-box
@@ -28,18 +29,19 @@
                             :label="'name'"
                             :selected-props="type"
                             :options="optionsType"
+                            :placeholder="'Chọn loại vi phạm'"
                             @ChangeValueSelectBox="changeType"
                         />
                         <vue-date-picker
                             v-model="startDate"
                             :enable-time-picker="false"
                             :format="format"
-                            placeholder="Start Date"
+                            placeholder="Ngày bắt đầu"
                             @update:model-value="Search"
                         ></vue-date-picker>
                         <vue-date-picker
                             v-model="endDate"
-                            placeholder="End Date"
+                            placeholder="Ngày cuối cùng"
                             :enable-time-picker="false"
                             :format="format"
                             @update:model-value="Search"
@@ -66,59 +68,33 @@
                         <div class="container-violation__page__table__row__cell status">
                             <span>{{ item.status }}</span>
                         </div>
-                        <div class="container-violation__page__table__row__cell vehicleId">
-                            <span>{{ item.vehicleID }}</span>
-                        </div>
-                        <div class="container-violation__page__table__row__cell time">
-                            <span>{{ item.time }}</span>
-                        </div>
-                        <div class="container-violation__page__table__row__cell cameraId">
-                            <span>{{ item.cameraID }}</span>
-                        </div>
-                        <div class="container-violation__page__table__row__cell action">
-                            <img src="@/assets/icons/edit-icon.svg" alt="edit" @click="showUpdate(item.id)" />
-                        </div>
                     </div>
                 </template>
             </table-view>
             <panel-view
                 v-if="isShowDetail"
                 :title="title"
-                :is-edit="isEdit"
+                :label="'violations'"
                 class="container-violation__page__panel"
                 @close-panel="closePanelView"
-                @update-object="updateViolation"
-                @allow-update="isEdit = true"
-                @cancel="isEdit = false"
             >
                 <template #pbody>
                     <div class="container-violation__page__panel__content">
                         <div class="label-input">
-                            <span>Type:</span>
+                            <span>Loại vi phạm:</span>
                             <input v-model="currentViolation.type" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Deadline:</span>
+                            <span>Thời hạn cuối cùng:</span>
                             <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Status:</span>
+                            <span>Trạng thái:</span>
                             <input v-model="currentViolation.status" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span>Vehicle ID:</span>
-                            <input v-model="currentViolation.vehicleID" type="text" :disabled="!isEdit" />
-                        </div>
-                        <div class="label-input">
-                            <span>Time:</span>
-                            <input v-model="currentViolation.time" type="text" :disabled="!isEdit" />
-                        </div>
-                        <div class="label-input">
-                            <span>Camera ID:</span>
-                            <input v-model="currentViolation.cameraID" type="text" :disabled="!isEdit" />
-                        </div>
-                        <div class="label-input">
-                            <span>Image URL:</span>
+                            <span v-if="isEdit">Đường dẫn hình ảnh vi phạm:</span>
+                            <span v-if="!isEdit">Hình ảnh phương tiện vi phạm:</span>
                             <input v-if="isEdit" v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit" />
                             <img
                                 v-else
@@ -130,7 +106,7 @@
                     </div>
                 </template>
             </panel-view>
-            <full-modal v-if="isShowPopup">
+            <!-- <full-modal v-if="isShowPopup">
                 <popup-view
                     title="Create Violation"
                     class="container-violation__page__popup"
@@ -141,19 +117,19 @@
                         <div class="container-violation__page__popup__content">
                             <div class="container-violation__page__popup__content__box1">
                                 <div class="label-input">
-                                    <span>Type:</span>
+                                    <span>Loại vi phạm:</span>
                                     <input v-model="currentViolation.type" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Deadline:</span>
+                                    <span>Thời hạn cuối cùng:</span>
                                     <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Status:</span>
+                                    <span>Trạng thái:</span>
                                     <input v-model="currentViolation.status" type="text" :disabled="!isEdit" />
                                 </div>
                                 <div class="label-input">
-                                    <span>Vehicle ID:</span>
+                                    <span>Mã số xe vi phạm:</span>
                                     <input v-model="currentViolation.vehicleID" type="text" :disabled="!isEdit" />
                                 </div>
                             </div>
@@ -174,8 +150,8 @@
                         </div>
                     </template>
                 </popup-view>
-            </full-modal>
-            <full-modal v-if="isShowDeleteVerifiedPopup">
+            </full-modal> -->
+            <!-- <full-modal v-if="isShowDeleteVerifiedPopup">
                 <popup-view
                     title="Xác nhận xóa vi phạm"
                     class="container-violation__page__popup"
@@ -188,61 +164,39 @@
                         </div>
                     </template>
                 </popup-view>
-            </full-modal>
+            </full-modal> -->
         </div>
     </div>
 </template>
 
 <script>
-import {
-    getAllViolations,
-    deleteViolation,
-    getSingleViolation,
-    updateViolation,
-    addViolation,
-} from '@/services/violation.service'
+import { getAllViolations, deleteViolation, getSingleViolation, addViolation } from '@/services/violation.service'
 export default {
     data() {
         return {
             listHeader: [
                 {
                     title: 'STT',
-                    width: 10,
-                },
-                {
-                    title: 'Loại vi phạm',
-                    width: 15,
-                },
-                {
-                    title: 'Hạn xử lý',
                     width: 20,
                 },
                 {
+                    title: 'Loại vi phạm',
+                    width: 20,
+                },
+                {
+                    title: 'Hạn xử lý',
+                    width: 40,
+                },
+                {
                     title: 'Trạng thái',
-                    width: 10,
-                },
-                {
-                    title: 'Mã xe',
-                    width: 10,
-                },
-                {
-                    title: 'Thời gian vi phạm',
-                    width: 15,
-                },
-                {
-                    title: 'Mã máy ảnh',
-                    width: 10,
-                },
-                {
-                    title: 'Thao tác',
-                    width: 10,
+                    width: 20,
                 },
             ],
             listData: [],
             currentViolation: {},
             isEdit: false,
             isShowDetail: false,
-            title: 'View Detail',
+            title: 'Chi tiết',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
             meta: [],
@@ -375,30 +329,30 @@ export default {
                 console.error(error)
             }
         },
-        async updateViolation() {
-            const id = localStorage.getItem('idViolation')
-            try {
-                const res = await updateViolation(id, this.currentViolation)
-                if (res.data.status === 'success') {
-                    this.isShowDetail = false
-                    this.isEdit = false
-                    this.fetchData()
-                    this.$notify({
-                        type: 'success',
-                        title: 'Update Violation',
-                        text: 'Update violation successfully!',
-                    })
-                }
-            } catch (error) {
-                console.error(error)
-                this.$notify({
-                    type: 'error',
-                    title: 'Update Violation',
-                    text: 'Update violation failed!',
-                    duration: 1000,
-                })
-            }
-        },
+        // async updateViolation() {
+        //     const id = localStorage.getItem('idViolation')
+        //     try {
+        //         const res = await updateViolation(id, this.currentViolation)
+        //         if (res.data.status === 'success') {
+        //             this.isShowDetail = false
+        //             this.isEdit = false
+        //             this.fetchData()
+        //             this.$notify({
+        //                 type: 'success',
+        //                 title: 'Update Violation',
+        //                 text: 'Update violation successfully!',
+        //             })
+        //         }
+        //     } catch (error) {
+        //         console.error(error)
+        //         this.$notify({
+        //             type: 'error',
+        //             title: 'Update Violation',
+        //             text: 'Update violation failed!',
+        //             duration: 1000,
+        //         })
+        //     }
+        // },
         async createViolation() {
             try {
                 const res = await addViolation(this.currentViolation)
@@ -419,11 +373,6 @@ export default {
                     duration: 1000,
                 })
             }
-        },
-        showUpdate(id) {
-            this.isEdit = true
-            this.isShowDetail = true
-            this.getSingleViolation(id)
         },
         closePanelView() {
             this.isShowDetail = false
@@ -580,26 +529,13 @@ export default {
                         @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
                     }
 
-                    &.time,
-                    &.type {
-                        width: 15%;
-                    }
-                    &.deadline {
+                    &.type,
+                    &.status,
+                    &.id {
                         width: 20%;
                     }
-                    &.cameraId,
-                    &.status,
-                    &.id,
-                    &.vehicleId {
-                        width: 10%;
-                    }
-                    &.action {
-                        width: 10%;
-                        img {
-                            height: 20px;
-                            width: 20px;
-                            cursor: pointer;
-                        }
+                    &.deadline {
+                        width: 40%;
                     }
                 }
             }

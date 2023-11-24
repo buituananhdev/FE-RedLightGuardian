@@ -5,11 +5,11 @@
                 <img src="@/assets/icons/arrow-right-icon.svg" alt="close" @click="closePanel()" />
                 <p class="panel-view__header__title__content">{{ title }}</p>
             </div>
-            <div class="panel-view__header__group-button">
-                <button v-if="!isEdit" class="btn button--primary btn__update" @click="allowUpdate">Update</button>
+            <div v-if="label !== 'violations'" class="panel-view__header__group-button">
+                <button v-if="!isEdit" class="btn button--primary btn__update" @click="allowUpdate">Cập nhật</button>
                 <div v-else class="panel-view__header__group-button__confirm">
-                    <button @click="cancel" class="btn button--secondary">Cancel</button>
-                    <button @click="updateObject" class="btn button--primary">Save</button>
+                    <button @click="cancel" class="btn button--secondary">Hủy</button>
+                    <button @click="updateObject" class="btn button--primary">Lưu</button>
                 </div>
             </div>
         </div>
@@ -27,6 +27,10 @@ export default {
         isEdit: {
             type: Boolean,
             default: false,
+        },
+        label: {
+            type: String,
+            default: '',
         },
     },
     methods: {
@@ -100,7 +104,7 @@ export default {
                 border-radius: 80px;
                 font-size: 12px;
                 &__update {
-                    width: 80px;
+                    width: 100px;
                 }
                 &.button--primary {
                     background: $gradient-default;

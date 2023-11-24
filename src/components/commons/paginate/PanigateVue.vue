@@ -2,7 +2,7 @@
     <div>
         <div class="pagination">
             <div v-if="isHaveContent" class="pagination-content">
-                <span class="total-page">Total page: {{ meta.totalPages }}</span>
+                <span class="total-page">Tổng số trang: {{ meta.totalPages }}</span>
                 <span class="pagination-btn">
                     <img
                         v-if="meta.hasPrevPage"
