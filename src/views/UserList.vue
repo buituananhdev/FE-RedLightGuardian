@@ -131,7 +131,7 @@
                                 <span>Xác nhận mật khẩu:</span>
                                 <input v-model="currentUser.confirm" type="password" />
                             </div>
-                            <button class="btn button--primary">Đổi mật khẩu</button>
+                            <!-- <button class="btn button--primary">Đổi mật khẩu</button> -->
                         </div>
                     </template>
                 </popup-view>
@@ -483,6 +483,7 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                flex-direction: column;
                 width: 100%;
             }
         }

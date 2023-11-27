@@ -63,7 +63,7 @@
                             <span>{{ item.type }}</span>
                         </div>
                         <div class="container-violation__page__table__row__cell deadline">
-                            <span>{{ item.deadline }}</span>
+                            <span>{{ formatDateTime(item.deadline) }}</span>
                         </div>
                         <div class="container-violation__page__table__row__cell status">
                             <span>{{ item.status }}</span>
@@ -323,6 +323,7 @@ export default {
             try {
                 const res = await getSingleViolation(id)
                 this.currentViolation = res.data.data
+                this.currentViolation.deadline = this.formatDateTime(this.currentViolation.deadline)
                 localStorage.setItem('idViolation', this.currentViolation.id)
                 this.isShowDetail = true
             } catch (error) {
