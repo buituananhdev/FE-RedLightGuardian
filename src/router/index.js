@@ -35,13 +35,6 @@ const routes = [
         meta: { layout: 'auth', requiresAuth: true },
         component: () => import('@/views/OwnersPage.vue'),
     },
-    // Cameras router
-    {
-        path: '/cameras',
-        name: 'cameras',
-        meta: { layout: 'auth', requiresAuth: true },
-        component: () => import('@/views/CamerasPage.vue'),
-    },
     // Auth router
     {
         path: '/login',
