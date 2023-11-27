@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { updateCoordinatesCamera } from '@/services/camera.service'
+// import axios from 'axios'
+import { updateCoordinatesCamera, getCameraById } from '@/services/camera.service'
 export default {
     data() {
         return {
@@ -31,6 +31,7 @@ export default {
             isConfirmed: false,
             coordinatesData: [],
             drawDelay: 500, // Thời gian trễ (0.5 giây)
+            currentCamera: {},
         }
     },
     computed: {
@@ -44,32 +45,39 @@ export default {
         this.tryLoadCoordinates() // Thử tải tọa độ khi component được mounted
     },
     methods: {
-        tryLoadCoordinates() {
-            axios
-                .get('http://localhost:3011/api/cameras/1') // Thay đổi URL để lấy thông tin của camera có id 1
-                .then((response) => {
-                    const cameraData = response.data
-                    if (cameraData.coordinates) {
-                        // Kiểm tra nếu camera có thông tin tọa độ
-                        this.dangerZone = JSON.parse(cameraData.coordinates) // Chuyển chuỗi JSON thành mảng tọa độ
-                        this.redrawCoordinates() // Gọi hàm vẽ lại hình sau khi tải dữ liệu
-                    } else {
-                        alert('Camera không có thông tin tọa độ.')
-                    }
-                })
-                .catch((error) => {
-                    console.error('Lỗi khi tải dữ liệu từ API:', error)
-                    alert('Có lỗi xảy ra khi tải dữ liệu từ API.')
-                })
+        async tryLoadCoordinates() {
+            // const cameraId = 2 // Thay đổi id camera tại đây nếu cần
+            try {
+                await this.getSingleCamera(2)
+                // console.log('1111111', this.currentCamera)
+                if (this.currentCamera.coordinates) {
+                    this.dangerZone = JSON.parse(this.currentCamera.coordinates) // Chuyển chuỗi JSON thành mảng tọa độ
+                    this.redrawCoordinates() // Gọi hàm vẽ lại hình sau khi tải dữ liệu
+                } else {
+                    alert('Camera không có thông tin tọa độ.')
+                }
+            } catch (error) {
+                console.error(error)
+                alert('Lấy tọa độ từ API thất bại')
+            }
+        },
+        async getSingleCamera(id) {
+            try {
+                const res = await getCameraById(id)
+                this.currentCamera = res.data
+                localStorage.setItem('idVehicle', this.currentCamera.id)
+            } catch (error) {
+                console.error(error)
+            }
         },
         async updateCoordinatesCamera() {
-            const id = 1
-            this.dangerZone = this.convertToCoordinates(this.dangerZone)
-            console.log(this.dangerZone)
+            const id = 2
+            // this.dangerZone = this.convertToCoordinates(this.dangerZone)
+            console.log(id, JSON.stringify(this.dangerZone))
             try {
-                const res = await updateCoordinatesCamera(id, this.dangerZone)
+                const res = await updateCoordinatesCamera(id, JSON.stringify(this.dangerZone))
                 if (res.data.status === 'success') {
-                    this.tryLoadCoordinates()
+                    // this.tryLoadCoordinates()
                     this.$notify({
                         type: 'success',
                         title: 'Update Violation',
@@ -149,32 +157,18 @@ export default {
                 return
             }
             this.roundCoordinates()
-            this.convertToCoordinates(this.dangerZone)
-            const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
-                type: 'application/json',
-            })
-            const jsonUrl = URL.createObjectURL(jsonBlob)
-            const a = document.createElement('a')
-            a.href = jsonUrl
-            a.download = 'coordinates.json'
-            a.click()
-            URL.revokeObjectURL(jsonUrl)
-            console.log(JSON.stringify(this.dangerZone))
+            // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
+            //     type: 'application/json',
+            // })
+            // const jsonUrl = URL.createObjectURL(jsonBlob)
+            // const a = document.createElement('a')
+            // a.href = jsonUrl
+            // a.download = 'coordinates.json'
+            // a.click()
+            // URL.revokeObjectURL(jsonUrl)
+            // console.log('json', JSON.stringify(this.dangerZone))
 
-            // this.updateCoordinatesCamera()
-
-            // axios
-            //     .patch(`http://localhost:3011/api/cameras/1`, {
-            //         coordinates: this.convertToCoordinates(this.dangerZone),
-            //     })
-            //     .then(() => {
-            //         console.log('Tọa độ đã được cập nhật thành công.')
-            //         alert('Tọa độ đã được lưu.')
-            //     })
-            //     .catch((error) => {
-            //         console.error('Lỗi khi cập nhật tọa độ:', error)
-            //         alert('Có lỗi xảy ra khi cập nhật tọa độ.')
-            //     })
+            this.updateCoordinatesCamera()
         },
 
         resetDrawing() {
@@ -196,23 +190,23 @@ export default {
                 this.isConfirmed = true
             }
         },
-        convertToCoordinates(points) {
-            var xValues = points.map(function (point) {
-                return point.x
-            })
+        // convertToCoordinates(points) {
+        //     var xValues = points.map(function (point) {
+        //         return point.x
+        //     })
 
-            var yValues = points.map(function (point) {
-                return point.y
-            })
+        //     var yValues = points.map(function (point) {
+        //         return point.y
+        //     })
 
-            var xmin = Math.min.apply(null, xValues)
-            var ymin = Math.min.apply(null, yValues)
-            var xmax = Math.max.apply(null, xValues)
-            var ymax = Math.max.apply(null, yValues)
+        //     var xmin = Math.min.apply(null, xValues)
+        //     var ymin = Math.min.apply(null, yValues)
+        //     var xmax = Math.max.apply(null, xValues)
+        //     var ymax = Math.max.apply(null, yValues)
 
-            var coordinates = [xmin, ymin, xmax, ymax]
-            return JSON.stringify(coordinates)
-        },
+        //     var coordinates = [xmin, ymin, xmax, ymax]
+        //     return JSON.stringify(coordinates)
+        // },
     },
 }
 </script>

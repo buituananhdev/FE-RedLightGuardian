@@ -15,22 +15,10 @@ export const changeBalance = async (cameraID, balance) => {
     return await axiosApiInstance.patch(`/cameras/${cameraID}/change-balance`, { balance: balance })
 }
 
-export const deleteCamera = async (id) => {
-    return await axiosApiInstance.delete(`/cameras/${id}`)
-}
-
-export const getAllCameras = async () => {
-    return await axiosApiInstance.get('/cameras')
-}
-
 export const getCameraById = async (id) => {
     return await axiosApiInstance.get(`/cameras/${id}`)
 }
 
 export const updateCoordinatesCamera = async (id, newCoordinates) => {
-    return await axiosApiInstance.patch(`/cameras/${id}`, newCoordinates)
-}
-
-export const addCamera = async (newCamera) => {
-    return await axiosApiInstance.post(`/cameras`, newCamera)
+    return await axiosApiInstance.patch(`/cameras/${id}`, { newCoordinates: newCoordinates })
 }

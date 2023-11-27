@@ -524,13 +524,13 @@ export default {
                         @include truncate(1);
                         @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
                     }
-                    &.email,
-                    &.idCitizen,
                     &.id {
                         width: 10%;
                     }
                     &.type,
-                    &.license,
+                    &.license {
+                        width: 15%;
+                    }
                     &.name,
                     &.ownerId {
                         width: 20%;
@@ -543,37 +543,13 @@ export default {
                             display: flex;
                             justify-content: center;
                             align-items: center;
-                            gap: 10px;
+                            gap: 20px;
                             img {
                                 height: 20px;
                                 width: 20px;
                                 cursor: pointer;
                             }
                         }
-                    }
-                }
-                &__id {
-                    width: 10%;
-                }
-                &__type,
-                &__license {
-                    width: 15%;
-                }
-                &__name,
-                &__ownerId {
-                    width: 20%;
-                }
-
-                &__action {
-                    width: 20%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 20px;
-                    img {
-                        height: 20px;
-                        width: 20px;
-                        cursor: pointer;
                     }
                 }
             }
