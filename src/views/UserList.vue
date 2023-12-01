@@ -63,11 +63,27 @@
                     <div class="container-user__page__panel__content">
                         <div class="label-input">
                             <span>Tên người dùng:</span>
-                            <input v-model="currentUser.username" type="text" :disabled="!isEdit" />
+                            <input
+                                v-model="currentUser.username"
+                                type="text"
+                                :disabled="!isEdit"
+                                @blur="checkValidateInput(0, currentUser.username, '')"
+                                @focus="validateInput[0] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[0]">Vui lòng nhập username.</span>
                         </div>
                         <div class="label-input">
                             <span>Email:</span>
-                            <input v-model="currentUser.email" type="email" :disabled="!isEdit" />
+                            <input
+                                v-model="currentUser.email"
+                                type="email"
+                                :disabled="!isEdit"
+                                @blur="checkValidateInput(1, currentUser.email, 'email')"
+                                @focus="validateInput[1] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[1]"
+                                >Vui lòng nhập email đúng định dạng.</span
+                            >
                         </div>
                         <button class="btn button--primary" @click="showPopupChangePassword">Đổi mật khẩu</button>
                     </div>
@@ -83,15 +99,41 @@
                     <template #popupbody>
                         <div class="label-input">
                             <span>Tên người dùng:</span>
-                            <input v-model="currentUser.username" id="name" type="text" name="" />
+                            <input
+                                v-model="currentUser.username"
+                                id="name"
+                                type="text"
+                                name=""
+                                @blur="checkValidateInput(2, currentUser.username, '')"
+                                @focus="validateInput[2] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[2]">Vui lòng nhập username.</span>
                         </div>
                         <div class="label-input">
                             <span>Mật khẩu:</span>
-                            <input type="password" v-model="currentUser.password" name="" id="address" />
+                            <input
+                                type="password"
+                                v-model="currentUser.password"
+                                name=""
+                                id="address"
+                                @blur="checkValidateInput(3, currentUser.password, '')"
+                                @focus="validateInput[3] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[3]">Vui lòng nhập mật khẩu.</span>
                         </div>
                         <div class="label-input">
                             <span>Email:</span>
-                            <input type="email" v-model="currentUser.email" name="" id="email" />
+                            <input
+                                type="email"
+                                v-model="currentUser.email"
+                                name=""
+                                id="email"
+                                @blur="checkValidateInput(4, currentUser.email, '')"
+                                @focus="validateInput[4] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[4]"
+                                >Vui lòng nhập email đúng định dạng.</span
+                            >
                         </div>
                     </template>
                 </popup-view>
@@ -121,15 +163,33 @@
                         <div class="container-user__page__popup__content">
                             <div class="label-input">
                                 <span>Mật khẩu cũ:</span>
-                                <input v-model="password.old" type="password" />
+                                <input
+                                    v-model="password.old"
+                                    type="password"
+                                    @blur="checkValidateInput(5, password.old, '')"
+                                    @focus="validateInput[5] = false"
+                                />
+                                <span class="error-message" v-if="validateInput[5]">Vui lòng nhập mật khẩu cũ.</span>
                             </div>
                             <div class="label-input">
                                 <span>Mật khẩu mới:</span>
-                                <input v-model="currentUser.new" type="password" />
+                                <input
+                                    v-model="currentUser.new"
+                                    type="password"
+                                    @blur="checkValidateInput(6, currentUser.new, '')"
+                                    @focus="validateInput[6] = false"
+                                />
+                                <span class="error-message" v-if="validateInput[6]">Vui lòng nhập mật khẩu mới.</span>
                             </div>
                             <div class="label-input">
                                 <span>Xác nhận mật khẩu:</span>
-                                <input v-model="currentUser.confirm" type="password" />
+                                <input
+                                    v-model="currentUser.confirm"
+                                    type="password"
+                                    @blur="checkValidateInput(7, currentUser.confirm, '')"
+                                    @focus="validateInput[7] = false"
+                                />
+                                <span class="error-message" v-if="validateInput[7]">Vui lòng nhập số CCCD.</span>
                             </div>
                             <!-- <button class="btn button--primary">Đổi mật khẩu</button> -->
                         </div>
@@ -177,6 +237,7 @@ export default {
             isShowDeleteVerifiedPopup: false,
             isChangePassword: false,
             password: {},
+            validateInput: [],
         }
     },
     computed: {
@@ -379,6 +440,21 @@ export default {
                 console.error(error)
             }
         },
+        checkValidateInput(index, value, type) {
+            if (!value) {
+                this.validateInput[index] = true
+            } else {
+                this.validateInput[index] = false
+            }
+            if (type === 'email' && this.validateInput[index] === false) {
+                const reg = /^\S+@\S+\.\S+$/
+                if (!reg.test(value)) {
+                    this.validateInput[index] = true
+                } else {
+                    this.validateInput[index] = false
+                }
+            }
+        },
     },
 }
 </script>
@@ -445,11 +521,8 @@ export default {
             &__content {
                 display: flex;
                 flex-direction: column;
-                input {
-                    margin-bottom: 10px;
-                }
                 span {
-                    padding: 7px 0;
+                    padding: 17px 0 7px 0;
                 }
                 .btn {
                     display: flex;
