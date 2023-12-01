@@ -110,18 +110,6 @@
                             <span class="error-message" v-if="validateInput[2]">Vui lòng nhập username.</span>
                         </div>
                         <div class="label-input">
-                            <span>Mật khẩu:</span>
-                            <input
-                                type="password"
-                                v-model="currentUser.password"
-                                name=""
-                                id="address"
-                                @blur="checkValidateInput(3, currentUser.password, '')"
-                                @focus="validateInput[3] = false"
-                            />
-                            <span class="error-message" v-if="validateInput[3]">Vui lòng nhập mật khẩu.</span>
-                        </div>
-                        <div class="label-input">
                             <span>Email:</span>
                             <input
                                 type="email"
@@ -134,6 +122,29 @@
                             <span class="error-message" v-if="validateInput[4]"
                                 >Vui lòng nhập email đúng định dạng.</span
                             >
+                        </div>
+                        <div class="label-input">
+                            <span>Mật khẩu:</span>
+                            <input
+                                type="password"
+                                v-model="currentUser.password"
+                                name=""
+                                id="address"
+                                @blur="checkValidateInput(3, currentUser.password, '')"
+                                @focus="validateInput[3] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[3]">Vui lòng nhập mật khẩu.</span>
+                        </div>
+                        <div class="label-input">
+                            <span>Xác nhận mật khẩu:</span>
+                            <input
+                                v-model="currentUser.confirm"
+                                type="password"
+                                @blur="checkValidateInput(8, currentUser.confirm, '')"
+                                @focus="validateInput[8] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[8]">Vui lòng xác nhập lại mật khẩu.</span>
+                            <span class="error-message" v-if="isDifferent">Mật khẩu không khớp.</span>
                         </div>
                     </template>
                 </popup-view>
@@ -169,7 +180,9 @@
                                     @blur="checkValidateInput(5, password.old, '')"
                                     @focus="validateInput[5] = false"
                                 />
-                                <span class="error-message" v-if="validateInput[5]">Vui lòng nhập mật khẩu cũ.</span>
+                                <span class="error-message" v-if="validateInput[5]"
+                                    >Vui lòng nhập mật khẩu cũ hoặc mật khẩu cũ không đúng.</span
+                                >
                             </div>
                             <div class="label-input">
                                 <span>Mật khẩu mới:</span>
@@ -189,7 +202,9 @@
                                     @blur="checkValidateInput(7, currentUser.confirm, '')"
                                     @focus="validateInput[7] = false"
                                 />
-                                <span class="error-message" v-if="validateInput[7]">Vui lòng nhập số CCCD.</span>
+                                <span class="error-message" v-if="validateInput[7]"
+                                    >Vui lòng xác nhận lại mật khẩu hoặc mật khẩu không khớp.</span
+                                >
                             </div>
                             <!-- <button class="btn button--primary">Đổi mật khẩu</button> -->
                         </div>
@@ -238,6 +253,7 @@ export default {
             isChangePassword: false,
             password: {},
             validateInput: [],
+            isDifferent: false,
         }
     },
     computed: {
@@ -355,16 +371,28 @@ export default {
         },
         async createUser() {
             try {
-                this.isShowPopup = false
-                const res = await addUser(this.currentUser)
-                if (res.data.status === 'success') {
+                if (this.currentUser.password !== this.currentUser.confirm) {
+                    alert('hii')
+                    console.log('1', this.currentUser.password)
+                    console.log('2', this.currentUser.old)
+                    this.isDifferent = true
+                    return
+                } else {
+                    alert('haa')
+                    console.log('1', this.currentUser.password)
+                    console.log('2', this.currentUser.old)
+                    this.isDifferent = false
                     this.isShowPopup = false
-                    this.$notify({
-                        type: 'success',
-                        title: 'Thêm Người dùng',
-                        text: 'Thêm người dùng thành công!',
-                    })
-                    this.listData.push(res.data.data)
+                    const res = await addUser(this.currentUser)
+                    if (res.data.status === 'success') {
+                        this.isShowPopup = false
+                        this.$notify({
+                            type: 'success',
+                            title: 'Thêm Người dùng',
+                            text: 'Thêm người dùng thành công!',
+                        })
+                        this.listData.push(res.data.data)
+                    }
                 }
             } catch (error) {
                 console.error(error)
