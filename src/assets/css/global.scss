@@ -84,3 +84,15 @@ body {
 .dp__pointer {
     padding: 10px 30px !important;
 }
+
+.error-message {
+    padding-top: 4px !important;
+    color: red !important;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    padding-bottom: 0px !important;
+}
+
+.error-input {
+    border: 1px solid red !important;
+}
