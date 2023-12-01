@@ -69,12 +69,26 @@
                                 v-model="currentOwner.citizen_identification"
                                 type="text"
                                 name=""
+                                :class="{ 'error-input': validateInput[0] }"
                                 :disabled="!isEdit"
+                                @blur="checkValidateInput(0, currentOwner.citizen_identification, '')"
+                                @focus="validateInput[0] = false"
                             />
+                            <span class="error-message" v-if="validateInput[0]">Vui lòng nhập số CCCD.</span>
                         </div>
                         <div class="label-input">
                             <span>Tên người dùng:</span>
-                            <input v-model="currentOwner.name" type="text" id="name" name="" :disabled="!isEdit" />
+                            <input
+                                id="name"
+                                v-model="currentOwner.name"
+                                type="text"
+                                name=""
+                                :disabled="!isEdit"
+                                :class="{ 'error-input': validateInput[1] }"
+                                @blur="checkValidateInput(1, currentOwner.name, '')"
+                                @focus="validateInput[1] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[1]">Vui lòng nhập tên User.</span>
                         </div>
                         <div class="label-input">
                             <span>Địa chỉ:</span>
@@ -84,11 +98,27 @@
                                 type="text"
                                 name=""
                                 :disabled="!isEdit"
+                                :class="{ 'error-input': validateInput[2] }"
+                                @blur="checkValidateInput(2, currentOwner.address, '')"
+                                @focus="validateInput[2] = false"
                             />
+                            <span class="error-message" v-if="validateInput[2]">Vui lòng nhập địa chỉ.</span>
                         </div>
                         <div class="label-input">
                             <span>Email:</span>
-                            <input type="email" v-model="currentOwner.email" name="" id="" :disabled="!isEdit" />
+                            <input
+                                v-model="currentOwner.email"
+                                type="email"
+                                name=""
+                                id=""
+                                :disabled="!isEdit"
+                                :class="{ 'error-input': validateInput[3] }"
+                                @blur="checkValidateInput(3, currentOwner.email, 'email')"
+                                @focus="validateInput[3] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[3]"
+                                >Vui lòng nhập email đúng định dạng.</span
+                            >
                         </div>
                     </div>
                 </template>
@@ -103,19 +133,58 @@
                     <template #popupbody>
                         <div class="label-input">
                             <span>Mã số căn cước công dân:</span>
-                            <input type="text" v-model="currentOwner.citizen_identification" name="" id="name" />
+                            <input
+                                type="text"
+                                v-model="currentOwner.citizen_identification"
+                                name=""
+                                id="name"
+                                :class="{ 'error-input': validateInput[4] }"
+                                @blur="checkValidateInput(4, currentOwner.citizen_identification, '')"
+                                @focus="validateInput[4] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[4]">Vui lòng nhập số CCCD.</span>
                         </div>
                         <div class="label-input">
                             <span>Tên chủ sở hữu:</span>
-                            <input type="text" v-model="currentOwner.name" name="" id="name" />
+                            <input
+                                type="text"
+                                v-model="currentOwner.name"
+                                name=""
+                                id="name"
+                                :class="{ 'error-input': validateInput[5] }"
+                                @blur="checkValidateInput(5, currentOwner.name, '')"
+                                @focus="validateInput[5] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[5]">Vui lòng nhập tên chủ sở hữu.</span>
                         </div>
                         <div class="label-input">
                             <span>Địa chỉ:</span>
-                            <input id="address" v-model="currentOwner.address" type="text" name="" />
+                            <input
+                                id="address"
+                                v-model="currentOwner.address"
+                                type="text"
+                                name=""
+                                :class="{ 'error-input': validateInput[6] }"
+                                @blur="checkValidateInput(6, currentOwner.address, '')"
+                                @focus="validateInput[6] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[6]">Vui lòng nhập địa chỉ.</span>
                         </div>
                         <div class="label-input">
                             <span>Email:</span>
-                            <input id="" v-model="currentOwner.email" type="email" name="" />
+                            <input
+                                id=""
+                                v-model="currentOwner.email"
+                                type="email"
+                                name=""
+                                :class="{ 'error-input': validateInput[7] }"
+                                @blur="checkValidateInput(7, currentOwner.email, 'email')"
+                                @focus="validateInput[7] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[7]"
+                                >Vui lòng nhập email đúng định dạng.</span
+                            >
+                            {{ currentOwner.email }}
                         </div>
                     </template>
                 </popup-view>
@@ -182,6 +251,7 @@ export default {
             meta: [],
             currentPage: 1,
             isHaveContent: false,
+            validateInput: [],
         }
     },
     computed: {
@@ -374,6 +444,21 @@ export default {
         hiddenDeleteVerifiedPopup() {
             this.isShowDeleteVerifiedPopup = false
         },
+        checkValidateInput(index, value, type) {
+            if (!value) {
+                this.validateInput[index] = true
+            } else {
+                this.validateInput[index] = false
+            }
+            if (type === 'email' && this.validateInput[index] === false) {
+                const reg = /^\S+@\S+\.\S+$/
+                if (!reg.test(value)) {
+                    this.validateInput[index] = true
+                } else {
+                    this.validateInput[index] = false
+                }
+            }
+        },
     },
 }
 </script>
@@ -442,11 +527,8 @@ export default {
             &__content {
                 display: flex;
                 flex-direction: column;
-                input {
-                    margin-bottom: 10px;
-                }
                 span {
-                    padding: 7px 0;
+                    padding: 17px 0 7px 0;
                 }
             }
         }

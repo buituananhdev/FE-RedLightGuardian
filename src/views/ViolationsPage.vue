@@ -82,15 +82,36 @@
                     <div class="container-violation__page__panel__content">
                         <div class="label-input">
                             <span>Loại vi phạm:</span>
-                            <input v-model="currentViolation.type" type="text" :disabled="!isEdit" />
+                            <input
+                                v-model="currentViolation.type"
+                                type="text"
+                                :disabled="!isEdit"
+                                @blur="checkValidateInput(0, currentViolation.type, '')"
+                                @focus="validateInput[0] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[0]">Vui lòng nhập loại vi phạm.</span>
                         </div>
                         <div class="label-input">
                             <span>Thời hạn cuối cùng:</span>
-                            <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit" />
+                            <input
+                                v-model="currentViolation.deadline"
+                                type="text"
+                                :disabled="!isEdit"
+                                @blur="checkValidateInput(1, currentViolation.deadline, '')"
+                                @focus="validateInput[1] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[1]">Vui lòng nhập thời hạn cuối cùng.</span>
                         </div>
                         <div class="label-input">
                             <span>Trạng thái:</span>
-                            <input v-model="currentViolation.status" type="text" :disabled="!isEdit" />
+                            <input
+                                v-model="currentViolation.status"
+                                type="text"
+                                :disabled="!isEdit"
+                                @blur="checkValidateInput(2, currentViolation.status, '')"
+                                @focus="validateInput[2] = false"
+                            />
+                            <span class="error-message" v-if="validateInput[2]">Vui lòng nhập trạng thái.</span>
                         </div>
                         <div class="label-input">
                             <span v-if="isEdit">Đường dẫn hình ảnh vi phạm:</span>
@@ -118,33 +139,68 @@
                             <div class="container-violation__page__popup__content__box1">
                                 <div class="label-input">
                                     <span>Loại vi phạm:</span>
-                                    <input v-model="currentViolation.type" type="text" :disabled="!isEdit" />
+                                    <input v-model="currentViolation.type" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
+                                        @focus="validateInput[15] = false"
+                                    />
+                                    <span class="error-message" v-if="validateInput[15]"
+                                        >Vui lòng nhập số động cơ.</span
+                                    >
                                 </div>
                                 <div class="label-input">
                                     <span>Thời hạn cuối cùng:</span>
-                                    <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit" />
+                                    <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
+                                        @focus="validateInput[15] = false"
+                                    />
+                                    <span class="error-message" v-if="validateInput[15]"
+                                        >Vui lòng nhập số động cơ.</span
+                                    >
                                 </div>
                                 <div class="label-input">
                                     <span>Trạng thái:</span>
-                                    <input v-model="currentViolation.status" type="text" :disabled="!isEdit" />
+                                    <input v-model="currentViolation.status" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
+                                        @focus="validateInput[15] = false"
+                                    />
+                                    <span class="error-message" v-if="validateInput[15]"
+                                        >Vui lòng nhập số động cơ.</span
+                                    >
                                 </div>
                                 <div class="label-input">
                                     <span>Mã số xe vi phạm:</span>
-                                    <input v-model="currentViolation.vehicleID" type="text" :disabled="!isEdit" />
+                                    <input v-model="currentViolation.vehicleID" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
+                                        @focus="validateInput[15] = false"
+                                    />
+                                    <span class="error-message" v-if="validateInput[15]"
+                                        >Vui lòng nhập số động cơ.</span
+                                    >
                                 </div>
                             </div>
                             <div>
                                 <div class="label-input">
                                     <span>Time:</span>
-                                    <input v-model="currentViolation.time" type="text" :disabled="!isEdit" />
+                                    <input v-model="currentViolation.time" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
+                                        @focus="validateInput[15] = false"
+                                    />
+                                    <span class="error-message" v-if="validateInput[15]"
+                                        >Vui lòng nhập số động cơ.</span
+                                    >
                                 </div>
                                 <div class="label-input">
                                     <span>Camera ID:</span>
-                                    <input v-model="currentViolation.cameraID" type="text" :disabled="!isEdit" />
+                                    <input v-model="currentViolation.cameraID" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
+                                        @focus="validateInput[15] = false"
+                                    />
+                                    <span class="error-message" v-if="validateInput[15]"
+                                        >Vui lòng nhập số động cơ.</span
+                                    >
                                 </div>
                                 <div class="label-input">
                                     <span>Image URL:</span>
-                                    <input v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit" />
+                                    <input v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
+                                        @focus="validateInput[15] = false"
+                                    />
+                                    <span class="error-message" v-if="validateInput[15]"
+                                        >Vui lòng nhập số động cơ.</span
+                                    >
                                 </div>
                             </div>
                         </div>
@@ -236,6 +292,7 @@ export default {
                     name: 'Ngày vi phạm',
                 },
             ],
+            validateInput: [],
         }
     },
     computed: {
@@ -489,6 +546,21 @@ export default {
         convertUnitime(date) {
             return new Date(date).getTime() / 1000
         },
+        checkValidateInput(index, value, type) {
+            if (!value) {
+                this.validateInput[index] = true
+            } else {
+                this.validateInput[index] = false
+            }
+            if (type === 'email' && this.validateInput[index] === false) {
+                const reg = /^\S+@\S+\.\S+$/
+                if (!reg.test(value)) {
+                    this.validateInput[index] = true
+                } else {
+                    this.validateInput[index] = false
+                }
+            }
+        },
     },
 }
 </script>
@@ -554,11 +626,8 @@ export default {
                 display: flex;
                 flex-direction: column;
                 margin-bottom: 100px;
-                input {
-                    margin-bottom: 8px;
-                }
                 span {
-                    padding: 7px 0;
+                    padding: 17px 0 7px 0;
                 }
             }
         }
