@@ -47,7 +47,7 @@
                             <span>{{ item.licensePlate }}</span>
                         </div>
                         <div class="container-vehicle__page__table__row__cell ownerId">
-                            <span>{{ listOwners[index].name }}</span>
+                            <span>{{ item.owner.name }}</span>
                         </div>
                         <div class="container-vehicle__page__table__row__cell type">
                             <span>{{ item.vehicleType }}</span>
