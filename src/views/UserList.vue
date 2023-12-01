@@ -400,6 +400,9 @@ export default {
                 gap: 20px;
                 background: var(--neutral-100, #fafcfe);
                 cursor: pointer;
+                &:hover {
+                    opacity: 0.7;
+                }
                 &.bold {
                     background: var(--neutral-300, #f4f7fe);
                 }
