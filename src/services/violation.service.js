@@ -16,23 +16,13 @@ export const deleteViolation = async (id) => {
     return await axiosApiInstance.delete(`/violations/${id}`)
 }
 
-export const getAllViolations = async (
-    page = 1,
-    status = '',
-    type = '',
-    startDate = '',
-    endDate = '',
-    pageSize = 8
-) => {
+export const getAllViolations = async (page = 1, status = '', startDate = '', endDate = '', pageSize = 8) => {
     let url = `/violations?page=${page}&pageSize=${pageSize}`
     if (startDate) {
         url += `&startDate=${startDate}`
     }
     if (status) {
         url += `&status=${status}`
-    }
-    if (type) {
-        url += `&type=${type}`
     }
     if (endDate) {
         url += `&endDate=${endDate}`
