@@ -24,14 +24,14 @@
                             :placeholder="'Chọn trạng thái'"
                             @ChangeValueSelectBox="changeStatus"
                         />
-                        <select-box
+                        <!-- <select-box
                             :type_select_box="'status-white'"
                             :label="'name'"
                             :selected-props="type"
                             :options="optionsType"
                             :placeholder="'Chọn loại vi phạm'"
                             @ChangeValueSelectBox="changeType"
-                        />
+                        /> -->
                         <vue-date-picker
                             v-model="startDate"
                             :enable-time-picker="false"
@@ -205,7 +205,10 @@ export default {
             startDate: '',
             endDate: '',
             status: {},
-            type: {},
+            type: {
+                key: 'violatedate',
+                name: 'Ngày vi phạm',
+            },
             optionsStatus: [
                 {
                     key: 'paid fine',
@@ -225,12 +228,12 @@ export default {
             ],
             optionsType: [
                 {
-                    key: 'Run a red light',
-                    name: 'Vượt đèn đỏ',
+                    key: 'deadline',
+                    name: 'Hạn cuối nộp phạt',
                 },
                 {
-                    key: 'No helmet',
-                    name: 'Không MBH',
+                    key: 'violatedate',
+                    name: 'Ngày vi phạm',
                 },
             ],
         }
