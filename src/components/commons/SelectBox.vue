@@ -255,6 +255,7 @@ export default {
     max-width: 100%;
     cursor: pointer;
     position: relative;
+    min-width: 150px;
     &-select-box {
         height: 100%;
         border-radius: 8px;

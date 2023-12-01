@@ -84,6 +84,7 @@ export default {
     display: flex;
     align-items: center;
     width: 100px;
+    margin-right: 20px;
     gap: 18px;
 }
 
