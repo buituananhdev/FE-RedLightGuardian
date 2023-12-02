@@ -482,7 +482,6 @@ export default {
                     query.startDate = this.convertUnitime(this.startDate)
                 }
                 if (this.endDate) {
-                    console.log('endDate', this.endDate)
                     query.endDate = this.convertUnitime(this.endDate)
                 }
                 if (this.type) {
@@ -540,7 +539,6 @@ export default {
             this.Search()
         },
         findName(option, key) {
-            console.log('key', key)
             return option.find((item) => item.key === key)
         },
         convertUnitime(date) {

@@ -294,7 +294,6 @@ export default {
         },
         async fetchData() {
             try {
-                console.log('pasge', this.pageParam)
                 const res = await getAllUsers(this.pageParam)
                 this.meta = res.data.meta
                 this.listData = res.data.data
@@ -372,15 +371,9 @@ export default {
         async createUser() {
             try {
                 if (this.currentUser.password !== this.currentUser.confirm) {
-                    alert('hii')
-                    console.log('1', this.currentUser.password)
-                    console.log('2', this.currentUser.old)
                     this.isDifferent = true
                     return
                 } else {
-                    alert('haa')
-                    console.log('1', this.currentUser.password)
-                    console.log('2', this.currentUser.old)
                     this.isDifferent = false
                     this.isShowPopup = false
                     const res = await addUser(this.currentUser)
