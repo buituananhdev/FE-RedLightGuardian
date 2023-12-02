@@ -438,7 +438,7 @@ export default {
                 const res = await deleteVehicle(id)
                 if (res.data.status === 'success') {
                     this.isShowDeleteVerifiedPopup = false
-                    this.listData = this.listData.filter((vehicle) => vehicle.id !== id)
+                    this.Search()
                     this.$notify({
                         type: 'success',
                         title: 'Delete Vehicle',

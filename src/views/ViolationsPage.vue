@@ -362,7 +362,7 @@ export default {
                 const res = await deleteViolation(id)
                 if (res.data.status === 'success') {
                     this.isShowDeleteVerifiedPopup = false
-                    this.listData = this.listData.filter((violation) => violation.id !== id)
+                    this.Search()
                     this.$notify({
                         type: 'success',
                         title: 'Delete Violation',
