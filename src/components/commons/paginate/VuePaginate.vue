@@ -110,24 +110,18 @@ export default {
                 this.$emit('before-fetch', this.isBeforeFetch)
             }
             var queryParam = this.$route.query
-            console.log('queryParam')
-            console.log(queryParam)
-            console.log('querySearch1')
             var querySearch = this.stringifyQuery(queryParam)
-            console.log('querySearch', querySearch)
             const result = await this.$axios.$get(
                 `${this.baseUrl}?${querySearch ? querySearch : 'page=' + this.currentPage}&paging=${this.paging}${
                     this.optionParam ? '&' + this.optionParam : ''
                 }`
             )
-            console.log('result', result)
             this.objectResults = result['data']
             this.pageCount = result['meta']['total_pages']
             this.isBeforeFetch = false
             this.$emit('before-fetch', this.isBeforeFetch)
             this.$emit('fetch-success', this.objectResults)
             this.$emit('total-count', result['meta']['total_count'])
-            console.log('result2', result)
         } catch (error) {
             console.log('error', error)
             this.$emit('fetch-error', false)

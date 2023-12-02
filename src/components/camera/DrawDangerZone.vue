@@ -49,7 +49,6 @@ export default {
             // const cameraId = 2 // Thay đổi id camera tại đây nếu cần
             try {
                 await this.getSingleCamera(2)
-                // console.log('1111111', this.currentCamera)
                 if (this.currentCamera.coordinates) {
                     this.dangerZone = JSON.parse(this.currentCamera.coordinates) // Chuyển chuỗi JSON thành mảng tọa độ
                     this.redrawCoordinates() // Gọi hàm vẽ lại hình sau khi tải dữ liệu
