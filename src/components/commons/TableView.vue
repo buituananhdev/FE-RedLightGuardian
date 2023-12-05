@@ -201,7 +201,7 @@ export default {
     }
     &__pagination {
         position: absolute;
-        bottom: 16.5%;
+        bottom: 14.5%;
         z-index: 100;
         width: 100%;
         right: 10px;
@@ -225,6 +225,7 @@ export default {
         position: relative;
         // height: calc(100% - 74px);
         overflow: hidden;
+        margin-bottom: 20px;
         &__head {
             width: 100%;
             background-color: #ffff;
