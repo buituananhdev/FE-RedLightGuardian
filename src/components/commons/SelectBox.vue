@@ -65,9 +65,10 @@ export default {
                     case 'status':
                         if (option != this.selected.status) {
                             this.$emit('ChangeStatus', this.selected, option.status)
-                            if (this.type_select_box == 'status-white') {
-                                this.selected.status = option.status
-                            }
+                            // if (this.type_select_box == 'status-white') {
+                            //     this.selected.status = option.status
+                            // }
+                            this.selected.status = option.status
                         }
                         break
                     default:
@@ -109,7 +110,7 @@ export default {
         <div
             :class="[
                 `${type_select_box}-select-box`,
-                `${selected.status}`,
+                `${selected.key}`,
                 { isShowSelectBox: isShowSelectBox },
                 { center: !isSelect },
                 { isRequired: isRequired },
@@ -230,7 +231,7 @@ export default {
     .PENDING {
         background: #2b3674 !important;
     }
-    .DOING {
+    .unpaid.fine {
         background: #ff8800 !important;
     }
 
@@ -242,8 +243,12 @@ export default {
         background: #08875d !important;
     }
 
-    .EXPIRED {
+    .overdue {
         background: #e02d3c !important;
+    }
+
+    .pain.fine {
+        background: #08875d !important;
     }
 
     .center {
@@ -256,6 +261,7 @@ export default {
     cursor: pointer;
     position: relative;
     min-width: 150px;
+    background-color: #ffff;
     &-select-box {
         height: 100%;
         border-radius: 8px;
@@ -287,6 +293,7 @@ export default {
 
         .placeholder {
             @include text-style(12px, 18px, 400, $text-light-icon-disabled, 0);
+            padding: 0;
         }
     }
 

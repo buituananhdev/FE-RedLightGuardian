@@ -190,124 +190,145 @@
                 >
                     <template #popupbody>
                         <div class="container-vehicle__page__popup__content">
-                            <div class="container-vehicle__page__popup__content__box1">
-                                <div class="label-input">
-                                    <span>Tên phương tiện:</span>
-                                    <input
-                                        v-model="currentVehicle.vehicleName"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(8, currentVehicle.vehicleName, '')"
-                                        @focus="validateInput[8] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[8]"
-                                        >Vui lòng nhập tên phương tiện.</span
-                                    >
+                            <div class="container-vehicle__page__popup__content__text">
+                                <div class="container-vehicle__page__popup__content__text__box1">
+                                    <div class="label-input">
+                                        <span>Tên phương tiện:</span>
+                                        <input
+                                            v-model="currentVehicle.vehicleName"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(8, currentVehicle.vehicleName, '')"
+                                            @focus="validateInput[8] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[8]"
+                                            >Vui lòng nhập tên phương tiện.</span
+                                        >
+                                    </div>
+                                    <div class="label-input">
+                                        <span>Biển số:</span>
+                                        <input
+                                            v-model="currentVehicle.licensePlate"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(9, currentVehicle.licensePlate, '')"
+                                            @focus="validateInput[9] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[9]"
+                                            >Vui lòng nhập biển số xe.</span
+                                        >
+                                    </div>
+                                    <div class="label-input">
+                                        <span>Mã số căn cước công dân:</span>
+                                        <input
+                                            v-model="currentVehicle.citizenIdentification"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(10, currentVehicle.citizenIdentification, '')"
+                                            @focus="validateInput[10] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[10]"
+                                            >Vui lòng nhập mã căn cước công dân.</span
+                                        >
+                                    </div>
+                                    <div class="label-input">
+                                        <span>Loại xe:</span>
+                                        <select-box
+                                            v-model="type"
+                                            :type_select_box="'status-white'"
+                                            :label="'name'"
+                                            :selected-props="type"
+                                            :options="optionsType"
+                                            :placeholder="'Chọn loại xe'"
+                                            @change-value-select-box="changeType"
+                                            class="select-box"
+                                        />
+                                        <span class="error-message" v-if="validateInput[11]"
+                                            >Vui lòng chọn loại xe.</span
+                                        >
+                                    </div>
+                                    <div class="label-input">
+                                        <span>Công suất động cơ:</span>
+                                        <input
+                                            v-model="currentVehicle.engineCapacity"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(12, currentVehicle.engineCapacity, '')"
+                                            @focus="validateInput[12] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[12]"
+                                            >Vui lòng nhập công suất động cơ.</span
+                                        >
+                                    </div>
                                 </div>
-                                <div class="label-input">
-                                    <span>Biển số:</span>
-                                    <input
-                                        v-model="currentVehicle.licensePlate"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(9, currentVehicle.licensePlate, '')"
-                                        @focus="validateInput[9] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[9]">Vui lòng nhập biển số xe.</span>
-                                </div>
-                                <div class="label-input">
-                                    <span>Mã chủ sở hữu:</span>
-                                    <input
-                                        v-model="currentVehicle.ownerID"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(10, currentVehicle.ownerID, '')"
-                                        @focus="validateInput[10] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[10]"
-                                        >Vui lòng nhập mã chủ sở hữu.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Loại xe:</span>
-                                    <input
-                                        v-model="currentVehicle.vehicleType"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(11, currentVehicle.vehicleType, '')"
-                                        @focus="validateInput[11] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[11]">Vui lòng nhập loại xe.</span>
-                                </div>
-                                <div class="label-input">
-                                    <span>Công suất động cơ:</span>
-                                    <input
-                                        v-model="currentVehicle.engineCapacity"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(12, currentVehicle.engineCapacity, '')"
-                                        @focus="validateInput[12] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[12]"
-                                        >Vui lòng nhập công suất động cơ.</span
-                                    >
+                                <div>
+                                    <div class="label-input">
+                                        <span>Màu sắc:</span>
+                                        <input
+                                            v-model="currentVehicle.color"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(13, currentVehicle.color, '')"
+                                            @focus="validateInput[13] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[13]"
+                                            >Vui lòng nhập màu sác phương tiện.</span
+                                        >
+                                    </div>
+                                    <div class="label-input">
+                                        <span>Số khung:</span>
+                                        <input
+                                            v-model="currentVehicle.frameNumber"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(14, currentVehicle.frameNumber, '')"
+                                            @focus="validateInput[14] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[14]"
+                                            >Vui lòng nhập số khung.</span
+                                        >
+                                    </div>
+                                    <div class="label-input">
+                                        <span>Số động cơ:</span>
+                                        <input
+                                            v-model="currentVehicle.engineNumber"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(15, currentVehicle.engineNumber, '')"
+                                            @focus="validateInput[15] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[15]"
+                                            >Vui lòng nhập số động cơ.</span
+                                        >
+                                    </div>
+                                    <div class="label-input">
+                                        <span>Thương hiệu:</span>
+                                        <input
+                                            v-model="currentVehicle.brand"
+                                            type="text"
+                                            :disabled="!isEdit"
+                                            @blur="checkValidateInput(16, currentVehicle.brand, '')"
+                                            @focus="validateInput[16] = false"
+                                        />
+                                        <span class="error-message" v-if="validateInput[16]"
+                                            >Vui lòng nhập thương hiệu phương tiện.</span
+                                        >
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="label-input">
-                                    <span>Màu sắc:</span>
-                                    <input
-                                        v-model="currentVehicle.color"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(13, currentVehicle.color, '')"
-                                        @focus="validateInput[13] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[13]"
-                                        >Vui lòng nhập màu sác phương tiện.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Số khung:</span>
-                                    <input
-                                        v-model="currentVehicle.frameNumber"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(14, currentVehicle.frameNumber, '')"
-                                        @focus="validateInput[14] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[14]">Vui lòng nhập số khung.</span>
-                                </div>
-                                <div class="label-input">
-                                    <span>Số động cơ:</span>
-                                    <input
-                                        v-model="currentVehicle.engineNumber"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(15, currentVehicle.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Thương hiệu:</span>
-                                    <input
-                                        v-model="currentVehicle.brand"
-                                        type="text"
-                                        :disabled="!isEdit"
-                                        @blur="checkValidateInput(16, currentVehicle.brand, '')"
-                                        @focus="validateInput[16] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[16]"
-                                        >Vui lòng nhập thương hiệu phương tiện.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Đường dẫn ảnh:</span>
-                                    <input v-model="currentVehicle.imageUrl" type="text" :disabled="!isEdit" />
-                                </div>
+                            <div class="container-vehicle__page__popup__content__file">
+                                <input
+                                    type="file"
+                                    id="fileInput"
+                                    class="file-input"
+                                    accept="image/*"
+                                    @change="handleFileChange"
+                                />
+                                <label for="fileInput" class="file-label">Chọn ảnh</label>
+                                <img :src="previewUrl" v-if="previewUrl" class="preview-image" alt="Preview Image" />
+                                <!-- 
+                                <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" />
+                                <img :src="previewUrl" class="preview-image" v-if="previewUrl" alt="Preview Image" /> -->
                             </div>
                         </div>
                     </template>
@@ -334,6 +355,7 @@
 <script>
 import { getAllVehicles, deleteVehicle, getSingleVehicle, updateVehicle, addVehicle } from '@/services/vehicle.service'
 import { getAllOwners } from '@/services/owner.service'
+import { uploadFile } from '@/services/storage.service'
 export default {
     data() {
         return {
@@ -380,6 +402,19 @@ export default {
             previousSelected: {},
             lastQuery: {},
             validateInput: [],
+            type: { name: '' },
+            optionsType: [
+                {
+                    key: 'car',
+                    name: 'Xe ô tô',
+                },
+                {
+                    key: 'motorcycle',
+                    name: 'Xe máy',
+                },
+            ],
+            selectedFile: null,
+            previewUrl: null,
         }
     },
     computed: {
@@ -491,10 +526,15 @@ export default {
         },
         async createVehicle() {
             try {
+                const imageData = await this.uploadImage()
+                console.log('image data', imageData.data)
+                this.currentVehicle.imageUrl = imageData.url
                 const res = await addVehicle(this.currentVehicle)
                 if (res.data.status === 'success') {
                     this.isShowPopup = false
                     this.isEdit = false
+                    this.type = null
+                    this.previewUrl = null
                     this.$notify({
                         type: 'success',
                         title: 'Add Vehicle',
@@ -629,6 +669,32 @@ export default {
                 }
             }
         },
+        changeType(option) {
+            this.type = option
+            console.log(option)
+            this.currentVehicle.vehicleType = option.key
+        },
+        handleFileChange(event) {
+            this.selectedFile = event.target.files[0]
+            if (this.selectedFile) {
+                const reader = new FileReader()
+                reader.onload = (e) => {
+                    this.previewUrl = e.target.result
+                }
+                reader.readAsDataURL(this.selectedFile)
+            }
+        },
+        async uploadImage() {
+            if (this.selectedFile) {
+                const formData = new FormData()
+                formData.append('file', this.selectedFile)
+
+                const res = await uploadFile(formData)
+                return res.data.data
+            } else {
+                console.log('Vui lòng chọn một file.')
+            }
+        },
     },
 }
 </script>
@@ -720,25 +786,66 @@ export default {
             }
         }
         &__popup {
-            position: absolute;
-            top: 50%; /* Đặt vị trí top ở giữa trang */
-            left: 50%; /* Đặt vị trí left ở giữa trang */
-            transform: translate(-50%, -50%);
             z-index: 3;
             width: auto;
             height: auto;
-            overflow: auto;
             &__content {
                 display: flex;
-                &__box1 {
-                    margin-right: 70px;
+                flex-direction: column;
+                height: 400px;
+                overflow: auto;
+                @include custom-scrollbar();
+                &::-webkit-scrollbar {
+                    width: 6px;
                 }
-                input {
-                    min-width: 300px;
-                    // margin-bottom: 10px;
+                &__text {
+                    display: flex;
+                    &__box1 {
+                        margin-right: 70px;
+                    }
+                    input {
+                        min-width: 300px;
+                        // margin-bottom: 10px;
+                    }
+                    span {
+                        padding-top: 10px;
+                    }
                 }
-                span {
-                    padding-top: 10px;
+                &__file {
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 24px;
+                    background-color: $neutral-300;
+                    height: 240px;
+                    min-height: 240px;
+                    input {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        cursor: pointer;
+                    }
+                    img {
+                        max-width: 400px;
+                        max-height: 200px;
+                    }
+                    label {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        padding: 8px 16px;
+                        background-color: #eee;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        background-color: transparent;
+                        z-index: 1; /* Đảm bảo label ở trên cùng */
+                    }
                 }
             }
         }
