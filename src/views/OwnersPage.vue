@@ -305,7 +305,7 @@ export default {
                 const res = await deleteOwner(id)
                 if (res.data.status === 'success') {
                     this.isShowDeleteVerifiedPopup = false
-                    this.listData = this.listData.filter((owner) => owner.id !== id)
+                    this.Search()
                     this.$notify({
                         type: 'success',
                         title: 'Delete Owner',
@@ -339,7 +339,7 @@ export default {
                 if (res.data.status === 'success') {
                     this.isShowDetail = false
                     this.isEdit = false
-                    this.fetchData()
+                    this.Search()
                     this.$notify({
                         type: 'success',
                         title: 'Update Owner',

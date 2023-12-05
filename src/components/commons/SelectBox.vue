@@ -88,7 +88,6 @@ export default {
                 return
             }
             this.isShowSelectBox = !this.isShowSelectBox
-            console.log(this.isShowSelectBox)
         },
         checkLabel(option, ischeckActive) {
             switch (this.label) {

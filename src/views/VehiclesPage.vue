@@ -473,7 +473,7 @@ export default {
                 const res = await deleteVehicle(id)
                 if (res.data.status === 'success') {
                     this.isShowDeleteVerifiedPopup = false
-                    this.listData = this.listData.filter((vehicle) => vehicle.id !== id)
+                    this.Search()
                     this.$notify({
                         type: 'success',
                         title: 'Delete Vehicle',
@@ -598,7 +598,6 @@ export default {
         },
         onSearchInput(searchValue) {
             this.searchValue = searchValue
-            console.log('onsearch', searchValue)
             clearTimeout(this.timeOutId) // xóa bỏ setTimeout() trước đó (nếu có)
             this.timeOutId = setTimeout(() => {
                 this.Search()
@@ -651,7 +650,6 @@ export default {
         },
         FilterBox(option) {
             this.currentSelected = option
-            console.log('filterbox', this.currentSelected)
             this.Search()
         },
         checkValidateInput(index, value, type) {

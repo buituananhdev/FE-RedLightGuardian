@@ -294,7 +294,6 @@ export default {
         },
         async fetchData() {
             try {
-                console.log('pasge', this.pageParam)
                 const res = await getAllUsers(this.pageParam)
                 this.meta = res.data.meta
                 this.listData = res.data.data
@@ -316,9 +315,9 @@ export default {
             const id = localStorage.getItem('idDelete')
             try {
                 const res = await deleteUser(id)
+                this.isShowDeleteVerifiedPopup = false
                 if (res.data.status === 'success') {
-                    this.isShowDeleteVerifiedPopup = false
-                    this.listData = this.listData.filter((user) => user.id !== id)
+                    this.Search()
                     this.$notify({
                         type: 'success',
                         title: 'Xóa Người dùng',
@@ -341,12 +340,14 @@ export default {
                 const res = await updateUser(id, this.currentUser)
                 if (res.data.status === 'success') {
                     this.isEdit = false
+                    this.isShowDetail = false
                     this.$notify({
                         type: 'success',
                         title: 'Cập nhật Người dùng',
                         text: 'Cập nhật người dùng thành công!',
                     })
                 }
+                this.Search()
             } catch (error) {
                 console.error(error)
                 this.$notify({
@@ -368,19 +369,14 @@ export default {
         },
         hiddenPopup() {
             this.isShowPopup = false
+            // this.validateInput = false
         },
         async createUser() {
             try {
                 if (this.currentUser.password !== this.currentUser.confirm) {
-                    alert('hii')
-                    console.log('1', this.currentUser.password)
-                    console.log('2', this.currentUser.old)
                     this.isDifferent = true
                     return
                 } else {
-                    alert('haa')
-                    console.log('1', this.currentUser.password)
-                    console.log('2', this.currentUser.old)
                     this.isDifferent = false
                     this.isShowPopup = false
                     const res = await addUser(this.currentUser)
