@@ -41,3 +41,7 @@ export const updateViolation = async (id, newViolation) => {
 export const addViolation = async (newViolation) => {
     return await axiosApiInstance.post(`/violations`, newViolation)
 }
+
+export const updateStatusViolation = async (id, status) => {
+    return await axiosApiInstance.patch(`/violations/${id}`, { status: status })
+}
