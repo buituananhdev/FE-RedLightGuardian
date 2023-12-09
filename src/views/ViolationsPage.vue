@@ -237,7 +237,7 @@
 </template>
 
 <script>
-import { getAllViolations, deleteViolation, getSingleViolation, addViolation } from '@/services/violation.service'
+import { getAllViolations, getSingleViolation, updateStatusViolation } from '@/services/violation.service'
 import SelectBox from '@/components/commons/SelectBox.vue'
 export default {
     components: { SelectBox },
@@ -286,6 +286,7 @@ export default {
                 key: 'violatedate',
                 name: 'Ngày vi phạm',
             },
+            selectedStatus: {},
             optionsStatus: [
                 {
                     key: 'paid fine',
@@ -328,7 +329,6 @@ export default {
                 },
             ],
             validateInput: [],
-            currentStatusSelected: { status: 'Chưa nộp', placeholder: 'Select' },
         }
     },
     computed: {
@@ -386,6 +386,7 @@ export default {
         async fetchData() {
             try {
                 const res = await getAllViolations(this.pageParam)
+                console.log('dataaaaaa', res.data.data)
                 res.data.data.forEach((item) => {
                     // Chuyển đổi giá trị status từ chuỗi thành đối tượng
                     item.status = this.convertStatusToObject(item.status)
@@ -406,34 +407,52 @@ export default {
                     return { key: 'unpaid fine', status: 'Chưa nộp' }
                 case 'overdue':
                     return { key: 'overdue', status: 'Quá hạn' }
+                case 'cancel':
+                    return { key: 'cancel', status: 'Hủy bỏ' }
                 // Xử lý trạng thái khác nếu cần
                 default:
                     return { key: status, status: status }
             }
         },
-        async deleteViolation() {
-            const id = localStorage.getItem('idViolation')
-            try {
-                const res = await deleteViolation(id)
-                if (res.data.status === 'success') {
-                    this.isShowDeleteVerifiedPopup = false
-                    this.Search()
-                    this.$notify({
-                        type: 'success',
-                        title: 'Delete Violation',
-                        text: 'Delete violation successfully!',
-                    })
-                }
-            } catch (error) {
-                console.error(error)
-                this.$notify({
-                    type: 'error',
-                    title: 'Delete Violation',
-                    text: 'Delete violation failed!',
-                    duration: 1000,
-                })
+        convertStatusToObjectVie(status) {
+            // Xử lý để chuyển đổi chuỗi status thành đối tượng
+            switch (status) {
+                case 'Đã nộp':
+                    return { key: 'paid fine', status: 'Đã nộp' }
+                case 'Chưa nộp':
+                    return { key: 'unpaid fine', status: 'Chưa nộp' }
+                case 'Quá hạn':
+                    return { key: 'overdue', status: 'Quá hạn' }
+                case 'Hủy bỏ':
+                    return { key: 'cancel', status: 'Hủy bỏ' }
+                // Xử lý trạng thái khác nếu cần
+                default:
+                    return { key: status, status: status }
             }
         },
+        // async deleteViolation() {
+        //     const id = localStorage.getItem('idViolation')
+        //     try {
+        //         const res = await deleteViolation(id)
+        //         if (res.data.status === 'success') {
+        //             this.isShowDeleteVerifiedPopup = false
+        //             this.Search()
+        //             this.$notify({
+        //                 type: 'success',
+        //                 title: 'Delete Violation',
+        //                 text: 'Delete violation successfully!',
+        //             })
+        //         }
+        //     } catch (error) {
+        //         console.error(error)
+        //         this.$notify({
+        //             type: 'error',
+        //             title: 'Delete Violation',
+        //             text: 'Delete violation failed!',
+        //             duration: 1000,
+        //         })
+        //     }
+        // },
         async getSingleViolation(id) {
             try {
                 const res = await getSingleViolation(id)
@@ -446,23 +465,45 @@ export default {
                 console.error(error)
             }
         },
-        async createViolation() {
+        // async createViolation() {
+        //     try {
+        //         const res = await addViolation(this.currentViolation)
+        //         if (res.data.status === 'success') {
+        //             this.isShowPopup = false
+        //             this.$notify({
+        //                 type: 'success',
+        //                 title: 'Add Violation',
+        //                 text: 'Add violation successfully!',
+        //             })
+        //         }
+        //     } catch (error) {
+        //         console.error(error)
+        //         this.$notify({
+        //             type: 'error',
+        //             title: 'Add Violation',
+        //             text: 'Add violation failed!',
+        //             duration: 1000,
+        //         })
+        //     }
+        // },
+        async updateStatusViolation() {
+            const id = localStorage.getItem('idViolation')
+            console.log('new status violation', this.selectedStatus.key)
             try {
-                const res = await addViolation(this.currentViolation)
+                const res = await updateStatusViolation(id, this.selectedStatus.key)
                 if (res.data.status === 'success') {
-                    this.isShowPopup = false
                     this.$notify({
                         type: 'success',
-                        title: 'Add Violation',
-                        text: 'Add violation successfully!',
+                        title: 'Update Violation',
+                        text: 'Update violation successfully!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Add Violation',
-                    text: 'Add violation failed!',
+                    title: 'Update Violation',
+                    text: 'Update violation failed!',
                     duration: 1000,
                 })
             }
@@ -506,9 +547,11 @@ export default {
                     this.startDateParam,
                     this.endDateParam
                 )
+                console.log(res.data.data[1])
                 res.data.data.forEach((item) => {
                     // Chuyển đổi giá trị status từ chuỗi thành đối tượng
                     item.status = this.convertStatusToObject(item.status)
+                    console.log('status', item.status)
                 })
                 this.listData = res.data.data
                 this.meta = res.data.meta
@@ -597,15 +640,23 @@ export default {
         },
         updateStatus(selected, option) {
             const oldStatus = selected.status
-            selected.status = option
+            console.log('key', option)
+            const newOption = this.convertStatusToObject(option)
+            selected.key = option
+            selected.status = newOption.status
+            this.selectedStatus = selected
+            console.log('newwwwwwwww', newOption)
             this.onChangeStatus(oldStatus, selected)
         },
         onChangeStatus(oldStatus, selected) {
+            // const id = localStorage.getItem('idViolation')
             if (!selected.status) {
                 return
             }
             alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
-            this.currentStatusSelected = selected
+            // this.currentStatusSelected = selected
+            console.log('id, status', selected.key)
+            this.updateStatusViolation()
         },
         // async updateOptionsStatusColor() {
         //     try {
