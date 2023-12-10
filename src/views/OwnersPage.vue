@@ -184,7 +184,6 @@
                             <span class="error-message" v-if="validateInput[7]"
                                 >Vui lòng nhập email đúng định dạng.</span
                             >
-                            {{ currentOwner.email }}
                         </div>
                     </template>
                 </popup-view>
