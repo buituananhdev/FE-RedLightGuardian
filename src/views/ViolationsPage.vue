@@ -93,6 +93,7 @@
                                 :selectedProps="item.status"
                                 :options="optionsStatusColor"
                                 @ChangeStatus="updateStatus"
+                                @click="currentViolationID = item.id"
                             ></select-box>
                         </div>
                     </div>
@@ -138,6 +139,20 @@
                     </div>
                 </template>
             </panel-view>
+            <full-modal v-if="alert.isShowModal" @close-modal="resetAlert">
+                <popup-view
+                    :title="alert.title"
+                    :content="alert.content"
+                    :typeModal="alert.typeModal"
+                    :isButtonCancel="alert.isButtonCancel"
+                    :isButtonOk="alert.isButtonOk"
+                    :buttonOkContent="alert.buttonOkContent"
+                    :buttonCancelContent="alert.buttonCancelContent"
+                    @onOk="alert.currentFunctionOk"
+                    @onCancel="alert.currentFunctionCancel"
+                />
+            </full-modal>
+
             <!-- <full-modal v-if="isShowPopup">
                 <popup-view
                     title="Create Violation"
@@ -269,6 +284,7 @@ export default {
                     width: 20,
                 },
             ],
+            currentViolationID: '',
             listData: [],
             currentViolation: {},
             isEdit: false,
@@ -276,6 +292,7 @@ export default {
             title: 'Chi tiết',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
+            isShowChangeStatusVerified: false,
             meta: [],
             currentPage: 1,
             isHaveContent: false,
@@ -287,6 +304,7 @@ export default {
                 name: 'Ngày vi phạm',
             },
             selectedStatus: {},
+            oldStatus: '',
             optionsStatus: [
                 {
                     key: 'paid fine',
@@ -329,6 +347,18 @@ export default {
                 },
             ],
             validateInput: [],
+            alert: {
+                isShowModal: false,
+                title: '',
+                content: '',
+                typeModal: 'confirm',
+                buttonOkContent: 'Đóng',
+                isButtonOk: true,
+                isButtonCancel: true,
+                currentFunctionOk: null,
+                currentFunctionCancel: null,
+                options: null,
+            },
         }
     },
     computed: {
@@ -465,6 +495,15 @@ export default {
                 console.error(error)
             }
         },
+        async getSingleViolationId(id) {
+            try {
+                const res = await getSingleViolation(id)
+                this.currentViolation.id = res.data.data.id
+                localStorage.setItem('idViolation', this.currentViolation.id)
+            } catch (error) {
+                console.error(error)
+            }
+        },
         // async createViolation() {
         //     try {
         //         const res = await addViolation(this.currentViolation)
@@ -486,28 +525,6 @@ export default {
         //         })
         //     }
         // },
-        async updateStatusViolation() {
-            const id = localStorage.getItem('idViolation')
-            console.log('new status violation', this.selectedStatus.key)
-            try {
-                const res = await updateStatusViolation(id, this.selectedStatus.key)
-                if (res.data.status === 'success') {
-                    this.$notify({
-                        type: 'success',
-                        title: 'Update Violation',
-                        text: 'Update violation successfully!',
-                    })
-                }
-            } catch (error) {
-                console.error(error)
-                this.$notify({
-                    type: 'error',
-                    title: 'Update Violation',
-                    text: 'Update violation failed!',
-                    duration: 1000,
-                })
-            }
-        },
         closePanelView() {
             this.isShowDetail = false
             this.isEdit = false
@@ -526,6 +543,9 @@ export default {
         },
         hiddenDeleteVerifiedPopup() {
             this.isShowDeleteVerifiedPopup = false
+        },
+        hiddenChangeStatusVerifiedPopup() {
+            this.isShowChangeStatusVerified = false
         },
         formatDateTime(timestamp) {
             // Chuyển timestamp thành đối tượng Date
@@ -609,7 +629,9 @@ export default {
             const year = date.getFullYear()
             return `${year}-${month}-${day}`
         },
-        changeStatus(option) {
+        changeStatus(now, after) {
+            // now -> after
+
             this.status = option
             this.Search()
         },
@@ -640,53 +662,74 @@ export default {
         },
         updateStatus(selected, option) {
             const oldStatus = selected.status
-            console.log('key', option)
-            const newOption = this.convertStatusToObject(option)
-            selected.key = option
-            selected.status = newOption.status
-            this.selectedStatus = selected
-            console.log('newwwwwwwww', newOption)
-            this.onChangeStatus(oldStatus, selected)
+            const newStatus = this.convertStatusToObject(option)
+
+            console.log('now', selected)
+            console.log('after', newStatus)
+            this.onChangeStatus(oldStatus, newStatus)
         },
         onChangeStatus(oldStatus, selected) {
-            // const id = localStorage.getItem('idViolation')
             if (!selected.status) {
                 return
             }
-            alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
-            // this.currentStatusSelected = selected
-            console.log('id, status', selected.key)
-            this.updateStatusViolation()
+            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa', selected)
+            const update = async () => {
+                try {
+                    const res = await updateStatusViolation(this.currentViolationID, selected.key)
+                    if (res.data.status === 'success') {
+                        this.$notify({
+                            type: 'success',
+                            title: 'Update Violation',
+                            text: 'Update violation successfully!',
+                        })
+                        let index = this.listData.findIndex((x) => (x.id = this.currentViolationID))
+                        if (index !== -1) {
+                            this.listData[index].status = selected
+                        }
+                    }
+                } catch (err) {
+                    console.error(err)
+                    this.$notify({
+                        type: 'error',
+                        title: 'Update Violation',
+                        text: 'Update violation failed!',
+                        duration: 1000,
+                    })
+                }
+                this.alert.isShowModal = false
+            }
+
+            this.alert = {
+                ...this.alert,
+                ...{
+                    isShowModal: true,
+                    isShowLogo: false,
+                    title: 'Notification',
+                    content: `Đổi từ trạng thái ${oldStatus} thành ${selected.status} ?`,
+                    buttonOkContent: 'Ok',
+                    currentFunctionOk: update,
+                    currentFunctionCancel: this.resetAlert,
+                    options: {
+                        currentTask: selected,
+                        statusAfterChange: selected.status,
+                    },
+                },
+            }
         },
-        // async updateOptionsStatusColor() {
-        //     try {
-        //         const getAllResponse = await getAllViolations(this.pageParam)
-        //         const uniqueStatusValues = [...new Set(getAllResponse.data.data.map((item) => item.status))]
-        //         const updatedOptionsStatusColor = uniqueStatusValues.map((status) => {
-        //             let label = ''
-        //             switch (status) {
-        //                 case 'paid fine':
-        //                     label = 'Đã nộp'
-        //                     break
-        //                 case 'unpaid fine':
-        //                     label = 'Chưa nộp'
-        //                     break
-        //                 case 'overdue':
-        //                     label = 'Quá hạn'
-        //                     break
-        //                 default:
-        //                     label = status
-        //                     break
-        //             }
-        //             return { key: status, status: label }
-        //         })
-        //         this.optionsStatusColor = updatedOptionsStatusColor
-        //         console.log(this.optionsStatusColor)
-        //     } catch (error) {
-        //         console.error('Error fetching violations:', error)
-        //         // Xử lý lỗi nếu có
-        //     }
-        // },
+
+        resetAlert() {
+            this.alert = {
+                isShowModal: false,
+                title: '',
+                content: '',
+                typeModal: 'confirm',
+                isButtonOk: true,
+                isButtonCancel: true,
+                currentFunctionOk: null,
+                currentFunctionCancel: null,
+                options: null,
+            }
+        },
     },
 }
 </script>

@@ -50,6 +50,9 @@ export default {
         selectedProps() {
             this.selected = this.selectedProps
         },
+        selected() {
+            console.log("changeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        }
     },
     methods: {
         ChangeOption(option) {
@@ -65,10 +68,6 @@ export default {
                     case 'status':
                         if (option != this.selected.status) {
                             this.$emit('ChangeStatus', this.selected, option.key)
-                            // if (this.type_select_box == 'status-white') {
-                            //     this.selected.status = option.status
-                            // }
-                            this.selected.key = option.key
                         }
                         break
                     default:
