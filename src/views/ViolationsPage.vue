@@ -609,7 +609,9 @@ export default {
             const year = date.getFullYear()
             return `${year}-${month}-${day}`
         },
-        changeStatus(option) {
+        changeStatus(now, after) {
+            // now -> after
+            
             this.status = option
             this.Search()
         },
