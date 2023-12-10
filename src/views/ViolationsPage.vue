@@ -93,6 +93,7 @@
                                 :selectedProps="item.status"
                                 :options="optionsStatusColor"
                                 @ChangeStatus="updateStatus"
+                                @click="getSingleViolationId(item.id)"
                             ></select-box>
                         </div>
                     </div>
@@ -138,6 +139,19 @@
                     </div>
                 </template>
             </panel-view>
+            <popup-view
+                v-if="isShowChangeStatusVerified"
+                title="Xác nhận thay đổi trạng thái vi phạm"
+                class="container-violation__page__popup"
+                @on-cancel="hiddenChangeStatusVerifiedPopup()"
+                @on-ok="updateStatusViolation()"
+            >
+                <template #popupbody>
+                    <div class="container-violation__page__popup__content">
+                        <span>Bạn có chắc chắn muốn thay đổi trạng thái không?</span>
+                    </div>
+                </template>
+            </popup-view>
             <!-- <full-modal v-if="isShowPopup">
                 <popup-view
                     title="Create Violation"
@@ -276,6 +290,7 @@ export default {
             title: 'Chi tiết',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
+            isShowChangeStatusVerified: false,
             meta: [],
             currentPage: 1,
             isHaveContent: false,
@@ -287,6 +302,7 @@ export default {
                 name: 'Ngày vi phạm',
             },
             selectedStatus: {},
+            oldStatus: '',
             optionsStatus: [
                 {
                     key: 'paid fine',
@@ -465,6 +481,15 @@ export default {
                 console.error(error)
             }
         },
+        async getSingleViolationId(id) {
+            try {
+                const res = await getSingleViolation(id)
+                this.currentViolation.id = res.data.data.id
+                localStorage.setItem('idViolation', this.currentViolation.id)
+            } catch (error) {
+                console.error(error)
+            }
+        },
         // async createViolation() {
         //     try {
         //         const res = await addViolation(this.currentViolation)
@@ -488,10 +513,11 @@ export default {
         // },
         async updateStatusViolation() {
             const id = localStorage.getItem('idViolation')
-            console.log('new status violation', this.selectedStatus.key)
+            console.log('new status violation', id + this.selectedStatus.key)
             try {
                 const res = await updateStatusViolation(id, this.selectedStatus.key)
                 if (res.data.status === 'success') {
+                    this.isShowChangeStatusVerified = false
                     this.$notify({
                         type: 'success',
                         title: 'Update Violation',
@@ -499,6 +525,7 @@ export default {
                     })
                 }
             } catch (error) {
+                this.isShowChangeStatusVerified = false
                 console.error(error)
                 this.$notify({
                     type: 'error',
@@ -526,6 +553,9 @@ export default {
         },
         hiddenDeleteVerifiedPopup() {
             this.isShowDeleteVerifiedPopup = false
+        },
+        hiddenChangeStatusVerifiedPopup() {
+            this.isShowChangeStatusVerified = false
         },
         formatDateTime(timestamp) {
             // Chuyển timestamp thành đối tượng Date
@@ -641,54 +671,26 @@ export default {
             }
         },
         updateStatus(selected, option) {
-            const oldStatus = selected.status
-            console.log('key', option)
             const newOption = this.convertStatusToObject(option)
+            this.oldStatus = selected.status
+            console.log('key', option)
             selected.key = option
             selected.status = newOption.status
             this.selectedStatus = selected
             console.log('newwwwwwwww', newOption)
-            this.onChangeStatus(oldStatus, selected)
+            this.onChangeStatus(selected)
         },
-        onChangeStatus(oldStatus, selected) {
+        onChangeStatus(selected) {
             // const id = localStorage.getItem('idViolation')
             if (!selected.status) {
                 return
             }
-            alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
+            this.isShowChangeStatusVerified = true
+            // alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
             // this.currentStatusSelected = selected
-            console.log('id, status', selected.key)
-            this.updateStatusViolation()
+            console.log('id, status', this.currentViolation.id + selected.key)
+            // this.updateStatusViolation()
         },
-        // async updateOptionsStatusColor() {
-        //     try {
-        //         const getAllResponse = await getAllViolations(this.pageParam)
-        //         const uniqueStatusValues = [...new Set(getAllResponse.data.data.map((item) => item.status))]
-        //         const updatedOptionsStatusColor = uniqueStatusValues.map((status) => {
-        //             let label = ''
-        //             switch (status) {
-        //                 case 'paid fine':
-        //                     label = 'Đã nộp'
-        //                     break
-        //                 case 'unpaid fine':
-        //                     label = 'Chưa nộp'
-        //                     break
-        //                 case 'overdue':
-        //                     label = 'Quá hạn'
-        //                     break
-        //                 default:
-        //                     label = status
-        //                     break
-        //             }
-        //             return { key: status, status: label }
-        //         })
-        //         this.optionsStatusColor = updatedOptionsStatusColor
-        //         console.log(this.optionsStatusColor)
-        //     } catch (error) {
-        //         console.error('Error fetching violations:', error)
-        //         // Xử lý lỗi nếu có
-        //     }
-        // },
     },
 }
 </script>
