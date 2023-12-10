@@ -93,7 +93,7 @@
                                 :selectedProps="item.status"
                                 :options="optionsStatusColor"
                                 @ChangeStatus="updateStatus"
-                                @click="getSingleViolationId(item.id)"
+                                @click="currentViolationID = item.id"
                             ></select-box>
                         </div>
                     </div>
@@ -139,19 +139,20 @@
                     </div>
                 </template>
             </panel-view>
-            <popup-view
-                v-if="isShowChangeStatusVerified"
-                title="Xác nhận thay đổi trạng thái vi phạm"
-                class="container-violation__page__popup"
-                @on-cancel="hiddenChangeStatusVerifiedPopup()"
-                @on-ok="updateStatusViolation()"
-            >
-                <template #popupbody>
-                    <div class="container-violation__page__popup__content">
-                        <span>Bạn có chắc chắn muốn thay đổi trạng thái không?</span>
-                    </div>
-                </template>
-            </popup-view>
+            <full-modal v-if="alert.isShowModal" @close-modal="resetAlert">
+                <popup-view
+                    :title="alert.title"
+                    :content="alert.content"
+                    :typeModal="alert.typeModal"
+                    :isButtonCancel="alert.isButtonCancel"
+                    :isButtonOk="alert.isButtonOk"
+                    :buttonOkContent="alert.buttonOkContent"
+                    :buttonCancelContent="alert.buttonCancelContent"
+                    @onOk="alert.currentFunctionOk"
+                    @onCancel="alert.currentFunctionCancel"
+                />
+            </full-modal>
+
             <!-- <full-modal v-if="isShowPopup">
                 <popup-view
                     title="Create Violation"
@@ -283,6 +284,7 @@ export default {
                     width: 20,
                 },
             ],
+            currentViolationID: '',
             listData: [],
             currentViolation: {},
             isEdit: false,
@@ -345,6 +347,18 @@ export default {
                 },
             ],
             validateInput: [],
+            alert: {
+                isShowModal: false,
+                title: '',
+                content: '',
+                typeModal: 'confirm',
+                buttonOkContent: 'Đóng',
+                isButtonOk: true,
+                isButtonCancel: true,
+                currentFunctionOk: null,
+                currentFunctionCancel: null,
+                options: null,
+            },
         }
     },
     computed: {
@@ -511,30 +525,6 @@ export default {
         //         })
         //     }
         // },
-        async updateStatusViolation() {
-            const id = localStorage.getItem('idViolation')
-            console.log('new status violation', id + this.selectedStatus.key)
-            try {
-                const res = await updateStatusViolation(id, this.selectedStatus.key)
-                if (res.data.status === 'success') {
-                    this.isShowChangeStatusVerified = false
-                    this.$notify({
-                        type: 'success',
-                        title: 'Update Violation',
-                        text: 'Update violation successfully!',
-                    })
-                }
-            } catch (error) {
-                this.isShowChangeStatusVerified = false
-                console.error(error)
-                this.$notify({
-                    type: 'error',
-                    title: 'Update Violation',
-                    text: 'Update violation failed!',
-                    duration: 1000,
-                })
-            }
-        },
         closePanelView() {
             this.isShowDetail = false
             this.isEdit = false
@@ -641,7 +631,7 @@ export default {
         },
         changeStatus(now, after) {
             // now -> after
-            
+
             this.status = option
             this.Search()
         },
@@ -671,25 +661,74 @@ export default {
             }
         },
         updateStatus(selected, option) {
-            const newOption = this.convertStatusToObject(option)
-            this.oldStatus = selected.status
-            console.log('key', option)
-            selected.key = option
-            selected.status = newOption.status
-            this.selectedStatus = selected
-            console.log('newwwwwwwww', newOption)
-            this.onChangeStatus(selected)
+            const oldStatus = selected.status
+            const newStatus = this.convertStatusToObject(option)
+
+            console.log('now', selected)
+            console.log('after', newStatus)
+            this.onChangeStatus(oldStatus, newStatus)
         },
-        onChangeStatus(selected) {
-            // const id = localStorage.getItem('idViolation')
+        onChangeStatus(oldStatus, selected) {
             if (!selected.status) {
                 return
             }
-            this.isShowChangeStatusVerified = true
-            // alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
-            // this.currentStatusSelected = selected
-            console.log('id, status', this.currentViolation.id + selected.key)
-            // this.updateStatusViolation()
+            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa', selected)
+            const update = async () => {
+                try {
+                    const res = await updateStatusViolation(this.currentViolationID, selected.key)
+                    if (res.data.status === 'success') {
+                        this.$notify({
+                            type: 'success',
+                            title: 'Update Violation',
+                            text: 'Update violation successfully!',
+                        })
+                        let index = this.listData.findIndex((x) => (x.id = this.currentViolationID))
+                        if (index !== -1) {
+                            this.listData[index].status = selected
+                        }
+                    }
+                } catch (err) {
+                    console.error(err)
+                    this.$notify({
+                        type: 'error',
+                        title: 'Update Violation',
+                        text: 'Update violation failed!',
+                        duration: 1000,
+                    })
+                }
+                this.alert.isShowModal = false
+            }
+
+            this.alert = {
+                ...this.alert,
+                ...{
+                    isShowModal: true,
+                    isShowLogo: false,
+                    title: 'Notification',
+                    content: `Đổi từ trạng thái ${oldStatus} thành ${selected.status} ?`,
+                    buttonOkContent: 'Ok',
+                    currentFunctionOk: update,
+                    currentFunctionCancel: this.resetAlert,
+                    options: {
+                        currentTask: selected,
+                        statusAfterChange: selected.status,
+                    },
+                },
+            }
+        },
+
+        resetAlert() {
+            this.alert = {
+                isShowModal: false,
+                title: '',
+                content: '',
+                typeModal: 'confirm',
+                isButtonOk: true,
+                isButtonCancel: true,
+                currentFunctionOk: null,
+                currentFunctionCancel: null,
+                options: null,
+            }
         },
     },
 }
