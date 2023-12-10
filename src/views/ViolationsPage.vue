@@ -54,19 +54,46 @@
                         :key="item.id"
                         class="container-violation__page__table__row"
                         :class="!(index % 2) ? 'bold' : ''"
-                        @click="getSingleViolation(item.id)"
                     >
-                        <div class="container-violation__page__table__row__cell id">
+                        <div
+                            class="container-violation__page__table__row__cell id"
+                            @click="getSingleViolation(item.id)"
+                        >
                             <span>{{ index + 1 }}</span>
                         </div>
-                        <div class="container-violation__page__table__row__cell type">
-                            <span>{{ item.type }}</span>
+                        <div
+                            class="container-violation__page__table__row__cell license"
+                            @click="getSingleViolation(item.id)"
+                        >
+                            <span>{{ item.licensePlate }}</span>
                         </div>
-                        <div class="container-violation__page__table__row__cell deadline">
+                        <div
+                            class="container-violation__page__table__row__cell location"
+                            @click="getSingleViolation(item.id)"
+                        >
+                            <span>{{ item.location }}</span>
+                        </div>
+                        <div
+                            class="container-violation__page__table__row__cell time"
+                            @click="getSingleViolation(item.id)"
+                        >
+                            <span>{{ formatDateTime(item.createdAt) }}</span>
+                        </div>
+                        <div
+                            class="container-violation__page__table__row__cell deadline"
+                            @click="getSingleViolation(item.id)"
+                        >
                             <span>{{ formatDateTime(item.deadline) }}</span>
                         </div>
                         <div class="container-violation__page__table__row__cell status">
-                            <span>{{ item.status }}</span>
+                            <!-- <span>{{ item.status }}</span> -->
+                            <select-box
+                                :type_select_box="'status-color'"
+                                :label="'status'"
+                                :selectedProps="item.status"
+                                :options="optionsStatusColor"
+                                @ChangeStatus="updateStatus"
+                            ></select-box>
                         </div>
                     </div>
                 </template>
@@ -81,48 +108,32 @@
                 <template #pbody>
                     <div class="container-violation__page__panel__content">
                         <div class="label-input">
+                            <span>Biển số xe vi phạm:</span>
+                            <input v-model="currentViolation.licensePlate" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Vị trí vi phạm:</span>
+                            <input v-model="currentViolation.location" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
                             <span>Loại vi phạm:</span>
-                            <input
-                                v-model="currentViolation.type"
-                                type="text"
-                                :disabled="!isEdit"
-                                @blur="checkValidateInput(0, currentViolation.type, '')"
-                                @focus="validateInput[0] = false"
-                            />
-                            <span class="error-message" v-if="validateInput[0]">Vui lòng nhập loại vi phạm.</span>
+                            <input v-model="currentViolation.type" type="text" :disabled="!isEdit" />
+                        </div>
+                        <div class="label-input">
+                            <span>Thời gian vi phạm:</span>
+                            <input v-model="currentViolation.createdAt" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
                             <span>Thời hạn cuối cùng:</span>
-                            <input
-                                v-model="currentViolation.deadline"
-                                type="text"
-                                :disabled="!isEdit"
-                                @blur="checkValidateInput(1, currentViolation.deadline, '')"
-                                @focus="validateInput[1] = false"
-                            />
-                            <span class="error-message" v-if="validateInput[1]">Vui lòng nhập thời hạn cuối cùng.</span>
+                            <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
                             <span>Trạng thái:</span>
-                            <input
-                                v-model="currentViolation.status"
-                                type="text"
-                                :disabled="!isEdit"
-                                @blur="checkValidateInput(2, currentViolation.status, '')"
-                                @focus="validateInput[2] = false"
-                            />
-                            <span class="error-message" v-if="validateInput[2]">Vui lòng nhập trạng thái.</span>
+                            <input v-model="currentViolation.status" type="text" :disabled="!isEdit" />
                         </div>
                         <div class="label-input">
-                            <span v-if="isEdit">Đường dẫn hình ảnh vi phạm:</span>
-                            <span v-if="!isEdit">Hình ảnh phương tiện vi phạm:</span>
-                            <input v-if="isEdit" v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit" />
-                            <img
-                                v-else
-                                :src="currentViolation.imageUrl"
-                                :alt="currentViolation.type"
-                                :disabled="!isEdit"
-                            />
+                            <span>Hình ảnh phương tiện vi phạm:</span>
+                            <img :src="currentViolation.imageUrl" :alt="currentViolation.type" :disabled="!isEdit" />
                         </div>
                     </div>
                 </template>
@@ -226,22 +237,32 @@
 </template>
 
 <script>
-import { getAllViolations, deleteViolation, getSingleViolation, addViolation } from '@/services/violation.service'
+import { getAllViolations, getSingleViolation, updateStatusViolation } from '@/services/violation.service'
+import SelectBox from '@/components/commons/SelectBox.vue'
 export default {
+    components: { SelectBox },
     data() {
         return {
             listHeader: [
                 {
                     title: 'STT',
-                    width: 20,
+                    width: 5,
                 },
                 {
-                    title: 'Loại vi phạm',
-                    width: 20,
+                    title: 'Biển số',
+                    width: 10,
+                },
+                {
+                    title: 'Vị trí vi phạm',
+                    width: 15,
+                },
+                {
+                    title: 'Thời gian vi phạm',
+                    width: 25,
                 },
                 {
                     title: 'Hạn xử lý',
-                    width: 40,
+                    width: 25,
                 },
                 {
                     title: 'Trạng thái',
@@ -265,6 +286,7 @@ export default {
                 key: 'violatedate',
                 name: 'Ngày vi phạm',
             },
+            selectedStatus: {},
             optionsStatus: [
                 {
                     key: 'paid fine',
@@ -281,6 +303,20 @@ export default {
                 // {
                 //     name: 'Hủy bỏ',
                 // },
+            ],
+            optionsStatusColor: [
+                {
+                    key: 'paid fine',
+                    status: 'Đã nộp',
+                },
+                {
+                    key: 'unpaid fine',
+                    status: 'Chưa nộp',
+                },
+                {
+                    key: 'overdue',
+                    status: 'Quá hạn',
+                },
             ],
             optionsType: [
                 {
@@ -350,87 +386,124 @@ export default {
         async fetchData() {
             try {
                 const res = await getAllViolations(this.pageParam)
+                console.log('dataaaaaa', res.data.data)
+                res.data.data.forEach((item) => {
+                    // Chuyển đổi giá trị status từ chuỗi thành đối tượng
+                    item.status = this.convertStatusToObject(item.status)
+                    console.log('status', item.status)
+                })
                 this.listData = res.data.data
                 this.meta = res.data.meta
             } catch (error) {
                 console.error(error)
             }
         },
-        async deleteViolation() {
-            const id = localStorage.getItem('idViolation')
-            try {
-                const res = await deleteViolation(id)
-                if (res.data.status === 'success') {
-                    this.isShowDeleteVerifiedPopup = false
-                    this.Search()
-                    this.$notify({
-                        type: 'success',
-                        title: 'Delete Violation',
-                        text: 'Delete violation successfully!',
-                    })
-                }
-            } catch (error) {
-                console.error(error)
-                this.$notify({
-                    type: 'error',
-                    title: 'Delete Violation',
-                    text: 'Delete violation failed!',
-                    duration: 1000,
-                })
+        convertStatusToObject(status) {
+            // Xử lý để chuyển đổi chuỗi status thành đối tượng
+            switch (status) {
+                case 'paid fine':
+                    return { key: 'paid fine', status: 'Đã nộp' }
+                case 'unpaid fine':
+                    return { key: 'unpaid fine', status: 'Chưa nộp' }
+                case 'overdue':
+                    return { key: 'overdue', status: 'Quá hạn' }
+                case 'cancel':
+                    return { key: 'cancel', status: 'Hủy bỏ' }
+                // Xử lý trạng thái khác nếu cần
+                default:
+                    return { key: status, status: status }
             }
         },
-        async getSingleViolation(id) {
-            try {
-                const res = await getSingleViolation(id)
-                this.currentViolation = res.data.data
-                this.currentViolation.deadline = this.formatDateTime(this.currentViolation.deadline)
-                localStorage.setItem('idViolation', this.currentViolation.id)
-                this.isShowDetail = true
-            } catch (error) {
-                console.error(error)
+        convertStatusToObjectVie(status) {
+            // Xử lý để chuyển đổi chuỗi status thành đối tượng
+            switch (status) {
+                case 'Đã nộp':
+                    return { key: 'paid fine', status: 'Đã nộp' }
+                case 'Chưa nộp':
+                    return { key: 'unpaid fine', status: 'Chưa nộp' }
+                case 'Quá hạn':
+                    return { key: 'overdue', status: 'Quá hạn' }
+                case 'Hủy bỏ':
+                    return { key: 'cancel', status: 'Hủy bỏ' }
+                // Xử lý trạng thái khác nếu cần
+                default:
+                    return { key: status, status: status }
             }
         },
-        // async updateViolation() {
+        // async deleteViolation() {
         //     const id = localStorage.getItem('idViolation')
         //     try {
-        //         const res = await updateViolation(id, this.currentViolation)
+        //         const res = await deleteViolation(id)
         //         if (res.data.status === 'success') {
-        //             this.isShowDetail = false
-        //             this.isEdit = false
-        //             this.fetchData()
+        //             this.isShowDeleteVerifiedPopup = false
+        //             this.Search()
         //             this.$notify({
         //                 type: 'success',
-        //                 title: 'Update Violation',
-        //                 text: 'Update violation successfully!',
+        //                 title: 'Delete Violation',
+        //                 text: 'Delete violation successfully!',
         //             })
         //         }
         //     } catch (error) {
         //         console.error(error)
         //         this.$notify({
         //             type: 'error',
-        //             title: 'Update Violation',
-        //             text: 'Update violation failed!',
+        //             title: 'Delete Violation',
+        //             text: 'Delete violation failed!',
         //             duration: 1000,
         //         })
         //     }
         // },
-        async createViolation() {
+        async getSingleViolation(id) {
             try {
-                const res = await addViolation(this.currentViolation)
+                const res = await getSingleViolation(id)
+                this.currentViolation = res.data.data
+                this.currentViolation.deadline = this.formatDateTime(this.currentViolation.deadline)
+                this.currentViolation.createdAt = this.formatDateTime(this.currentViolation.createdAt)
+                localStorage.setItem('idViolation', this.currentViolation.id)
+                this.isShowDetail = true
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        // async createViolation() {
+        //     try {
+        //         const res = await addViolation(this.currentViolation)
+        //         if (res.data.status === 'success') {
+        //             this.isShowPopup = false
+        //             this.$notify({
+        //                 type: 'success',
+        //                 title: 'Add Violation',
+        //                 text: 'Add violation successfully!',
+        //             })
+        //         }
+        //     } catch (error) {
+        //         console.error(error)
+        //         this.$notify({
+        //             type: 'error',
+        //             title: 'Add Violation',
+        //             text: 'Add violation failed!',
+        //             duration: 1000,
+        //         })
+        //     }
+        // },
+        async updateStatusViolation() {
+            const id = localStorage.getItem('idViolation')
+            console.log('new status violation', this.selectedStatus.key)
+            try {
+                const res = await updateStatusViolation(id, this.selectedStatus.key)
                 if (res.data.status === 'success') {
-                    this.isShowPopup = false
                     this.$notify({
                         type: 'success',
-                        title: 'Add Violation',
-                        text: 'Add violation successfully!',
+                        title: 'Update Violation',
+                        text: 'Update violation successfully!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Add Violation',
-                    text: 'Add violation failed!',
+                    title: 'Update Violation',
+                    text: 'Update violation failed!',
                     duration: 1000,
                 })
             }
@@ -474,6 +547,12 @@ export default {
                     this.startDateParam,
                     this.endDateParam
                 )
+                console.log(res.data.data[1])
+                res.data.data.forEach((item) => {
+                    // Chuyển đổi giá trị status từ chuỗi thành đối tượng
+                    item.status = this.convertStatusToObject(item.status)
+                    console.log('status', item.status)
+                })
                 this.listData = res.data.data
                 this.meta = res.data.meta
                 const query = {}
@@ -559,6 +638,55 @@ export default {
                 }
             }
         },
+        updateStatus(selected, option) {
+            const oldStatus = selected.status
+            console.log('key', option)
+            const newOption = this.convertStatusToObject(option)
+            selected.key = option
+            selected.status = newOption.status
+            this.selectedStatus = selected
+            console.log('newwwwwwwww', newOption)
+            this.onChangeStatus(oldStatus, selected)
+        },
+        onChangeStatus(oldStatus, selected) {
+            // const id = localStorage.getItem('idViolation')
+            if (!selected.status) {
+                return
+            }
+            alert('Ban co muon thay doi tu ' + oldStatus + ' sang ' + selected.status)
+            // this.currentStatusSelected = selected
+            console.log('id, status', selected.key)
+            this.updateStatusViolation()
+        },
+        // async updateOptionsStatusColor() {
+        //     try {
+        //         const getAllResponse = await getAllViolations(this.pageParam)
+        //         const uniqueStatusValues = [...new Set(getAllResponse.data.data.map((item) => item.status))]
+        //         const updatedOptionsStatusColor = uniqueStatusValues.map((status) => {
+        //             let label = ''
+        //             switch (status) {
+        //                 case 'paid fine':
+        //                     label = 'Đã nộp'
+        //                     break
+        //                 case 'unpaid fine':
+        //                     label = 'Chưa nộp'
+        //                     break
+        //                 case 'overdue':
+        //                     label = 'Quá hạn'
+        //                     break
+        //                 default:
+        //                     label = status
+        //                     break
+        //             }
+        //             return { key: status, status: label }
+        //         })
+        //         this.optionsStatusColor = updatedOptionsStatusColor
+        //         console.log(this.optionsStatusColor)
+        //     } catch (error) {
+        //         console.error('Error fetching violations:', error)
+        //         // Xử lý lỗi nếu có
+        //     }
+        // },
     },
 }
 </script>
@@ -584,10 +712,7 @@ export default {
                 gap: 20px;
                 cursor: pointer;
                 background: $neutral-100;
-                overflow: auto;
-                &:hover {
-                    opacity: 0.7;
-                }
+                overflow: visible;
                 &.bold {
                     background: $neutral-300;
                 }
@@ -603,13 +728,30 @@ export default {
                         @include text-style(14px, 150%, 400, $text-light-secondary-1, 0);
                     }
 
-                    &.type,
-                    &.status,
                     &.id {
-                        width: 20%;
+                        width: 5%;
                     }
-                    &.deadline {
-                        width: 40%;
+                    &.location {
+                        width: 15%;
+                    }
+                    &.deadline,
+                    &.time {
+                        width: 25%;
+                    }
+                    &.status {
+                        overflow: auto;
+                        width: 20%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        overflow: visible;
+                        &.status-color {
+                            position: relative;
+                            z-index: 99999;
+                        }
+                    }
+                    &.license {
+                        width: 10%;
                     }
                 }
             }

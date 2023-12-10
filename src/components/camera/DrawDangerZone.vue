@@ -1,16 +1,13 @@
 <template>
     <div class="draw-container">
         <div class="draw-container__button-list">
-            <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="saveCoordinates"
-                >Lưu Hình</button-vue
-            >
             <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="tryLoadCoordinates"
                 >Tải Tọa độ</button-vue
             >
             <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="resetDrawing"
                 >Xóa Hình</button-vue
             >
-            <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="confirmDrawing"
+            <button-vue class="draw-container__button-list__button" :type-btn="'secondary'" @click="saveCoordinates"
                 >Xác Nhận</button-vue
             >
         </div>
@@ -46,7 +43,6 @@ export default {
     },
     methods: {
         async tryLoadCoordinates() {
-            // const cameraId = 2 // Thay đổi id camera tại đây nếu cần
             try {
                 await this.getSingleCamera(2)
                 if (this.currentCamera.coordinates) {
@@ -71,12 +67,10 @@ export default {
         },
         async updateCoordinatesCamera() {
             const id = 2
-            // this.dangerZone = this.convertToCoordinates(this.dangerZone)
             console.log(id, JSON.stringify(this.dangerZone))
             try {
                 const res = await updateCoordinatesCamera(id, JSON.stringify(this.dangerZone))
                 if (res.data.status === 'success') {
-                    // this.tryLoadCoordinates()
                     this.$notify({
                         type: 'success',
                         title: 'Update Violation',
@@ -152,8 +146,7 @@ export default {
         },
         saveCoordinates() {
             if (!this.isConfirmed) {
-                alert('Vui lòng xác nhận tọa độ trước khi lưu.')
-                return
+                this.confirmDrawing()
             }
             this.roundCoordinates()
             // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
@@ -189,23 +182,6 @@ export default {
                 this.isConfirmed = true
             }
         },
-        // convertToCoordinates(points) {
-        //     var xValues = points.map(function (point) {
-        //         return point.x
-        //     })
-
-        //     var yValues = points.map(function (point) {
-        //         return point.y
-        //     })
-
-        //     var xmin = Math.min.apply(null, xValues)
-        //     var ymin = Math.min.apply(null, yValues)
-        //     var xmax = Math.max.apply(null, xValues)
-        //     var ymax = Math.max.apply(null, yValues)
-
-        //     var coordinates = [xmin, ymin, xmax, ymax]
-        //     return JSON.stringify(coordinates)
-        // },
     },
 }
 </script>
