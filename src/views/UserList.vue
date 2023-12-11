@@ -409,7 +409,7 @@ export default {
                 if (this.searchValue) {
                     query.search = this.searchValue
                 }
-                this.$router.push({ path: `/users`, query })
+                this.$router.push({ path: `/`, query })
             } catch (error) {
                 console.error(error)
             }

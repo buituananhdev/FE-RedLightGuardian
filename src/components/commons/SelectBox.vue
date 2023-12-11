@@ -272,6 +272,7 @@ export default {
         }
         &_selected {
             width: 100%;
+            padding: 0;
             @include text-style(12px, 18px, 400, $text-light-icon-secondary-1, 0);
             @include truncate(1);
             @include text-color-gradient();

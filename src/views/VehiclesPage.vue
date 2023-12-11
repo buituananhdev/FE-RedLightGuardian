@@ -15,20 +15,6 @@
                 @go-to-next-page="goToNextPage"
                 @go-to-prev-page="goToPrevPage"
             >
-                <template #fbody>
-                    <div class="container-vehicle__page__table__filter">
-                        <select-box
-                            v-model="currentSelected"
-                            :type_select_box="'status-white'"
-                            :label="'name'"
-                            :placeholder="'Chọn tên chủ xe'"
-                            :selected-props="currentSelected"
-                            :options="listOwners"
-                            @change-value-select-box="FilterBox"
-                        >
-                        </select-box>
-                    </div>
-                </template>
                 <template #tbody>
                     <div
                         v-for="(item, index) in listData"
@@ -50,7 +36,7 @@
                             <span>{{ item.owner.name }}</span>
                         </div>
                         <div class="container-vehicle__page__table__row__cell type">
-                            <span>{{ item.vehicleType }}</span>
+                            <span>{{ convertVehicleTypeToVie(item.vehicleType) }}</span>
                         </div>
                         <div class="container-vehicle__page__table__row__cell action">
                             <div class="container-vehicle__page__table__row__cell action__icon">
@@ -101,10 +87,16 @@
                         </div>
                         <div class="label-input">
                             <span>Loại phương tiện:</span>
-                            <input
+                            <select-box
                                 v-model="currentVehicle.vehicleType"
-                                type="text"
-                                :disabled="!isEdit"
+                                :type_select_box="'status-white'"
+                                :label="'name'"
+                                :selected-props="type"
+                                :options="optionsType"
+                                :placeholder="convertVehicleTypeToVie(currentVehicle.vehicleType)"
+                                :is-select="isEdit"
+                                class="select-box"
+                                @change-value-select-box="changeType"
                                 @blur="checkValidateInput(2, currentVehicle.vehicleType, '')"
                                 @focus="validateInput[2] = false"
                             />
@@ -556,14 +548,11 @@ export default {
         },
         async Search() {
             try {
-                const res = await getAllVehicles(this.pageParam, this.searchValue, this.currentSelected.id)
+                const res = await getAllVehicles(this.pageParam, this.searchValue)
                 this.listData = res.data.data
                 this.meta = res.data.meta
                 const query = {}
                 query.page = this.currentPage
-                if (this.currentSelected) {
-                    query.ownerID = this.currentSelected.id
-                }
                 if (this.searchValue) {
                     query.search = this.searchValue
                 }
@@ -594,6 +583,18 @@ export default {
                 setTimeout(() => {
                     this.showNotification = false
                 }, 3000)
+            }
+        },
+        convertVehicleTypeToVie(type) {
+            // Xử lý để chuyển đổi chuỗi status thành đối tượng
+            switch (type) {
+                case 'car':
+                    return 'Xe ô tô'
+                case 'motorcycle':
+                    return 'Xe máy'
+                // Xử lý trạng thái khác nếu cần
+                default:
+                    return ''
             }
         },
         onSearchInput(searchValue) {
@@ -647,10 +648,6 @@ export default {
             if (this.currentPage > 1) {
                 this.goToIndexPage(this.currentPage--)
             }
-        },
-        FilterBox(option) {
-            this.currentSelected = option
-            this.Search()
         },
         checkValidateInput(index, value, type) {
             if (!value) {
