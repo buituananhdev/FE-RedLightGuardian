@@ -233,16 +233,6 @@ export default {
                     status: 'Hủy bỏ',
                 },
             ],
-            optionsType: [
-                {
-                    key: 'deadline',
-                    name: 'Hạn cuối nộp phạt',
-                },
-                {
-                    key: 'violatedate',
-                    name: 'Ngày vi phạm',
-                },
-            ],
             validateInput: [],
             alert: {
                 isShowModal: false,
@@ -264,9 +254,6 @@ export default {
         },
         statusParam() {
             return this.$route.query.status
-        },
-        typeParam() {
-            return this.$route.query.type
         },
         startDateParam() {
             return this.$route.query.startDate
@@ -296,9 +283,6 @@ export default {
         this.endDate = this.endDateParam
         if (this.statusParam) {
             this.status = this.findName(this.optionsStatus, this.statusParam)
-        }
-        if (this.typeParam) {
-            this.type = this.findName(this.optionsType, this.typeParam)
         }
         this.refreshData()
     },
@@ -389,7 +373,6 @@ export default {
                 const res = await getAllViolations(
                     this.pageParam,
                     this.status.key,
-                    this.type.key,
                     this.startDateParam,
                     this.endDateParam
                 )
@@ -407,9 +390,6 @@ export default {
                 if (this.endDate) {
                     query.endDate = this.convertUnitime(this.endDate)
                 }
-                if (this.type) {
-                    query.type = this.type.key
-                }
                 if (this.status) {
                     query.status = this.status.key
                 }
@@ -426,9 +406,6 @@ export default {
             }
             if (this.endDate) {
                 query.endDate = this.endDate
-            }
-            if (this.type) {
-                query.type = this.type.name
             }
             if (this.status) {
                 query.status = this.status.name
@@ -455,10 +432,6 @@ export default {
         },
         changeStatus(option) {
             this.status = option
-            this.Search()
-        },
-        changeType(option) {
-            this.type = option
             this.Search()
         },
         findName(option, key) {
