@@ -50,9 +50,6 @@ export default {
         selectedProps() {
             this.selected = this.selectedProps
         },
-        selected() {
-            console.log("changeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-        }
     },
     methods: {
         ChangeOption(option) {
@@ -233,7 +230,7 @@ export default {
         background: #ff8800 !important;
     }
 
-    .CANCELED {
+    .cancel {
         background: #a3aed0 !important;
     }
 
@@ -245,7 +242,7 @@ export default {
         background: #e02d3c !important;
     }
 
-    .pain.fine {
+    .paid.fine {
         background: #08875d !important;
     }
 

@@ -24,21 +24,14 @@
             </div>
         </div>
     </div>
-    <PopupEditUsers v-if="isEditPopupVisible" :user="isEditPopupVisible" @close="exitPopupEdit" />
 </template>
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { authStore } from '@/stores/auth.store'
-import PopupEditUsers from '../Users/PopupEditUsers.vue'
 const isPopupVisible = ref(false)
-const isEditPopupVisible = ref(false)
 
 const togglePopup = () => {
     isPopupVisible.value = !isPopupVisible.value
-}
-
-const exitPopupEdit = () => {
-    isEditPopupVisible.value = false
 }
 
 const logout = () => {

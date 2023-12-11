@@ -24,14 +24,6 @@
                             :placeholder="'Chọn trạng thái'"
                             @ChangeValueSelectBox="changeStatus"
                         />
-                        <!-- <select-box
-                            :type_select_box="'status-white'"
-                            :label="'name'"
-                            :selected-props="type"
-                            :options="optionsType"
-                            :placeholder="'Chọn loại vi phạm'"
-                            @ChangeValueSelectBox="changeType"
-                        /> -->
                         <vue-date-picker
                             v-model="startDate"
                             :enable-time-picker="false"
@@ -152,101 +144,6 @@
                     @onCancel="alert.currentFunctionCancel"
                 />
             </full-modal>
-
-            <!-- <full-modal v-if="isShowPopup">
-                <popup-view
-                    title="Create Violation"
-                    class="container-violation__page__popup"
-                    @on-cancel="hiddenPopup"
-                    @on-ok="createViolation"
-                >
-                    <template #popupbody>
-                        <div class="container-violation__page__popup__content">
-                            <div class="container-violation__page__popup__content__box1">
-                                <div class="label-input">
-                                    <span>Loại vi phạm:</span>
-                                    <input v-model="currentViolation.type" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Thời hạn cuối cùng:</span>
-                                    <input v-model="currentViolation.deadline" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Trạng thái:</span>
-                                    <input v-model="currentViolation.status" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Mã số xe vi phạm:</span>
-                                    <input v-model="currentViolation.vehicleID" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                            </div>
-                            <div>
-                                <div class="label-input">
-                                    <span>Time:</span>
-                                    <input v-model="currentViolation.time" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Camera ID:</span>
-                                    <input v-model="currentViolation.cameraID" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                                <div class="label-input">
-                                    <span>Image URL:</span>
-                                    <input v-model="currentViolation.imageUrl" type="text" :disabled="!isEdit"  @blur="checkValidateInput(15, currentViolation.engineNumber, '')"
-                                        @focus="validateInput[15] = false"
-                                    />
-                                    <span class="error-message" v-if="validateInput[15]"
-                                        >Vui lòng nhập số động cơ.</span
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </popup-view>
-            </full-modal> -->
-            <!-- <full-modal v-if="isShowDeleteVerifiedPopup">
-                <popup-view
-                    title="Xác nhận xóa vi phạm"
-                    class="container-violation__page__popup"
-                    @on-cancel="hiddenDeleteVerifiedPopup"
-                    @on-ok="deleteViolation()"
-                >
-                    <template #popupbody>
-                        <div class="container-violation__page__popup__content">
-                            <span>Bạn xác nhận sẽ xóa vi phạm giao thông này?</span>
-                        </div>
-                    </template>
-                </popup-view>
-            </full-modal> -->
         </div>
     </div>
 </template>
@@ -292,17 +189,12 @@ export default {
             title: 'Chi tiết',
             isShowPopup: false,
             isShowDeleteVerifiedPopup: false,
-            isShowChangeStatusVerified: false,
             meta: [],
             currentPage: 1,
             isHaveContent: false,
             startDate: '',
             endDate: '',
             status: {},
-            type: {
-                key: 'violatedate',
-                name: 'Ngày vi phạm',
-            },
             selectedStatus: {},
             oldStatus: '',
             optionsStatus: [
@@ -318,9 +210,10 @@ export default {
                     key: 'overdue',
                     name: 'Quá hạn',
                 },
-                // {
-                //     name: 'Hủy bỏ',
-                // },
+                {
+                    key: 'cancel',
+                    name: 'Hủy bỏ',
+                },
             ],
             optionsStatusColor: [
                 {
@@ -334,6 +227,10 @@ export default {
                 {
                     key: 'overdue',
                     status: 'Quá hạn',
+                },
+                {
+                    key: 'cancel',
+                    status: 'Hủy bỏ',
                 },
             ],
             optionsType: [
@@ -351,7 +248,7 @@ export default {
                 isShowModal: false,
                 title: '',
                 content: '',
-                typeModal: 'confirm',
+                typeModal: 'header',
                 buttonOkContent: 'Đóng',
                 isButtonOk: true,
                 isButtonCancel: true,
@@ -407,7 +304,7 @@ export default {
     },
     methods: {
         refreshData() {
-            if (this.startDate || this.endDate || this.status.name || this.type.name) {
+            if (this.startDate || this.endDate || this.status.name) {
                 this.Search()
             } else {
                 this.fetchData()
@@ -416,11 +313,9 @@ export default {
         async fetchData() {
             try {
                 const res = await getAllViolations(this.pageParam)
-                console.log('dataaaaaa', res.data.data)
                 res.data.data.forEach((item) => {
                     // Chuyển đổi giá trị status từ chuỗi thành đối tượng
                     item.status = this.convertStatusToObject(item.status)
-                    console.log('status', item.status)
                 })
                 this.listData = res.data.data
                 this.meta = res.data.meta
@@ -444,45 +339,6 @@ export default {
                     return { key: status, status: status }
             }
         },
-        convertStatusToObjectVie(status) {
-            // Xử lý để chuyển đổi chuỗi status thành đối tượng
-            switch (status) {
-                case 'Đã nộp':
-                    return { key: 'paid fine', status: 'Đã nộp' }
-                case 'Chưa nộp':
-                    return { key: 'unpaid fine', status: 'Chưa nộp' }
-                case 'Quá hạn':
-                    return { key: 'overdue', status: 'Quá hạn' }
-                case 'Hủy bỏ':
-                    return { key: 'cancel', status: 'Hủy bỏ' }
-                // Xử lý trạng thái khác nếu cần
-                default:
-                    return { key: status, status: status }
-            }
-        },
-        // async deleteViolation() {
-        //     const id = localStorage.getItem('idViolation')
-        //     try {
-        //         const res = await deleteViolation(id)
-        //         if (res.data.status === 'success') {
-        //             this.isShowDeleteVerifiedPopup = false
-        //             this.Search()
-        //             this.$notify({
-        //                 type: 'success',
-        //                 title: 'Delete Violation',
-        //                 text: 'Delete violation successfully!',
-        //             })
-        //         }
-        //     } catch (error) {
-        //         console.error(error)
-        //         this.$notify({
-        //             type: 'error',
-        //             title: 'Delete Violation',
-        //             text: 'Delete violation failed!',
-        //             duration: 1000,
-        //         })
-        //     }
-        // },
         async getSingleViolation(id) {
             try {
                 const res = await getSingleViolation(id)
@@ -495,36 +351,6 @@ export default {
                 console.error(error)
             }
         },
-        async getSingleViolationId(id) {
-            try {
-                const res = await getSingleViolation(id)
-                this.currentViolation.id = res.data.data.id
-                localStorage.setItem('idViolation', this.currentViolation.id)
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        // async createViolation() {
-        //     try {
-        //         const res = await addViolation(this.currentViolation)
-        //         if (res.data.status === 'success') {
-        //             this.isShowPopup = false
-        //             this.$notify({
-        //                 type: 'success',
-        //                 title: 'Add Violation',
-        //                 text: 'Add violation successfully!',
-        //             })
-        //         }
-        //     } catch (error) {
-        //         console.error(error)
-        //         this.$notify({
-        //             type: 'error',
-        //             title: 'Add Violation',
-        //             text: 'Add violation failed!',
-        //             duration: 1000,
-        //         })
-        //     }
-        // },
         closePanelView() {
             this.isShowDetail = false
             this.isEdit = false
@@ -567,11 +393,9 @@ export default {
                     this.startDateParam,
                     this.endDateParam
                 )
-                console.log(res.data.data[1])
                 res.data.data.forEach((item) => {
                     // Chuyển đổi giá trị status từ chuỗi thành đối tượng
                     item.status = this.convertStatusToObject(item.status)
-                    console.log('status', item.status)
                 })
                 this.listData = res.data.data
                 this.meta = res.data.meta
@@ -629,9 +453,7 @@ export default {
             const year = date.getFullYear()
             return `${year}-${month}-${day}`
         },
-        changeStatus(now, after) {
-            // now -> after
-
+        changeStatus(option) {
             this.status = option
             this.Search()
         },
@@ -663,16 +485,12 @@ export default {
         updateStatus(selected, option) {
             const oldStatus = selected.status
             const newStatus = this.convertStatusToObject(option)
-
-            console.log('now', selected)
-            console.log('after', newStatus)
             this.onChangeStatus(oldStatus, newStatus)
         },
         onChangeStatus(oldStatus, selected) {
             if (!selected.status) {
                 return
             }
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa', selected)
             const update = async () => {
                 try {
                     const res = await updateStatusViolation(this.currentViolationID, selected.key)
@@ -682,7 +500,7 @@ export default {
                             title: 'Update Violation',
                             text: 'Update violation successfully!',
                         })
-                        let index = this.listData.findIndex((x) => (x.id = this.currentViolationID))
+                        let index = this.listData.findIndex((x) => x.id === this.currentViolationID)
                         if (index !== -1) {
                             this.listData[index].status = selected
                         }
@@ -697,6 +515,7 @@ export default {
                     })
                 }
                 this.alert.isShowModal = false
+                this.currentViolationID = ''
             }
 
             this.alert = {
@@ -704,9 +523,9 @@ export default {
                 ...{
                     isShowModal: true,
                     isShowLogo: false,
-                    title: 'Notification',
+                    title: 'Xác nhận đổi trạng thái',
                     content: `Đổi từ trạng thái ${oldStatus} thành ${selected.status} ?`,
-                    buttonOkContent: 'Ok',
+                    buttonOkContent: 'Xác nhận',
                     currentFunctionOk: update,
                     currentFunctionCancel: this.resetAlert,
                     options: {

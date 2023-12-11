@@ -1,15 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-    {
-        path: '/',
-        name: 'dashboard',
-        component: () => import('@/views/Dashboard.vue'),
-        meta: { layout: 'auth', requiresAuth: true },
-    },
     // Users router
     {
-        path: '/users',
+        path: '/',
         name: 'users',
         meta: { layout: 'auth', requiresAuth: true },
         component: () => import('@/views/UserList.vue'),
