@@ -337,12 +337,12 @@
             <full-modal v-if="isShowDeleteVerifiedPopup">
                 <popup-view
                     title="Xác nhận xóa phương tiện"
-                    class="container-vehicle__page__popup"
+                    class="container-vehicle__page__modal"
                     @on-cancel="hiddenDeleteVerifiedPopup"
                     @on-ok="deleteVehicle()"
                 >
                     <template #popupbody>
-                        <div class="container-vehicle__page__popup__content">
+                        <div class="container-vehicle__page__modal__delete">
                             <span>Bạn xác nhận sẽ xóa phương tiện giao thông này?</span>
                         </div>
                     </template>
@@ -846,6 +846,13 @@ export default {
                     }
                 }
             }
+        }
+        &__modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
         }
     }
 }

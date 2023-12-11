@@ -7,7 +7,7 @@
                 <div
                     class="hover:bg-slate-100 cursor-pointer py-3 px-5 rounded-[8px] flex items-center gap-3"
                     :class="{ 'text-[#5d87ff]': isUser }"
-                    @click="goToPage('/users')"
+                    @click="goToPage('/')"
                 >
                     <svg
                         width="20"

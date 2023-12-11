@@ -2,6 +2,7 @@
     <div class="modal-alert" @click.stop>
         <div class="modal-alert__content">
             <h2 :class="typeModal">{{ title }}</h2>
+            <span>{{ content }}</span>
         </div>
         <slot name="popupbody"></slot>
         <div class="modal-alert__tool">
@@ -35,6 +36,10 @@ export default {
     },
     props: {
         title: {
+            type: String,
+            required: true,
+        },
+        content: {
             type: String,
             required: true,
         },
