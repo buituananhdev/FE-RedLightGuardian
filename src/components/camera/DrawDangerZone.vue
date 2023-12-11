@@ -149,6 +149,8 @@ export default {
                 this.confirmDrawing()
             }
             this.roundCoordinates()
+
+            // Save coordinates to device
             // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
             //     type: 'application/json',
             // })

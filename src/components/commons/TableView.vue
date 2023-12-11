@@ -179,7 +179,7 @@ export default {
             width: 80%;
             &__search {
                 position: relative;
-                width: 30%;
+                width: 40%;
                 height: 100%;
                 img {
                     position: absolute;
