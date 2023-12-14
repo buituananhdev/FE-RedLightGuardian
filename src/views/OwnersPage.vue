@@ -307,16 +307,16 @@ export default {
                     this.Search()
                     this.$notify({
                         type: 'success',
-                        title: 'Delete Owner',
-                        text: 'Delete owner successfully!',
+                        title: 'Xóa chủ sở hữu',
+                        text: 'Xóa chủ sở hữu thành công!',
                     })
                 }
             } catch (error) {
                 this.isShowDeleteVerifiedPopup = false
                 this.$notify({
                     type: 'error',
-                    title: 'Delete Owner',
-                    text: 'Delete owner failed!',
+                    title: 'Xóa chủ sở hữu',
+                    text: 'Xóa chủ sở hữu thất bại!',
                     duration: 1000,
                 })
             }
@@ -341,16 +341,16 @@ export default {
                     this.Search()
                     this.$notify({
                         type: 'success',
-                        title: 'Update Owner',
-                        text: 'Update owner successfully!',
+                        title: 'Cập nhật chủ sở hữu',
+                        text: 'Cập nhật chủ sở hữu thành công!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Update Owner',
-                    text: 'Update owner failed!',
+                    title: 'Cập nhật chủ sở hữu',
+                    text: 'Cập nhật chủ sở hữu thất bại!',
                     duration: 1000,
                 })
             }
@@ -376,8 +376,8 @@ export default {
                     this.isShowPopup = false
                     this.$notify({
                         type: 'success',
-                        title: 'Add Owner',
-                        text: 'Add owner successfully!',
+                        title: 'Thêm chủ sở hữu',
+                        text: 'Thêm chủ sở hữu thành công!',
                     })
                     this.listData.push(res.data.data)
                 }
@@ -385,8 +385,8 @@ export default {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Add Owner',
-                    text: 'Add owner failed!',
+                    title: 'Thêm chủ sở hữu',
+                    text: 'Thêm chủ sở hữu thất bại!',
                     duration: 1000,
                 })
             }
