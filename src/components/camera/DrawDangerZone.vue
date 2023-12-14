@@ -60,7 +60,8 @@ export default {
             try {
                 const res = await getCameraById(id)
                 this.currentCamera = res.data
-                localStorage.setItem('idVehicle', this.currentCamera.id)
+                console.log(res.data)
+                localStorage.setItem('idCamera', this.currentCamera.id)
             } catch (error) {
                 console.error(error)
             }
