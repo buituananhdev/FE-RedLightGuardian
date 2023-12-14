@@ -74,16 +74,16 @@ export default {
                 if (res.data.status === 'success') {
                     this.$notify({
                         type: 'success',
-                        title: 'Update Violation',
-                        text: 'Update violation successfully!',
+                        title: 'Cập nhật tọa độ vi phạm',
+                        text: 'Cập nhật tọa độ vi phạm thành công!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Update Violation',
-                    text: 'Update violation failed!',
+                    title: 'Cập nhật tọa độ vi phạm',
+                    text: 'Cập nhật tọa độ vi phạm thất bại!',
                     duration: 1000,
                 })
             }

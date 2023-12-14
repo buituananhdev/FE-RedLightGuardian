@@ -475,16 +475,16 @@ export default {
                     this.Search()
                     this.$notify({
                         type: 'success',
-                        title: 'Delete Vehicle',
-                        text: 'Delete vehicle successfully!',
+                        title: 'Xóa phương tiện',
+                        text: 'Xóa phương tiện thành công!',
                     })
                 }
             } catch (error) {
                 this.isShowDeleteVerifiedPopup = false
                 this.$notify({
                     type: 'error',
-                    title: 'Delete Vehicle',
-                    text: 'Delete vehicle failed!',
+                    title: 'Xóa phương tiện',
+                    text: 'Xóa phương tiện thất bại!',
                     duration: 1000,
                 })
             }
@@ -509,16 +509,16 @@ export default {
                     this.fetchData()
                     this.$notify({
                         type: 'success',
-                        title: 'Update Vehicle',
-                        text: 'Update vehicle successfully!',
+                        title: 'Cập nhật phương tiện',
+                        text: 'Cập nhật phương tiện thành công!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Update Vehicle',
-                    text: 'Update vehicle failed!',
+                    title: 'Cập nhật phương tiện',
+                    text: 'Cập nhật phương tiện thất bại!',
                     duration: 1000,
                 })
             }
@@ -536,8 +536,8 @@ export default {
                     this.previewUrl = null
                     this.$notify({
                         type: 'success',
-                        title: 'Add Vehicle',
-                        text: 'Add vehicle successfully!',
+                        title: 'Thêm phương tiện',
+                        text: 'Thêm phương tiện thành công!',
                     })
                     this.listData.push(res.data.data)
                 }
@@ -547,8 +547,8 @@ export default {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Add Vehicle',
-                    text: 'Add vehicle failed!',
+                    title: 'Thêm phương tiện',
+                    text: 'Thêm phương tiện thất bại!',
                     duration: 1000,
                 })
             }
@@ -571,8 +571,8 @@ export default {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Search Vehicle',
-                    text: 'Search vehicle failed!',
+                    title: 'Tìm kiếm phương tiện',
+                    text: 'Tìm kiếm phương tiện thất bại!',
                     duration: 1000,
                 })
             }
