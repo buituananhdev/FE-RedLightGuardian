@@ -159,16 +159,26 @@
                             />
                             <span class="error-message" v-if="validateInput[7]">Vui lòng nhập số thương hiệu.</span>
                         </div>
-                        <div class="label-input">
-                            <span v-if="isEdit">Đường dẫn hình ảnh phương tiện:</span>
-                            <span v-if="!isEdit">Hình ảnh phương tiện:</span>
-                            <input v-if="isEdit" v-model="currentVehicle.imageUrl" type="text" :disabled="!isEdit" />
+                        <div v-if="!isEdit" class="label-input">
+                            <span>Hình ảnh phương tiện:</span>
+                            <img :src="currentVehicle.imageUrl" :alt="currentVehicle.vehicleName" :disabled="!isEdit" />
+                        </div>
+                        <div v-if="isEdit" class="container-vehicle__page__popup__content__file">
+                            <input
+                                type="file"
+                                id="fileInput"
+                                class="file-input"
+                                accept="image/*"
+                                @change="handleFileChange"
+                            />
+                            <label for="fileInput" class="file-label">Chọn ảnh</label>
                             <img
-                                v-else
+                                v-if="!previewUrl"
                                 :src="currentVehicle.imageUrl"
                                 :alt="currentVehicle.vehicleName"
                                 :disabled="!isEdit"
                             />
+                            <img v-if="previewUrl" :src="previewUrl" class="preview-image" alt="Preview Image" />
                         </div>
                     </div>
                 </template>
@@ -318,9 +328,6 @@
                                 />
                                 <label for="fileInput" class="file-label">Chọn ảnh</label>
                                 <img :src="previewUrl" v-if="previewUrl" class="preview-image" alt="Preview Image" />
-                                <!-- 
-                                <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" />
-                                <img :src="previewUrl" class="preview-image" v-if="previewUrl" alt="Preview Image" /> -->
                             </div>
                         </div>
                     </template>
@@ -838,7 +845,7 @@ export default {
                         border: 1px solid #ccc;
                         border-radius: 4px;
                         cursor: pointer;
-                        background-color: transparent;
+                        background-color: rgba($color: #ffffff, $alpha: 0.7);
                         z-index: 1; /* Đảm bảo label ở trên cùng */
                     }
                 }
