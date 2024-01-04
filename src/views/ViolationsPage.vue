@@ -470,8 +470,8 @@ export default {
                     if (res.data.status === 'success') {
                         this.$notify({
                             type: 'success',
-                            title: 'Update Violation',
-                            text: 'Update violation successfully!',
+                            title: 'Cập nhật trạng thái',
+                            text: 'Cập nhật trạng thái thành công!',
                         })
                         let index = this.listData.findIndex((x) => x.id === this.currentViolationID)
                         if (index !== -1) {
@@ -482,8 +482,8 @@ export default {
                     console.error(err)
                     this.$notify({
                         type: 'error',
-                        title: 'Update Violation',
-                        text: 'Update violation failed!',
+                        title: 'Cập nhật trạng thái',
+                        text: 'Cập nhật trạng thái thất bại!',
                         duration: 1000,
                     })
                 }

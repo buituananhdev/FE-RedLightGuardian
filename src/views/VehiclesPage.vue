@@ -159,16 +159,26 @@
                             />
                             <span class="error-message" v-if="validateInput[7]">Vui lòng nhập số thương hiệu.</span>
                         </div>
-                        <div class="label-input">
-                            <span v-if="isEdit">Đường dẫn hình ảnh phương tiện:</span>
-                            <span v-if="!isEdit">Hình ảnh phương tiện:</span>
-                            <input v-if="isEdit" v-model="currentVehicle.imageUrl" type="text" :disabled="!isEdit" />
+                        <div v-if="!isEdit" class="label-input">
+                            <span>Hình ảnh phương tiện:</span>
+                            <img :src="currentVehicle.imageUrl" :alt="currentVehicle.vehicleName" :disabled="!isEdit" />
+                        </div>
+                        <div v-if="isEdit" class="container-vehicle__page__popup__content__file">
+                            <input
+                                type="file"
+                                id="fileInput"
+                                class="file-input"
+                                accept="image/*"
+                                @change="handleFileChange"
+                            />
+                            <label for="fileInput" class="file-label">Chọn ảnh</label>
                             <img
-                                v-else
+                                v-if="!previewUrl"
                                 :src="currentVehicle.imageUrl"
                                 :alt="currentVehicle.vehicleName"
                                 :disabled="!isEdit"
                             />
+                            <img v-if="previewUrl" :src="previewUrl" class="preview-image" alt="Preview Image" />
                         </div>
                     </div>
                 </template>
@@ -318,9 +328,6 @@
                                 />
                                 <label for="fileInput" class="file-label">Chọn ảnh</label>
                                 <img :src="previewUrl" v-if="previewUrl" class="preview-image" alt="Preview Image" />
-                                <!-- 
-                                <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" />
-                                <img :src="previewUrl" class="preview-image" v-if="previewUrl" alt="Preview Image" /> -->
                             </div>
                         </div>
                     </template>
@@ -468,16 +475,16 @@ export default {
                     this.Search()
                     this.$notify({
                         type: 'success',
-                        title: 'Delete Vehicle',
-                        text: 'Delete vehicle successfully!',
+                        title: 'Xóa phương tiện',
+                        text: 'Xóa phương tiện thành công!',
                     })
                 }
             } catch (error) {
                 this.isShowDeleteVerifiedPopup = false
                 this.$notify({
                     type: 'error',
-                    title: 'Delete Vehicle',
-                    text: 'Delete vehicle failed!',
+                    title: 'Xóa phương tiện',
+                    text: 'Xóa phương tiện thất bại!',
                     duration: 1000,
                 })
             }
@@ -502,16 +509,16 @@ export default {
                     this.fetchData()
                     this.$notify({
                         type: 'success',
-                        title: 'Update Vehicle',
-                        text: 'Update vehicle successfully!',
+                        title: 'Cập nhật phương tiện',
+                        text: 'Cập nhật phương tiện thành công!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Update Vehicle',
-                    text: 'Update vehicle failed!',
+                    title: 'Cập nhật phương tiện',
+                    text: 'Cập nhật phương tiện thất bại!',
                     duration: 1000,
                 })
             }
@@ -529,8 +536,8 @@ export default {
                     this.previewUrl = null
                     this.$notify({
                         type: 'success',
-                        title: 'Add Vehicle',
-                        text: 'Add vehicle successfully!',
+                        title: 'Thêm phương tiện',
+                        text: 'Thêm phương tiện thành công!',
                     })
                     this.listData.push(res.data.data)
                 }
@@ -540,8 +547,8 @@ export default {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Add Vehicle',
-                    text: 'Add vehicle failed!',
+                    title: 'Thêm phương tiện',
+                    text: 'Thêm phương tiện thất bại!',
                     duration: 1000,
                 })
             }
@@ -564,8 +571,8 @@ export default {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Search Vehicle',
-                    text: 'Search vehicle failed!',
+                    title: 'Tìm kiếm phương tiện',
+                    text: 'Tìm kiếm phương tiện thất bại!',
                     duration: 1000,
                 })
             }
@@ -838,7 +845,7 @@ export default {
                         border: 1px solid #ccc;
                         border-radius: 4px;
                         cursor: pointer;
-                        background-color: transparent;
+                        background-color: rgba($color: #ffffff, $alpha: 0.7);
                         z-index: 1; /* Đảm bảo label ở trên cùng */
                     }
                 }

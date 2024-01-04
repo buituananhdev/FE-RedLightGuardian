@@ -72,7 +72,8 @@ export default {
             try {
                 const res = await getCameraById(id)
                 this.currentCamera = res.data
-                localStorage.setItem('idVehicle', this.currentCamera.id)
+                console.log(res.data)
+                localStorage.setItem('idCamera', this.currentCamera.id)
             } catch (error) {
                 console.error(error)
             }
@@ -85,16 +86,16 @@ export default {
                 if (res.data.status === 'success') {
                     this.$notify({
                         type: 'success',
-                        title: 'Update Violation',
-                        text: 'Update violation successfully!',
+                        title: 'Cập nhật tọa độ vi phạm',
+                        text: 'Cập nhật tọa độ vi phạm thành công!',
                     })
                 }
             } catch (error) {
                 console.error(error)
                 this.$notify({
                     type: 'error',
-                    title: 'Update Violation',
-                    text: 'Update violation failed!',
+                    title: 'Cập nhật tọa độ vi phạm',
+                    text: 'Cập nhật tọa độ vi phạm thất bại!',
                     duration: 1000,
                 })
             }
