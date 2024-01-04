@@ -18,6 +18,7 @@
 <script>
 // import axios from 'axios'
 import { updateCoordinatesCamera, getCameraById } from '@/services/camera.service'
+import axios from 'axios'
 export default {
     data() {
         return {
@@ -37,11 +38,22 @@ export default {
         },
     },
     mounted() {
+        this.getImageFromCamera();
         this.canvas = this.$refs.canvas
         this.ctx = this.canvas.getContext('2d')
         this.tryLoadCoordinates() // Thử tải tọa độ khi component được mounted
     },
     methods: {
+        async getImageFromCamera() {
+            try{
+                const res = await axios.get("http://192.168.2.25/get-image");
+                const src = res["data"]["url"];
+                const canvas = this.$refs.canvas;
+                canvas.style.backgroundImage = `url(${src})`;
+            } catch (ex) {
+                console.log(ex)
+            }
+        },
         async tryLoadCoordinates() {
             try {
                 await this.getSingleCamera(2)
