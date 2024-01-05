@@ -11,12 +11,12 @@
                 >Xác Nhận</button-vue
             >
         </div>
-        <canvas ref="canvas" width="1280" height="720" @mousedown="startDrawing" @mouseup="stopDrawing"> </canvas>
+        <canvas :style="{ backgroundImage: 'url(' + imgSrc + ')', backgroundSize: 'contain'}" ref="canvas" width="1280" height="720" @mousedown="startDrawing" @mouseup="stopDrawing" > </canvas>
     </div>
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import { updateCoordinatesCamera, getCameraById } from '@/services/camera.service'
 export default {
     data() {
@@ -29,6 +29,7 @@ export default {
             coordinatesData: [],
             drawDelay: 500, // Thời gian trễ (0.5 giây)
             currentCamera: {},
+            imgSrc: 'https://res.cloudinary.com/ddqjbrc8q/image/upload/v1704418887/04-01-2024/ESP32CAM_68043.jpg.jpg'
         }
     },
     computed: {
@@ -36,12 +37,22 @@ export default {
             return !this.isDrawing
         },
     },
-    mounted() {
+    async mounted() {
+        await this.getImage()
         this.canvas = this.$refs.canvas
         this.ctx = this.canvas.getContext('2d')
         this.tryLoadCoordinates() // Thử tải tọa độ khi component được mounted
     },
     methods: {
+        async getImage() {
+            try {
+                const res = await axios.get('http://172.20.10.2/get-image');
+                this.imgSrc = res.data.data.url;
+                console.log('checkkkkkkkkk', res.data.data.url)
+            } catch (error) {
+                console.error(error);
+            }
+        },
         async tryLoadCoordinates() {
             try {
                 await this.getSingleCamera(2)
@@ -53,7 +64,6 @@ export default {
                 }
             } catch (error) {
                 console.error(error)
-                alert('Lấy tọa độ từ API thất bại')
             }
         },
         async getSingleCamera(id) {
@@ -151,18 +161,6 @@ export default {
             }
             this.roundCoordinates()
 
-            // Save coordinates to device
-            // const jsonBlob = new Blob([JSON.stringify(this.dangerZone)], {
-            //     type: 'application/json',
-            // })
-            // const jsonUrl = URL.createObjectURL(jsonBlob)
-            // const a = document.createElement('a')
-            // a.href = jsonUrl
-            // a.download = 'coordinates.json'
-            // a.click()
-            // URL.revokeObjectURL(jsonUrl)
-            // console.log('json', JSON.stringify(this.dangerZone))
-
             this.updateCoordinatesCamera()
         },
 
@@ -193,13 +191,12 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    // overflow: hidden; /* Ẩn phần ngoài khung hình */
     canvas {
         justify-self: center;
         align-self: center;
-        background-image: url('../../assets/img/test-draw.png');
         background-repeat: no-repeat;
-        background-size: cover;
+        background-size: contain;
+        background-position: center;
         border: 1px solid black;
         width: 80%;
         height: 80%;

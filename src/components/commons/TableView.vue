@@ -225,6 +225,7 @@ export default {
         position: relative;
         // height: calc(100% - 74px);
         overflow: hidden;
+        min-height: 100%;
         margin-bottom: 20px;
         &__head {
             width: 100%;
@@ -265,6 +266,7 @@ export default {
         &__body {
             display: block;
             overflow-y: scroll;
+            min-height: 100%;
             height: calc(100% - 45px);
             @include custom-scrollbar();
             &::-webkit-scrollbar {
